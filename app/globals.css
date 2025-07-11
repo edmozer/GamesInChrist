@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* New Brand Colors: Orange and Beige Palette */
+    --brand-primary-50: 30 40% 98%; /* Very light beige */
+    --brand-primary-100: 30 40% 95%; /* Light beige */
+    --brand-primary-600: 25 70% 55%; /* Main orange/terracotta */
+    --brand-primary-700: 25 70% 45%; /* Darker orange */
+    --brand-primary-800: 25 70% 35%; /* Even darker orange */
+    --brand-primary-900: 25 70% 25%; /* Deepest orange/brown for headings */
+
+    --brand-secondary-50: 40 60% 98%; /* Very light cream */
+    --brand-secondary-100: 40 60% 95%; /* Light cream */
+    --brand-secondary-600: 40 60% 70%; /* Muted yellow/orange */
+    --brand-secondary-700: 40 60% 60%; /* Darker muted yellow/orange */
+
+    --brand-accent-500: 200 40% 60%; /* Muted blue for contrast */
+    --brand-accent-600: 200 40% 50%; /* Darker muted blue */
+    --brand-accent-700: 200 40% 40%; /* Even darker muted blue */
+
+    --brand-background: 30 20% 98%; /* Warm off-white background */
+    --brand-text-dark: 25 30% 20%; /* Deep warm brown for text */
+    --brand-text-medium: 25 20% 40%; /* Softer warm brown for text */
+    --brand-text-light: 25 10% 60%; /* Lighter warm brown for descriptions */
+
+    /* Shadcn default colors - keeping them for compatibility if needed, but will use brand colors */
+    --background: hsl(var(--brand-background));
+    --foreground: hsl(var(--brand-text-dark));
+    --card: hsl(0 0% 100%); /* Will be overridden by specific component styles */
+    --card-foreground: hsl(var(--brand-text-dark));
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(var(--brand-text-dark));
+    --primary: hsl(var(--brand-primary-600));
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(var(--brand-secondary-600));
+    --secondary-foreground: hsl(var(--brand-text-dark));
+    --muted: hsl(var(--brand-background));
+    --muted-foreground: hsl(var(--brand-text-medium));
+    --accent: hsl(var(--brand-accent-500));
+    --accent-foreground: hsl(0 0% 100%);
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 47.4% 11.2%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
