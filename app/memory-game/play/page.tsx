@@ -84,8 +84,8 @@ export default function MemoryGamePage() {
   const calculateGridColumns = useCallback(() => {
     const totalCards = numCardPairs * 2
     const containerWidth = window.innerWidth * 0.8 // 80% da largura da viewport
-    const minCardDisplaySize = 80 // Tamanho mínimo aceitável para um cartão em px
-    const maxCardDisplaySize = 160 // Tamanho máximo desejável para um cartão em px
+    const minCardDisplaySize = 120 // Tamanho mínimo aceitável para um cartão em px
+    const maxCardDisplaySize = 320 // Tamanho máximo desejável para um cartão em px
     const gapSize = 16 // Equivalente a sm:gap-4
 
     let bestN = 1 // Padrão para 1 coluna
@@ -220,76 +220,91 @@ export default function MemoryGamePage() {
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100 p-4">
-      <Card className="w-[80vw] h-full flex flex-col border border-brand-primary-100 bg-white/60 backdrop-blur-lg shadow-lg p-6">
-        <CardHeader className="text-center pb-6">
-          <CardTitle className="text-3xl font-bold text-brand-primary-900">Jogo da Memória</CardTitle>
-          <div className="flex justify-center items-center gap-4 mt-4 text-brand-primary-800">
-            <Users className="h-5 w-5 text-brand-primary-600" />
-            <span className="text-xl font-semibold">Vez de: {playerNames[currentPlayerIndex]}</span>
-          </div>
-          <div className="flex justify-center gap-4 mt-2 text-brand-text-medium text-sm">
-            {playerNames.map((name, index) => (
-              <span key={name} className={`${index === currentPlayerIndex ? "font-bold text-brand-primary-900" : ""}`}>
-                {name}: {scores[index]} pontos
-              </span>
-            ))}
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow flex flex-col overflow-hidden">
-          <div className="flex-1 flex items-center justify-center overflow-hidden">
-            <div
-              className={`grid gap-4 w-full max-w-4xl mx-auto`}
-              style={{
-                gridTemplateColumns: `repeat(${gridColumns}, minmax(80px, 1fr))`,
-              }}
-            >
-              {cards.map((card) => (
-                <MemoryCard
-                  key={card.id}
-                  id={card.id}
-                  content={card.content}
-                  isFlipped={card.isFlipped || flippedCards.includes(card.id)}
-                  isMatched={card.isMatched}
-                  onClick={handleCardClick}
-                />
-              ))}
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100">
+      {/* Título no topo */}
+      <div className="bg-white/90 backdrop-blur-md border-b border-brand-primary-100 py-3 shadow-md">
+        <h1 className="text-3xl font-bold text-brand-primary-900 text-center">Jogo da Memória</h1>
+      </div>
+
+      {/* Área principal do jogo */}
+      <div className="flex-grow flex items-center justify-center p-4">
+        <div
+          className={`grid gap-4 w-full max-w-7xl mx-auto`}
+          style={{
+            gridTemplateColumns: `repeat(${gridColumns}, minmax(140px, 1fr))`,
+          }}
+        >
+          {cards.map((card) => (
+            <MemoryCard
+              key={card.id}
+              id={card.id}
+              content={card.content}
+              isFlipped={card.isFlipped || flippedCards.includes(card.id)}
+              isMatched={card.isMatched}
+              onClick={handleCardClick}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Rodapé fixo */}
+      <div className="w-full bg-white/95 backdrop-blur-md border-t border-brand-primary-100 py-4 px-6 shadow-[0_-8px_16px_-4px_rgba(0,0,0,0.1),0_-4px_6px_-2px_rgba(0,0,0,0.05)]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+            {/* Botões */}
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={initializeGame}
+                className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md"
+                size="sm"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Reiniciar
+              </Button>
+              <Button
+                onClick={() => router.push("/memory-game")}
+                variant="outline"
+                className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-transparent"
+                size="sm"
+              >
+                Voltar
+              </Button>
+            </div>
+
+            {/* Vez do jogador e pontuação */}
+            <div className="flex flex-wrap items-center gap-8">
+              <div className="flex items-center gap-2 text-brand-primary-800 border-r pr-8 border-brand-primary-200">
+                <Users className="h-5 w-5 text-brand-primary-600" />
+                <span className="font-semibold whitespace-nowrap">Vez de: {playerNames[currentPlayerIndex]}</span>
+              </div>
+
+              <div className="flex items-center gap-8">
+                {playerNames.map((name, index) => (
+                  <span
+                    key={name}
+                    className={`${
+                      index === currentPlayerIndex ? "font-bold text-brand-primary-900" : "text-brand-text-medium"
+                    } whitespace-nowrap`}
+                  >
+                    {name}: {scores[index]} pontos
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
+
+          {/* Mensagem de vitória */}
           {allCardsMatched && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center mt-8"
+              className="mt-4 text-center text-lg font-semibold text-brand-primary-700"
             >
-              <h3 className="text-2xl font-bold text-brand-primary-700">Parabéns! Todas as cartas foram combinadas!</h3>
-              {playerNames.length > 1 && (
-                <p className="text-xl text-brand-primary-800 mt-2">
-                  Vencedor: <span className="font-bold">{playerNames[scores.indexOf(Math.max(...scores))]}</span> com{" "}
-                  {Math.max(...scores)} pontos!
-                </p>
-              )}
+              {playerNames[scores.indexOf(Math.max(...scores))]} venceu o jogo!
             </motion.div>
           )}
-          <div className="flex justify-center gap-4 mt-8">
-            <Button
-              onClick={initializeGame}
-              className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg"
-            >
-              <RotateCcw className="mr-2 h-4 w-4" />
-              Reiniciar Jogo
-            </Button>
-            <Button
-              onClick={() => router.push("/memory-game")}
-              variant="outline"
-              className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-transparent"
-            >
-              Voltar para Configurações
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
