@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 import { RotateCcw, Users } from "lucide-react"
 import { MemoryCard } from "@/components/memory-card"
 import { motion, Reorder } from "framer-motion"
@@ -20,6 +22,7 @@ const shuffleArray = (array: any[]) => {
 export default function MemoryGamePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { toast } = useToast()
 
   // Obter configurações da URL ou usar padrões
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
@@ -123,6 +126,17 @@ export default function MemoryGamePage() {
         )
         setFlippedCards([])
         setLockBoard(false)
+        
+        // Mostrar toast festivo com animação
+        toast({
+          title: "🎉 Correto!",
+          description: `${playerNames[currentPlayerIndex]} encontrou um par!`,
+          className: "bg-gradient-to-r from-brand-primary-50 to-brand-accent-50 border-2 border-brand-primary-200",
+          duration: 3000,
+          style: {
+            animation: "bounce 0.5s ease"
+          },
+        })
       } else {
         // No match, flip back after a delay
         setTimeout(() => {
@@ -234,8 +248,8 @@ export default function MemoryGamePage() {
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
       {/* Título no topo */}
-      <div className="bg-white/90 backdrop-blur-md border-b border-brand-primary-100 py-2 shadow-md">
-        <h1 className="text-3xl font-bold text-brand-primary-900/90 text-center">Jogo da Memória</h1>
+      <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
+        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória</h1>
       </div>
 
       {/* Placar Arrastável */}
@@ -294,15 +308,15 @@ export default function MemoryGamePage() {
       </div>
 
       {/* Rodapé fixo */}
-      <div className="relative z-10 w-full bg-white/95 backdrop-blur-md border-t border-brand-primary-100 py-2 px-4 shadow-[0_-8px_16px_-4px_rgba(0,0,0,0.1),0_-4px_6px_-2px_rgba(0,0,0,0.05)]">
+      <div className="relative z-10 w-full bg-white/30 backdrop-blur-sm border-t border-brand-primary-100/30 py-3 px-4 shadow-md">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="grid grid-cols-3 items-center gap-4">
             {/* Grupo da esquerda: botões */}
-            <div className="flex items-center gap-3 ml-4 shrink-0">
+            <div className="flex items-center gap-3 justify-start">
               <Button
                 onClick={() => router.push("/memory-game")}
                 variant="outline"
-                className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-transparent rounded-full"
+                className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full"
                 size="sm"
               >
                 Voltar
@@ -318,15 +332,15 @@ export default function MemoryGamePage() {
             </div>
 
             {/* Grupo do centro: vez do jogador */}
-            <div className="flex-grow flex justify-center items-center mx-4">
-              <div className="flex items-center gap-3 text-brand-primary-800 px-6 py-2 rounded-full bg-brand-primary-50/50">
+            <div className="flex justify-center items-center">
+              <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-brand-primary-600" />
                 <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
               </div>
             </div>
 
-            {/* Espaço para manter o layout flexível */}
-            <div className="flex-grow"></div>
+            {/* Espaço à direita para manter simetria */}
+            <div></div>
           </div>
 
           {/* Mensagem de vitória */}
@@ -341,6 +355,9 @@ export default function MemoryGamePage() {
           )}
         </div>
       </div>
+
+      <Toaster />
+      <Toaster />
     </div>
   )
 }

@@ -67,9 +67,9 @@ export default function MemoryGameSetupPage() {
           {/* Número de Jogadores */}
           <div className="space-y-4">
             <Label
-              className="text-lg font-semibold text-brand-primary-800 flex items-center gap-2"
+              className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
             >
-              <Users className="h-5 w-5 text-brand-primary-600" />
+              <Users className="h-5 w-5 text-brand-primary-700" />
               Número de Jogadores
             </Label>
             <div className="flex gap-6 justify-center items-center flex-wrap">
@@ -89,7 +89,7 @@ export default function MemoryGameSetupPage() {
 
           {/* Nomes dos Jogadores com Animação */}
           <div className="space-y-4">
-            <Label className="text-lg font-semibold text-brand-primary-800">Nome dos Jogadores:</Label>
+            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">Nome dos Jogadores:</Label>
             <div className="grid gap-4">
               <AnimatePresence initial={false}>
                 {Array.from({ length: numPlayers }).map((_, index) => (
@@ -120,7 +120,7 @@ export default function MemoryGameSetupPage() {
           <div className="space-y-4">
             <Label
               htmlFor="num-card-pairs"
-              className="text-lg font-semibold text-brand-primary-800 flex items-center gap-2"
+              className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
             >
               <Brain className="h-5 w-5 text-brand-primary-600" />
               Número de Pares de Cartas
