@@ -145,7 +145,7 @@ export default function MemoryGamePage() {
   // Componente do Placar Arrastável
   const DraggableScoreBoard = () => {
     const [isDragging, setIsDragging] = useState(false)
-    const [cardWidth] = useState(256) // 256px = 16rem (w-64)
+    const [cardWidth] = useState(200) // 200px - tamanho intermediário
 
     return (
       <motion.div
@@ -177,9 +177,9 @@ export default function MemoryGamePage() {
             className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4"
             onClick={() => setIsScoreboardCollapsed(!isScoreboardCollapsed)}
           >
-            <div className="flex items-center gap-2 overflow-hidden">
-              <Users className="h-5 w-5 text-brand-primary-700 shrink-0" />
-              <span className="text-lg font-semibold text-brand-primary-800 truncate">
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              <Users className="h-4 w-4 text-brand-primary-700 shrink-0" />
+              <span className="text-base font-medium text-brand-primary-800 truncate">
                 Placar
               </span>
             </div>
