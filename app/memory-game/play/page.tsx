@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RotateCcw, Users } from "lucide-react"
 import { MemoryCard } from "@/components/memory-card"
+import { motion, Reorder } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
-import { motion } from "framer-motion" // Import motion from framer-motion
 
 // Helper para embaralhar um array
 const shuffleArray = (array: any[]) => {
@@ -33,6 +33,8 @@ export default function MemoryGamePage() {
   const [scores, setScores] = useState<number[]>(playerNames.map(() => 0))
   const [lockBoard, setLockBoard] = useState(false) // To prevent rapid clicks
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 }) // State for card size
+  const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: 20, y: 20 }) // Posição do placar arrastável
+  const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false) // Estado para controlar se o placar está colapsado
   // Array com os caminhos das imagens para as cartas
   const cardContents = [
     "/images/img1-min.jpg",
@@ -140,12 +142,104 @@ export default function MemoryGamePage() {
 
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
 
+  // Componente do Placar Arrastável
+  const DraggableScoreBoard = () => {
+    const [isDragging, setIsDragging] = useState(false)
+    const [cardWidth] = useState(256) // 256px = 16rem (w-64)
+
+    return (
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
+        animate={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={(event, info) => {
+          setIsDragging(false)
+          setScoreBoardPosition({
+            x: scoreBoardPosition.x + info.offset.x,
+            y: scoreBoardPosition.y + info.offset.y
+          })
+        }}
+        className="fixed z-50 touch-none select-none"
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      >
+        <Card 
+          className="bg-white/90 backdrop-blur-sm shadow-lg border-brand-primary-100 rounded-2xl overflow-hidden"
+          style={{ 
+            width: `${cardWidth}px`,
+            height: isScoreboardCollapsed ? '40px' : 'auto',
+            transition: 'height 0.3s ease'
+          }}
+        >
+          {/* Barra superior com alça para arrastar e botão de colapso */}
+          <div 
+            className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4"
+            onClick={() => setIsScoreboardCollapsed(!isScoreboardCollapsed)}
+          >
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Users className="h-5 w-5 text-brand-primary-700 shrink-0" />
+              <span className="text-lg font-semibold text-brand-primary-800 truncate">
+                Placar
+              </span>
+            </div>
+            <button 
+              className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-brand-primary-200/50 transition-colors shrink-0"
+              onClick={(e) => {
+                e.stopPropagation()
+                setIsScoreboardCollapsed(!isScoreboardCollapsed)
+              }}
+            >
+              <svg 
+                className={`w-4 h-4 transition-transform ${isScoreboardCollapsed ? '' : 'rotate-180'}`} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2"
+              >
+                <path d="M18 15l-6-6-6 6"/>
+              </svg>
+            </button>
+          </div>
+          
+          {/* Conteúdo do placar - escondido quando colapsado */}
+          <div
+            className={`transition-all duration-300 ${
+              isScoreboardCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'opacity-100'
+            } overflow-hidden`}
+          >
+            <CardContent className="p-4">
+              <div className="space-y-2">
+                {playerNames.map((name, index) => (
+                  <div
+                    key={index}
+                    className={`flex justify-between items-center p-2 rounded-lg transition-colors ${
+                      index === currentPlayerIndex
+                        ? "bg-brand-primary-100 text-brand-primary-800 font-medium"
+                        : "text-brand-text-medium hover:bg-brand-primary-50"
+                    }`}
+                  >
+                    <span className="font-medium truncate mr-2">{name}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} pares</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </div>
+        </Card>
+      </motion.div>
+    )
+  }
+
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100">
+    <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
       {/* Título no topo */}
       <div className="bg-white/90 backdrop-blur-md border-b border-brand-primary-100 py-2 shadow-md">
-        <h1 className="text-3xl font-bold text-brand-primary-900 text-center">Jogo da Memória</h1>
+        <h1 className="text-3xl font-bold text-brand-primary-900/90 text-center">Jogo da Memória</h1>
       </div>
+
+      {/* Placar Arrastável */}
+      <DraggableScoreBoard />
 
       {/* Área principal do jogo */}
       <div className="flex-1 relative">
@@ -231,23 +325,8 @@ export default function MemoryGamePage() {
               </div>
             </div>
 
-            {/* Grupo da direita: pontuação */}
-            <div className="flex items-center shrink-0">
-              <div className="flex items-center gap-6">
-                {playerNames.map((name, index) => (
-                  <div
-                    key={name}
-                    className={`px-4 py-2 rounded-lg ${
-                      index === currentPlayerIndex 
-                        ? "bg-brand-primary-100/50 font-bold text-brand-primary-900" 
-                        : "text-brand-text-medium"
-                    }`}
-                  >
-                    {name}: {scores[index]} pontos
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Espaço para manter o layout flexível */}
+            <div className="flex-grow"></div>
           </div>
 
           {/* Mensagem de vitória */}
