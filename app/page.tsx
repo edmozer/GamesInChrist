@@ -1,5 +1,6 @@
 "use client"
 
+import Head from "next/head"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Brain, Users, ArrowRight, Cross, Star, BookOpen, Puzzle } from "lucide-react"
@@ -11,9 +12,45 @@ export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-background font-sans text-brand-text-dark">
+    <div className="relative flex flex-col min-h-screen font-sans text-brand-text-dark">
+      <Head>
+        <title>Jogos em Cristo — Jogos Cristãos Divertidos e Educativos para Toda a Família</title>
+        <meta
+          name="description"
+          content="Descubra jogos cristãos que fortalecem a fé, ensinam valores e proporcionam diversão para crianças, jovens e famílias. Jogue online, aprenda e cresça espiritualmente!"
+        />
+        <meta
+          name="keywords"
+          content="jogos cristãos, jogos bíblicos, jogo da memória bíblico, quiz bíblico, quem sou eu bíblico, restauração, joseph smith, família cristã, ensino religioso, lds, igreja, mormon"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Edmozer Cavalcante" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:title" content="Jogos em Cristo — Edifique sua fé brincando" />
+        <meta
+          property="og:description"
+          content="Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão para todas as idades. Experimente gratuitamente!"
+        />
+        <meta property="og:image" content="/images/social-card.jpg" />
+        <meta property="og:url" content="https://www.jogosemcristo.com" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Jogos em Cristo — Edifique sua fé brincando" />
+        <meta
+          name="twitter:description"
+          content="Jogos bíblicos, educativos e gratuitos para toda a família. Comece agora!"
+        />
+        <meta name="twitter:image" content="/images/social-card.jpg" />
+
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="fixed inset-0 bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-no-repeat -z-10" />
+      <div className="relative flex flex-col min-h-screen z-10">
       {/* Header */}
-      <header className="h-16 flex items-center border-b border-brand-primary-100 bg-white/60 backdrop-blur-md shadow-sm">
+      <header className="h-16 flex items-center border-b border-brand-primary-100 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center justify-center gap-2">
             <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-brand-primary-50">
@@ -52,8 +89,9 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-6 md:py-12 lg:py-16 bg-gradient-to-br from-brand-primary-50 to-brand-secondary-100">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-6 md:py-12 lg:py-16 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary-50/80 to-brand-secondary-100/80 backdrop-blur-[2px]"></div>
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="grid gap-8 lg:grid-cols-[1fr_450px] lg:gap-12 xl:grid-cols-[1fr_550px] items-center">
               <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
                 <div className="space-y-4">
@@ -123,22 +161,47 @@ export default function LandingPage() {
         </section>
 
         {/* Jogos Section */}
-        <section id="jogos" className="w-full py-16 md:py-28 lg:py-36 bg-brand-background">
-          <div className="container mx-auto px-4 md:px-6">
+        <section id="jogos" className="w-full py-16 md:py-28 lg:py-36 relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm"></div>
+          {/* Decorative Elements */}
+          <div className="absolute -right-20 top-20 w-64 h-64 bg-brand-primary-100/20 rounded-full blur-3xl"></div>
+          <div className="absolute -left-20 bottom-20 w-64 h-64 bg-brand-secondary-100/20 rounded-full blur-3xl"></div>
+          
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
             {/* Título da Seção Jogos e Subtítulo */}
-            <div className="flex flex-col items-center space-y-4 text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-primary-900 font-heading">
-                Diversão que fortalece a fé
-              </h2>
-              <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans mx-auto">
-                Cada jogo foi cuidadosamente desenvolvido para proporcionar momentos de alegria enquanto fortalece
-                conhecimentos bíblicos e valores cristãos.
-              </p>
+            <div className="flex flex-col items-center space-y-8 text-center mb-16">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-primary-100 to-brand-secondary-100 flex items-center justify-center mb-2 shadow-lg">
+                <Heart className="h-10 w-10 text-brand-primary-600" />
+              </div>
+              
+              <div className="space-y-6 relative">
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
+                  <span className="text-brand-primary-600 font-medium tracking-wide uppercase text-sm px-4 py-1 rounded-full bg-brand-primary-50">
+                    Nossa Missão
+                  </span>
+                  <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
+                </div>
+
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-primary-900 font-heading">
+                  Diversão que <span className="text-brand-primary-600">fortalece</span> a fé
+                  <div className="absolute -right-8 -top-8 w-16 h-16 bg-brand-secondary-100 rounded-full flex items-center justify-center transform rotate-12 opacity-80 shadow-lg">
+                    <Cross className="h-8 w-8 text-brand-secondary-600" />
+                  </div>
+                </h2>
+
+                <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
+                  Cada jogo foi <span className="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar 
+                  momentos de <span className="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece 
+                  <span className="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e 
+                  <span className="text-brand-primary-600 font-medium"> valores cristãos</span>.
+                </p>
+              </div>
             </div>
 
             {/* Grid de Cartões de Jogos */}
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 place-items-center max-w-7xl mx-auto">
-              <Card className="group hover:shadow-xl transition-all duration-300 border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm">
+              <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <Brain className="h-8 w-8 text-white" />
@@ -150,13 +213,13 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <Link href="/memory-game" className="w-full">
-                    <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md">
+                    <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
                       Jogar Agora
                     </Button>
                   </Link>
                 </CardContent>
               </Card>
-              <Card className="group hover:shadow-xl transition-all duration-300 border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm">
+              <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto bg-brand-primary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <BookOpen className="h-8 w-8 text-white" />
@@ -167,12 +230,12 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-md">
+                  <Button className="w-full bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-md group-hover:shadow-lg">
                     Jogar Agora
                   </Button>
                 </CardContent>
               </Card>
-              <Card className="group hover:shadow-xl transition-all duration-300 border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm">
+              <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <Users className="h-8 w-8 text-white" />
@@ -183,12 +246,12 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md">
+                  <Button className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md group-hover:shadow-lg">
                     Jogar Agora
                   </Button>
                 </CardContent>
               </Card>
-              <Card className="group hover:shadow-xl transition-all duration-300 border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm">
+              <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <Puzzle className="h-8 w-8 text-white" />
@@ -199,7 +262,7 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md">
+                  <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
                     Jogar Agora
                   </Button>
                 </CardContent>
@@ -372,6 +435,7 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   )
 }

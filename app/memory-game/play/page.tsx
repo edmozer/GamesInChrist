@@ -4,10 +4,11 @@ import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CustomToast } from "@/components/custom-toast"
-import { RotateCcw, Users } from "lucide-react"
+import { RotateCcw, Users, Trophy } from "lucide-react"
 import { MemoryCard } from "@/components/memory-card"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
+import Image from "next/image"
 
 // Types
 interface GameCard {
@@ -74,6 +75,9 @@ export default function MemoryGamePage() {
   const [lockBoard, setLockBoard] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
+  const [showWinnerModal, setShowWinnerModal] = useState(false)
+  const [winner, setWinner] = useState<string>("")
+  const [hasGameEnded, setHasGameEnded] = useState(false)
   
   // UI state
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
@@ -86,6 +90,7 @@ export default function MemoryGamePage() {
     setCurrentPlayerIndex(0)
     setScores(playerNames.map(() => 0))
     setLockBoard(false)
+    setHasGameEnded(false)
     
     // Create and shuffle new cards
     const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
@@ -129,9 +134,7 @@ export default function MemoryGamePage() {
           })
           setFlippedCards([])
           setLockBoard(false)
-          setShowToast(true)
-          setToastMessage("Correto!")
-          setTimeout(() => setShowToast(false), 1500)
+          // Removido o toast daqui pois já existe outro mais abaixo
         }, 500)
       } else {
         // No match
@@ -197,6 +200,7 @@ const cardContents = [
     setCurrentPlayerIndex(0)
     setScores(playerNames.map(() => 0))
     setLockBoard(false)
+    setHasGameEnded(false)
     
     // Create and shuffle new cards
     const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
@@ -240,23 +244,26 @@ const cardContents = [
 
       if (firstCard?.content === secondCard?.content) {
         // Match!
+        const newCards = cards.map((card) =>
+          card.id === firstCardId || card.id === secondCardId ? { ...card, isMatched: true } : card
+        )
+        
+        setCards(newCards)
         setScores((prevScores) => {
           const newScores = [...prevScores]
           newScores[currentPlayerIndex] += 1
           return newScores
         })
-        setCards((prevCards) =>
-          prevCards.map((card) =>
-            card.id === firstCardId || card.id === secondCardId ? { ...card, isMatched: true } : card,
-          ),
-        )
         setFlippedCards([])
         setLockBoard(false)
         
-        // Mostrar toast festivo
-        setToastMessage("🎉 CORRETO! 🎉")
-        setShowToast(true)
-        setTimeout(() => setShowToast(false), 1500)
+        // Verificar se é a última jogada antes de mostrar o toast
+        const isLastMatch = newCards.every(card => card.isMatched || (card.id === firstCardId || card.id === secondCardId))
+        if (!isLastMatch) {
+          setToastMessage("🎉 CORRETO! 🎉")
+          setShowToast(true)
+          setTimeout(() => setShowToast(false), 1500)
+        }
       } else {
         // No match, flip back after a delay
         setTimeout(() => {
@@ -275,6 +282,98 @@ const cardContents = [
   }, [flippedCards, cards, currentPlayerIndex, playerNames])
 
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
+
+  // Efeito para verificar o vencedor quando o jogo terminar
+  useEffect(() => {
+    const isGameComplete = cards.length > 0 && cards.every(card => card.isMatched)
+    if (isGameComplete && !hasGameEnded) {
+      // Pequeno delay para garantir que todas as animações de carta terminaram
+      setTimeout(() => {
+        const scores = playerNames.map((_, index) => getPlayerPairs(index));
+        const maxScore = Math.max(...scores)
+        const winnerIndex = scores.indexOf(maxScore)
+        const winnerName = playerNames[winnerIndex]
+        setWinner(winnerName)
+        setShowWinnerModal(true)
+        setHasGameEnded(true)
+      }, 500)
+    }
+  }, [cards, playerNames, hasGameEnded])
+
+  // Função para reiniciar o jogo
+  const handleRestart = () => {
+    setShowWinnerModal(false)
+    resetGame()
+  }
+
+  // Componente do Modal de Vencedor
+  const WinnerModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.5, opacity: 0 }}
+        className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
+      >
+        {/* Confetti esquerdo */}
+        <div className="absolute -left-20 top-1/2 -translate-y-1/2">
+          <Image
+            src="/images/confetti.png"
+            alt="Confetti left"
+            width={120}
+            height={120}
+            className="animate-float-left"
+          />
+        </div>
+        {/* Confetti direito (espelhado) */}
+        <div className="absolute -right-20 top-1/2 -translate-y-1/2">
+          <Image
+            src="/images/confetti.png"
+            alt="Confetti right"
+            width={120}
+            height={120}
+            className="animate-float-right"
+            style={{ 
+              transform: 'scaleX(-1)', 
+              WebkitTransform: 'scaleX(-1)',
+              MozTransform: 'scaleX(-1)',
+              msTransform: 'scaleX(-1)'
+            }}
+          />
+        </div>
+        <div className="w-24 h-24 mx-auto mb-4">
+          <Image
+            src="/images/trophy.png"
+            alt="Troféu"
+            width={96}
+            height={96}
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
+          Parabéns!
+        </h2>
+        <p className="text-xl text-brand-text-medium mb-6">
+          O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!
+        </p>
+        <div className="flex gap-4 justify-center">
+          <Button
+            onClick={handleRestart}
+            className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white"
+          >
+            Jogar Novamente
+          </Button>
+          <Button
+            onClick={() => router.push("/memory-game")}
+            variant="outline"
+            className="border-brand-primary-100 text-brand-primary-700"
+          >
+            Menu Principal
+          </Button>
+        </div>
+      </motion.div>
+    </div>
+  )
 
   // Componente do Placar Arrastável
   const DraggableScoreBoard = () => {
@@ -344,19 +443,22 @@ const cardContents = [
           >
             <CardContent className="p-4">
               <div className="space-y-2">
-                {playerNames.map((name, index) => (
-                  <div
-                    key={index}
-                    className={`flex justify-between items-center p-2 rounded-lg transition-colors ${
-                      index === currentPlayerIndex
-                        ? "bg-brand-primary-100 text-brand-primary-800 font-medium"
-                        : "text-brand-text-medium hover:bg-brand-primary-50"
-                    }`}
-                  >
-                    <span className="font-medium truncate mr-2">{name}</span>
-                    <span className="font-bold whitespace-nowrap">{scores[index]} pares</span>
-                  </div>
-                ))}
+                {playerNames.map((name, index) => {
+                  const pairs = getPlayerPairs(index);
+                  return (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center p-2 rounded-lg transition-colors ${
+                        index === currentPlayerIndex
+                          ? "bg-brand-primary-100 text-brand-primary-800 font-medium"
+                          : "text-brand-text-medium hover:bg-brand-primary-50"
+                      }`}
+                    >
+                      <span className="font-medium truncate mr-2">{name}</span>
+                      <span className="font-bold whitespace-nowrap">{pairs} {pairs === 1 ? 'par' : 'pares'}</span>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </div>
@@ -365,8 +467,17 @@ const cardContents = [
     )
   }
 
+  // Função para calcular o número real de pares
+  const getPlayerPairs = (index: number) => {
+    const matchedCards = cards.filter(card => card.isMatched).length;
+    return Math.floor(matchedCards / 2);
+  }
+
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
+      {/* Modal de Vencedor */}
+      {showWinnerModal && <WinnerModal />}
+      
       {/* Título no topo */}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória</h1>
