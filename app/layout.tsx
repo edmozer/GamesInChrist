@@ -1,18 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Outfit, Manrope } from "next/font/google" // Importar Outfit e Manrope
+import { Red_Hat_Display } from "next/font/google"
 import "./globals.css"
 
-const outfit = Outfit({
+const redHat = Red_Hat_Display({
   subsets: ["latin"],
-  variable: "--font-outfit", // Variável para títulos
+  variable: "--font-redhat",
   display: "swap",
-})
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope", // Variável para corpo de texto
-  display: "swap",
+  weight: ["300", "400", "500", "600", "700"], // incluindo weights mais finos para um visual mais clean
 })
 
 export const metadata: Metadata = {
@@ -27,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${outfit.variable} ${manrope.variable}`}>
+    <html lang="pt-BR" className={redHat.variable}>
       <body>{children}</body>
     </html>
   )

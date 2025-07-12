@@ -53,12 +53,12 @@ export default function MemoryGameSetupPage() {
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed p-4">
       {/* Main Card */}
-      <Card className="w-full max-w-2xl border border-brand-primary-100/30 bg-white/30 backdrop-blur-sm shadow-lg mb-4">
+      <Card className="w-full max-w-2xl border border-brand-primary-100/30 bg-white/30 backdrop-blur-sm shadow-lg mb-4 rounded-3xl">
         <CardHeader className="text-center pb-6">
           <div className="w-20 h-20 mx-auto bg-brand-primary-600/90 rounded-full flex items-center justify-center mb-4">
             <Brain className="h-10 w-10 text-white" />
           </div>
-          <CardTitle className="text-3xl font-bold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm inline-block">Configurar Jogo da Memória</CardTitle>
+          <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Configurar Jogo da Memória</CardTitle>
           <CardDescription className="text-brand-text-medium/90">
             Defina as opções para sua partida e prepare-se para testar sua memória!
           </CardDescription>
@@ -108,7 +108,7 @@ export default function MemoryGameSetupPage() {
                       placeholder={`Jogador ${index + 1}`}
                       value={playerNames[index]}
                       onChange={(e) => handlePlayerNameChange(index, e.target.value)}
-                      className="bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500"
+                      className="bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
                     />
                   </motion.div>
                 ))}
@@ -133,7 +133,7 @@ export default function MemoryGameSetupPage() {
                 max={25}
                 value={numCardPairs}
                 onChange={handleNumCardPairsChange}
-                className="w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500"
+                className="w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
               />
               <span className="text-sm text-brand-text-medium">
                 (Min: 2, Max: 25 pares)
@@ -157,7 +157,7 @@ export default function MemoryGameSetupPage() {
       <Button
         onClick={() => router.push("/")}
         variant="outline"
-        className="fixed bottom-6 left-6 z-50 border-brand-accent-100/30 text-brand-accent-700/90 hover:bg-brand-accent-50/30 bg-white/30 backdrop-blur-sm shadow-md rounded-full py-4"
+        className="fixed bottom-6 left-6 z-50 border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-white/30 backdrop-blur-sm shadow-md rounded-full py-4"
       >
         Voltar ao Início
       </Button>
