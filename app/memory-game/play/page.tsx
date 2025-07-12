@@ -85,11 +85,16 @@ export default function MemoryGamePage() {
   }, [initializeGame])
 
   const handleCardClick = (id: string) => {
+    // Não permita cliques se o tabuleiro estiver bloqueado
     if (lockBoard) return
 
+    // Encontre a carta clicada
     const clickedCard = cards.find((card) => card.id === id)
+    
+    // Não permita cliques em cartas já viradas, já combinadas ou inexistentes
     if (!clickedCard || clickedCard.isFlipped || clickedCard.isMatched) return
 
+    // Vire a carta clicada
     const newCards = cards.map((card) => (card.id === id ? { ...card, isFlipped: true } : card))
     setCards(newCards)
     setFlippedCards((prev) => [...prev, id])
@@ -150,8 +155,8 @@ export default function MemoryGamePage() {
             <div className="fixed bottom-20 right-6 flex flex-col gap-2 z-20">
               <Button
                 onClick={() => setCardSize(prev => ({
-                  min: Math.min(prev.min + 10, 160),
-                  max: Math.min(prev.max + 10, 180)
+                  min: Math.min(prev.min + 10, 300),
+                  max: Math.min(prev.max + 10, 320)
                 }))}
                 variant="outline"
                 size="sm"
@@ -161,8 +166,8 @@ export default function MemoryGamePage() {
               </Button>
               <Button
                 onClick={() => setCardSize(prev => ({
-                  min: Math.max(prev.min - 10, 80),
-                  max: Math.max(prev.max - 10, 100)
+                  min: Math.max(prev.min - 10, 60),
+                  max: Math.max(prev.max - 10, 80)
                 }))}
                 variant="outline"
                 size="sm"

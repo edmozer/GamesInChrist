@@ -30,8 +30,11 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
         }
       }}
       whileTap={{ scale: 0.98 }}
-      animate={{ opacity: isMatched ? 0 : 1 }}
       transition={{ duration: 0.3 }}
+      style={{
+        pointerEvents: isMatched ? 'none' : 'auto',
+        filter: isMatched ? 'grayscale(0.5) brightness(1.1)' : 'none'
+      }}
     >
       <motion.div
         className="relative w-full h-full shadow-lg rounded-xl"
