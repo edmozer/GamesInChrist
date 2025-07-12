@@ -316,7 +316,7 @@ const cardContents = [
         className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
       >
         {/* Confetti esquerdo */}
-        <div className="absolute -left-20 top-1/2 -translate-y-1/2">
+        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
           <Image
             src="/images/confetti.png"
             alt="Confetti left"
@@ -325,22 +325,18 @@ const cardContents = [
             className="animate-float-left"
           />
         </div>
-        {/* Confetti direito (espelhado) */}
-        <div className="absolute -right-20 top-1/2 -translate-y-1/2">
+
+        {/* Confetti direito */}
+        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
           <Image
             src="/images/confetti.png"
             alt="Confetti right"
             width={120}
             height={120}
             className="animate-float-right"
-            style={{ 
-              transform: 'scaleX(-1)', 
-              WebkitTransform: 'scaleX(-1)',
-              MozTransform: 'scaleX(-1)',
-              msTransform: 'scaleX(-1)'
-            }}
           />
         </div>
+
         <div className="w-24 h-24 mx-auto mb-4">
           <Image
             src="/images/trophy.png"

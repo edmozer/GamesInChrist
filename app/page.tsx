@@ -203,8 +203,14 @@ export default function LandingPage() {
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 place-items-center max-w-7xl mx-auto">
               <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
-                  <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                    <Brain className="h-8 w-8 text-white" />
+                  <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
+                    <Image
+                      src="/images/cards.png"
+                      alt="Memory Game Cards"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-contain"
+                    />
                   </div>
                   <CardTitle className="text-brand-primary-900 font-heading mb-2">Jogo da Memória</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
@@ -221,8 +227,14 @@ export default function LandingPage() {
               </Card>
               <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
-                  <div className="w-16 h-16 mx-auto bg-brand-primary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                    <BookOpen className="h-8 w-8 text-white" />
+                  <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
+                    <Image
+                      src="/images/sacred-scriptures.png"
+                      alt="Sacred Scriptures"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-contain"
+                    />
                   </div>
                   <CardTitle className="text-brand-primary-900 font-heading mb-2">Quiz Bíblico</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
