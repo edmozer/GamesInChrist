@@ -32,8 +32,7 @@ export default function MemoryGamePage() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0)
   const [scores, setScores] = useState<number[]>(playerNames.map(() => 0))
   const [lockBoard, setLockBoard] = useState(false) // To prevent rapid clicks
-  const [gridColumns, setGridColumns] = useState(4) // Estado para o número dinâmico de colunas
-
+  const [cardSize, setCardSize] = useState({ min: 140, max: 160 }) // State for card size
   // Array com os caminhos das imagens para as cartas
   const cardContents = [
     "/images/img1-min.jpg",
@@ -79,89 +78,6 @@ export default function MemoryGamePage() {
     setScores(playerNames.map(() => 0))
     setLockBoard(false)
   }, [numCardPairs, playerNames])
-
-  // Função para calcular o número de colunas
-  const calculateGridColumns = useCallback(() => {
-    const totalCards = numCardPairs * 2
-    const containerWidth = window.innerWidth * 0.8 // 80% da largura da viewport
-    const minCardDisplaySize = 120 // Tamanho mínimo aceitável para um cartão em px
-    const maxCardDisplaySize = 320 // Tamanho máximo desejável para um cartão em px
-    const gapSize = 16 // Equivalente a sm:gap-4
-
-    let bestN = 1 // Padrão para 1 coluna
-    let minDiff = Number.POSITIVE_INFINITY // Para encontrar o layout mais "quadrado"
-
-    // Limite prático para o número de colunas para evitar cartas muito pequenas ou muitas colunas
-    const maxPossibleColumns = Math.min(totalCards, Math.floor(containerWidth / (minCardDisplaySize + gapSize)))
-    const practicalMaxColumns = Math.min(maxPossibleColumns, 8) // Limite superior razoável para jogos de memória
-
-    console.log("Grid Calculation:", {
-      totalCards,
-      containerWidth,
-      maxPossibleColumns,
-      practicalMaxColumns,
-    })
-
-    for (let N = 2; N <= practicalMaxColumns; N++) {
-      const rows = Math.ceil(totalCards / N)
-      const cardsInLastRow = totalCards % N === 0 ? N : totalCards % N
-      const cardWidthWithGap = (containerWidth - (N - 1) * gapSize) / N
-
-      console.log(`Testing N=${N}:`, {
-        rows,
-        cardsInLastRow,
-        cardWidthWithGap,
-      })
-
-      // 1. Verificar se o tamanho da carta é aceitável
-      if (cardWidthWithGap < minCardDisplaySize || cardWidthWithGap > maxCardDisplaySize) {
-        continue
-      }
-
-      // 2. Verificar a regra da "última fileira com pelo menos metade"
-      if (cardsInLastRow < N / 2 && cardsInLastRow !== 0) {
-        continue
-      }
-
-      // 3. Calcular a diferença para um layout quadrado (colunas vs. linhas)
-      const diff = Math.abs(N - rows)
-
-      // Se este N der um layout mais quadrado, ou se for o primeiro N válido
-      if (diff < minDiff || (diff === minDiff && N > bestN)) {
-        minDiff = diff
-        bestN = N
-      }
-    }
-
-    // Se nenhum N válido foi encontrado, usar um valor seguro
-    if (bestN === 1) {
-      bestN = Math.min(4, totalCards)
-    }
-
-    console.log("Final grid decision:", {
-      bestN,
-      minDiff,
-    })
-
-    return bestN
-  }, [numCardPairs])
-
-  // Atualizar o número de colunas quando a janela for redimensionada
-  useEffect(() => {
-    const handleResize = () => {
-      const newColumns = calculateGridColumns()
-      setGridColumns(newColumns)
-    }
-
-    // Calcular inicialmente
-    handleResize()
-
-    // Adicionar listener para redimensionamento
-    window.addEventListener("resize", handleResize)
-
-    // Cleanup
-    return () => window.removeEventListener("resize", handleResize)
-  }, [calculateGridColumns])
 
   // Efeito para inicializar o jogo
   useEffect(() => {
@@ -220,74 +136,110 @@ export default function MemoryGamePage() {
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100">
+    <div className="h-screen overflow-hidden flex flex-col bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100">
       {/* Título no topo */}
-      <div className="bg-white/90 backdrop-blur-md border-b border-brand-primary-100 py-3 shadow-md">
+      <div className="bg-white/90 backdrop-blur-md border-b border-brand-primary-100 py-2 shadow-md">
         <h1 className="text-3xl font-bold text-brand-primary-900 text-center">Jogo da Memória</h1>
       </div>
 
       {/* Área principal do jogo */}
-      <div className="flex-grow flex items-center justify-center p-4">
-        <div
-          className={`grid gap-4 w-full max-w-7xl mx-auto`}
-          style={{
-            gridTemplateColumns: `repeat(${gridColumns}, minmax(140px, 1fr))`,
-          }}
-        >
-          {cards.map((card) => (
-            <MemoryCard
-              key={card.id}
-              id={card.id}
-              content={card.content}
-              isFlipped={card.isFlipped || flippedCards.includes(card.id)}
-              isMatched={card.isMatched}
-              onClick={handleCardClick}
-            />
-          ))}
+      <div className="flex-1 relative">
+        <div className="absolute inset-0 overflow-y-auto z-0">
+          <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-32">
+            {/* Zoom controls */}
+            <div className="fixed bottom-20 right-6 flex flex-col gap-2 z-20">
+              <Button
+                onClick={() => setCardSize(prev => ({
+                  min: Math.min(prev.min + 10, 160),
+                  max: Math.min(prev.max + 10, 180)
+                }))}
+                variant="outline"
+                size="sm"
+                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
+              >
+                +
+              </Button>
+              <Button
+                onClick={() => setCardSize(prev => ({
+                  min: Math.max(prev.min - 10, 80),
+                  max: Math.max(prev.max - 10, 100)
+                }))}
+                variant="outline"
+                size="sm"
+                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
+              >
+                -
+              </Button>
+            </div>
+            <div 
+              className="grid gap-4 w-full auto-rows-fr"
+              style={{
+                gridTemplateColumns: `repeat(auto-fill, minmax(${cardSize.min}px, ${cardSize.max}px))`,
+                gridAutoRows: '1fr',
+                justifyContent: 'center'
+              }}
+            >
+              {cards.map((card) => (
+                <MemoryCard
+                  key={card.id}
+                  id={card.id}
+                  content={card.content}
+                  isFlipped={card.isFlipped || flippedCards.includes(card.id)}
+                  isMatched={card.isMatched}
+                  onClick={handleCardClick}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Rodapé fixo */}
-      <div className="w-full bg-white/95 backdrop-blur-md border-t border-brand-primary-100 py-4 px-6 shadow-[0_-8px_16px_-4px_rgba(0,0,0,0.1),0_-4px_6px_-2px_rgba(0,0,0,0.05)]">
+      <div className="relative z-10 w-full bg-white/95 backdrop-blur-md border-t border-brand-primary-100 py-2 px-4 shadow-[0_-8px_16px_-4px_rgba(0,0,0,0.1),0_-4px_6px_-2px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
-            {/* Botões */}
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {/* Grupo da esquerda: botões */}
+            <div className="flex items-center gap-3 ml-4 shrink-0">
+              <Button
+                onClick={() => router.push("/memory-game")}
+                variant="outline"
+                className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-transparent rounded-full"
+                size="sm"
+              >
+                Voltar
+              </Button>
               <Button
                 onClick={initializeGame}
-                className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md"
+                className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md rounded-full"
                 size="sm"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Reiniciar
               </Button>
-              <Button
-                onClick={() => router.push("/memory-game")}
-                variant="outline"
-                className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-transparent"
-                size="sm"
-              >
-                Voltar
-              </Button>
             </div>
 
-            {/* Vez do jogador e pontuação */}
-            <div className="flex flex-wrap items-center gap-8">
-              <div className="flex items-center gap-2 text-brand-primary-800 border-r pr-8 border-brand-primary-200">
-                <Users className="h-5 w-5 text-brand-primary-600" />
-                <span className="font-semibold whitespace-nowrap">Vez de: {playerNames[currentPlayerIndex]}</span>
+            {/* Grupo do centro: vez do jogador */}
+            <div className="flex-grow flex justify-center items-center mx-4">
+              <div className="flex items-center gap-3 text-brand-primary-800 px-6 py-2 rounded-full bg-brand-primary-50/50">
+                <Users className="h-6 w-6 text-brand-primary-600" />
+                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
               </div>
+            </div>
 
-              <div className="flex items-center gap-8">
+            {/* Grupo da direita: pontuação */}
+            <div className="flex items-center shrink-0">
+              <div className="flex items-center gap-6">
                 {playerNames.map((name, index) => (
-                  <span
+                  <div
                     key={name}
-                    className={`${
-                      index === currentPlayerIndex ? "font-bold text-brand-primary-900" : "text-brand-text-medium"
-                    } whitespace-nowrap`}
+                    className={`px-4 py-2 rounded-lg ${
+                      index === currentPlayerIndex 
+                        ? "bg-brand-primary-100/50 font-bold text-brand-primary-900" 
+                        : "text-brand-text-medium"
+                    }`}
                   >
                     {name}: {scores[index]} pontos
-                  </span>
+                  </div>
                 ))}
               </div>
             </div>

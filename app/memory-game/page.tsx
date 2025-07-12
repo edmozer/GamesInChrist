@@ -48,7 +48,17 @@ export default function MemoryGameSetupPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100 p-4">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-br from-brand-primary-50 via-brand-primary-100 to-brand-secondary-100 p-4 relative">
+      <div className="absolute top-4 left-4">
+        <Button
+          onClick={() => router.push("/")}
+          variant="outline"
+          size="sm"
+          className="border-brand-accent-100 text-brand-accent-700 hover:bg-brand-accent-50 bg-white/80 backdrop-blur-sm shadow-md rounded-full"
+        >
+          Voltar ao Início
+        </Button>
+      </div>
       <Card className="w-full max-w-2xl border border-brand-primary-100 bg-white/60 backdrop-blur-lg shadow-lg">
         <CardHeader className="text-center pb-6">
           <div className="w-20 h-20 mx-auto bg-brand-primary-600 rounded-full flex items-center justify-center mb-4">
@@ -143,7 +153,7 @@ export default function MemoryGameSetupPage() {
 
           <Button
             onClick={startGame}
-            className="w-full bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg text-lg py-6"
+            className="w-full bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg text-lg py-6 rounded-full"
           >
             <Play className="mr-2 h-5 w-5" />
             Iniciar Jogo
