@@ -3,43 +3,166 @@
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
+import { CustomToast } from "@/components/custom-toast"
 import { RotateCcw, Users } from "lucide-react"
 import { MemoryCard } from "@/components/memory-card"
-import { motion, Reorder } from "framer-motion"
+import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 
-// Helper para embaralhar um array
-const shuffleArray = (array: any[]) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]]
-  }
-  return array
+// Types
+interface GameCard {
+  id: string;
+  content: string;
+  isFlipped: boolean;
+  isMatched: boolean;
 }
+
+// Helper functions
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+  return newArray
+}
+
+// Card contents - moved outside component to prevent recreation
+const cardContents = [
+  "/images/img1-min.jpg",
+  "/images/img2-min.jpg",
+  "/images/img3-min.jpg",
+  "/images/img4-min.jpg",
+  "/images/img5-min.jpg",
+  "/images/img6-min.jpg",
+  "/images/img7-min.jpg",
+  "/images/img8-min.jpg",
+  "/images/img9-min.jpg",
+  "/images/img10-min.jpg",
+  "/images/img11-min.jpg",
+  "/images/img12-min.jpg",
+  "/images/img13-min.jpg",
+  "/images/img14-min.jpg",
+  "/images/img15-min.jpg",
+  "/images/img16-min.jpg",
+  "/images/img17-min.jpg",
+  "/images/img18-min.jpg",
+  "/images/img19-min.jpg",
+  "/images/img20-min.jpg",
+  "/images/img21-min.jpg",
+  "/images/img22-min.jpg",
+  "/images/img23-min.jpg",
+  "/images/img24-min.jpg",
+  "/images/img25-min.jpg",
+]
 
 export default function MemoryGamePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { toast } = useToast()
-
-  // Obter configurações da URL ou usar padrões
+  
+  // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
   const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
 
-  const [playerNames, setPlayerNames] = useState<string[]>(initialPlayerNames)
-  const [numCardPairs, setNumCardPairs] = useState(initialNumCardPairs)
-  const [cards, setCards] = useState<{ id: string; content: string; isFlipped: boolean; isMatched: boolean }[]>([])
-  const [flippedCards, setFlippedCards] = useState<string[]>([]) // IDs of currently flipped cards
+  // Game state
+  const [playerNames] = useState<string[]>(initialPlayerNames)
+  const [numCardPairs] = useState<number>(initialNumCardPairs)
+  const [cards, setCards] = useState<GameCard[]>([])
+  const [flippedCards, setFlippedCards] = useState<string[]>([])
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0)
-  const [scores, setScores] = useState<number[]>(playerNames.map(() => 0))
-  const [lockBoard, setLockBoard] = useState(false) // To prevent rapid clicks
-  const [cardSize, setCardSize] = useState({ min: 140, max: 160 }) // State for card size
-  const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: 20, y: 20 }) // Posição do placar arrastável
-  const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false) // Estado para controlar se o placar está colapsado
-  // Array com os caminhos das imagens para as cartas
-  const cardContents = [
+  const [scores, setScores] = useState<number[]>(initialPlayerNames.map(() => 0))
+  const [lockBoard, setLockBoard] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState("")
+  
+  // UI state
+  const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
+  const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: 20, y: 20 })
+  const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
+
+  // Game initialization
+  const resetGame = useCallback(() => {
+    setFlippedCards([])
+    setCurrentPlayerIndex(0)
+    setScores(playerNames.map(() => 0))
+    setLockBoard(false)
+    
+    // Create and shuffle new cards
+    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
+    const newCards = shuffleArray(
+      selectedContents
+        .flatMap((content) => [
+          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
+          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
+        ])
+    )
+    setCards(newCards)
+  }, [numCardPairs, playerNames])
+
+  // Initialize game on mount
+  useEffect(() => {
+    resetGame()
+  }, [resetGame])
+
+  // Handle flipped cards
+  useEffect(() => {
+    if (flippedCards.length === 2) {
+      setLockBoard(true)
+      const [firstCardId, secondCardId] = flippedCards
+      const firstCard = cards.find((card) => card.id === firstCardId)
+      const secondCard = cards.find((card) => card.id === secondCardId)
+
+      if (firstCard?.content === secondCard?.content) {
+        // Match!
+        setTimeout(() => {
+          setCards((prevCards) =>
+            prevCards.map((card) =>
+              card.id === firstCardId || card.id === secondCardId
+                ? { ...card, isMatched: true }
+                : card
+            )
+          )
+          setScores((prevScores) => {
+            const newScores = [...prevScores]
+            newScores[currentPlayerIndex]++
+            return newScores
+          })
+          setFlippedCards([])
+          setLockBoard(false)
+          setShowToast(true)
+          setToastMessage("Correto!")
+          setTimeout(() => setShowToast(false), 1500)
+        }, 500)
+      } else {
+        // No match
+        setTimeout(() => {
+          setCards((prevCards) =>
+            prevCards.map((card) =>
+              card.id === firstCardId || card.id === secondCardId
+                ? { ...card, isFlipped: false }
+                : card
+            )
+          )
+          setFlippedCards([])
+          setLockBoard(false)
+          setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length)
+        }, 1000)
+      }
+    }
+  }, [flippedCards, cards, currentPlayerIndex, playerNames])
+
+// Helper para embaralhar um array
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+  return newArray
+}
+
+// Array com os caminhos das imagens para as cartas
+const cardContents = [
     "/images/img1-min.jpg",
     "/images/img2-min.jpg",
     "/images/img3-min.jpg",
@@ -67,27 +190,30 @@ export default function MemoryGamePage() {
     "/images/img25-min.jpg",
   ]
 
-  const initializeGame = useCallback(() => {
-    const selectedContents = cardContents.slice(0, numCardPairs)
-    const newCards = shuffleArray(
-      selectedContents
-        .flatMap((content) => [
-          { id: `${content}-1`, content, isFlipped: false, isMatched: false },
-          { id: `${content}-2`, content, isFlipped: false, isMatched: false },
-        ])
-        .map((card, index) => ({ ...card, id: `${card.id}-${index}` })), // Ensure unique IDs
-    )
-    setCards(newCards)
+  // Initialize or reset the game
+  const initializeGame = () => {
+    // Reset all game states
     setFlippedCards([])
     setCurrentPlayerIndex(0)
     setScores(playerNames.map(() => 0))
     setLockBoard(false)
-  }, [numCardPairs, playerNames])
+    
+    // Create and shuffle new cards
+    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
+    const newCards = shuffleArray(
+      selectedContents
+        .flatMap((content) => [
+          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
+          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
+        ])
+    )
+    setCards(newCards)
+  }
 
-  // Efeito para inicializar o jogo
+  // Initialize game on mount and when game parameters change
   useEffect(() => {
     initializeGame()
-  }, [initializeGame])
+  }, [numCardPairs]) // Only reinitialize when number of pairs changes
 
   const handleCardClick = (id: string) => {
     // Não permita cliques se o tabuleiro estiver bloqueado
@@ -127,16 +253,10 @@ export default function MemoryGamePage() {
         setFlippedCards([])
         setLockBoard(false)
         
-        // Mostrar toast festivo com animação
-        toast({
-          title: "🎉 Correto!",
-          description: `${playerNames[currentPlayerIndex]} encontrou um par!`,
-          className: "bg-gradient-to-r from-brand-primary-50 to-brand-accent-50 border-2 border-brand-primary-200",
-          duration: 3000,
-          style: {
-            animation: "bounce 0.5s ease"
-          },
-        })
+        // Mostrar toast festivo
+        setToastMessage("🎉 CORRETO! 🎉")
+        setShowToast(true)
+        setTimeout(() => setShowToast(false), 1500)
       } else {
         // No match, flip back after a delay
         setTimeout(() => {
@@ -322,7 +442,12 @@ export default function MemoryGamePage() {
                 Voltar
               </Button>
               <Button
-                onClick={initializeGame}
+                onClick={() => {
+                  setLockBoard(true)
+                  setTimeout(() => {
+                    resetGame()
+                  }, 300)
+                }}
                 className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md rounded-full"
                 size="sm"
               >
@@ -356,8 +481,11 @@ export default function MemoryGamePage() {
         </div>
       </div>
 
-      <Toaster />
-      <Toaster />
+      <CustomToast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   )
 }

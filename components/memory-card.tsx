@@ -33,7 +33,7 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
       transition={{ duration: 0.3 }}
       style={{
         pointerEvents: isMatched ? 'none' : 'auto',
-        filter: isMatched ? 'grayscale(0.5) brightness(1.1)' : 'none'
+        opacity: isMatched ? '0.8' : '1'
       }}
     >
       <motion.div
