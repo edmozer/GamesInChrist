@@ -11,7 +11,7 @@ import React from "react"
 
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
-  const [language, setLanguage] = useState<'pt' | 'en' | 'es'>('pt')
+  const [language, setLanguage] = useState<'pt' | 'en' | 'es'>('pt');
   const languageLabels = {
     pt: 'Português',
     en: 'English',
@@ -23,6 +23,124 @@ export default function LandingPage() {
     es: '🇪🇸',
   }
   const [showLangDropdown, setShowLangDropdown] = useState(false)
+
+  // Translation object for all UI texts
+  const translations: Record<'pt' | 'en', any> = {
+    pt: {
+      title: 'Jogos em Cristo — Jogos Cristãos Divertidos e Educativos para Toda a Família',
+      description: 'Descubra jogos cristãos que fortalecem a fé, ensinam valores e proporcionam diversão para crianças, jovens e famílias. Jogue online, aprenda e cresça espiritualmente!',
+      keywords: 'jogos cristãos, jogos bíblicos, jogo da memória bíblico, quiz bíblico, quem sou eu bíblico, restauração, joseph smith, família cristã, ensino religioso, lds, igreja, mormon',
+      ogTitle: 'Jogos em Cristo — Edifique sua fé brincando',
+      ogDescription: 'Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão para todas as idades. Experimente gratuitamente!',
+      twitterTitle: 'Jogos em Cristo — Edifique sua fé brincando',
+      twitterDescription: 'Jogos bíblicos, educativos e gratuitos para toda a família. Comece agora!',
+      headerTitle: 'Jogos em Cristo',
+      heroTitle: 'Jogos que <span class="text-brand-primary-600">edificam</span> e <span class="text-brand-secondary-700">divertem</span>',
+      heroDesc: 'Descubra uma coleção especial de jogos cristãos que combinam diversão, aprendizado e crescimento espiritual. Perfeito para toda a família!',
+      startPlaying: 'Começar a Jogar',
+      learnMore: 'Saiba Mais',
+      dividerMission: 'Nossa Missão',
+      dividerTitle: 'Diversão que <span class="text-brand-primary-600">fortalece</span> a fé',
+      dividerDesc: 'Cada jogo foi <span class="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar momentos de <span class="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece <span class="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e <span class="text-brand-primary-600 font-medium"> valores cristãos</span>.',
+      memoryTitle: 'Jogo da Memória',
+      memoryDesc: 'Teste sua memória com versículos e personagens bíblicos',
+      quizTitle: 'Quiz Bíblico',
+      quizDesc: 'Desafie seus conhecimentos sobre a Palavra de Deus',
+      whoTitle: 'Quem Sou Eu?',
+      whoDesc: 'Descubra personagens bíblicos através de dicas especiais',
+      orderTitle: 'Ordem das Frases',
+      orderDesc: 'Organize versículos e frases bíblicas na ordem correta',
+      playNow: 'Jogar Agora',
+      ctaTitle: 'Pronto para começar sua jornada?',
+      ctaDesc: 'Junte-se a milhares de famílias que já descobriram a alegria de aprender brincando. Comece agora mesmo!',
+      ctaBtn: 'Começar Gratuitamente',
+      footerTitle: 'Jogos em Cristo',
+      footerDesc: 'Desenvolvendo jogos que edificam, educam e divertem toda a família cristã.',
+      footerGames: 'Jogos',
+      footerSupport: 'Suporte',
+      footerAbout: 'Sobre o Jogo',
+      footerAboutDesc1: 'Este jogo foi criado com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.',
+      footerAboutDesc2: 'Através da mecânica de memória, queremos incentivar famílias, jovens e crianças a se lembrarem de eventos, símbolos e ensinamentos importantes relacionados à Primeira Visão, ao profeta Joseph Smith e à restauração da Igreja de Jesus Cristo na Terra.',
+      footerAboutMore: 'Mais',
+      footerAboutModalTitle: 'Criação e Desenvolvimento',
+      footerAboutModalDesc: 'Projeto idealizado e desenvolvido por Edmozer Cavalcante.<br />Saiba mais ou entre em contato: ',
+      footerAboutModalDev: 'Desenvolvimento Técnico <span class="align-middle">▼</span>',
+      footerAboutModalTech: [
+        'Next.js e React para estrutura e lógica do site',
+        'TypeScript para tipagem e segurança',
+        'TailwindCSS para estilização moderna e responsiva',
+        'Integração com IA (GitHub Copilot) para otimização e boas práticas',
+        'Animações CSS para uma experiência fluida',
+        'Layout totalmente responsivo e adaptativo',
+      ],
+      footerAboutModalCopy: '© 2025 — Este projeto é um esforço pessoal e sem fins lucrativos.<br />Desenvolvido com auxílio de IA em um processo de programação inovador.',
+      footerCopy: '© {year} Jogos em Cristo. Feito com ❤️ para a glória de Deus.',
+      terms: 'Termos de Uso',
+      privacy: 'Privacidade',
+      supportHow: 'Como Jogar',
+      supportFAQ: 'FAQ',
+      supportContact: 'Contato',
+      supportFeedback: 'Feedback',
+    },
+    en: {
+      title: 'Games in Christ — Fun and Educational Christian Games for the Whole Family',
+      description: 'Discover Christian games that strengthen faith, teach values, and provide fun for children, youth, and families. Play online, learn, and grow spiritually!',
+      keywords: 'christian games, bible games, bible memory game, bible quiz, who am I bible, restoration, joseph smith, christian family, religious education, lds, church, mormon',
+      ogTitle: 'Games in Christ — Build your faith while having fun',
+      ogDescription: 'A platform of Christian games that combine biblical learning with fun for all ages. Try it for free!',
+      twitterTitle: 'Games in Christ — Build your faith while having fun',
+      twitterDescription: 'Free, educational, and biblical games for the whole family. Start now!',
+      headerTitle: 'Games in Christ',
+      heroTitle: 'Games that <span class="text-brand-primary-600">build</span> and <span class="text-brand-secondary-700">entertain</span>',
+      heroDesc: 'Discover a special collection of Christian games that combine fun, learning, and spiritual growth. Perfect for the whole family!',
+      startPlaying: 'Start Playing',
+      learnMore: 'Learn More',
+      dividerMission: 'Our Mission',
+      dividerTitle: 'Fun that <span class="text-brand-primary-600">strengthens</span> faith',
+      dividerDesc: 'Each game was <span class="text-brand-primary-700 font-medium">carefully developed</span> to provide moments of <span class="text-brand-accent-600 font-medium">joy</span> while strengthening <span class="text-brand-secondary-600 font-medium"> biblical knowledge</span> and <span class="text-brand-primary-600 font-medium"> Christian values</span>.',
+      memoryTitle: 'Memory Game',
+      memoryDesc: 'Test your memory with Bible verses and characters',
+      quizTitle: 'Bible Quiz',
+      quizDesc: 'Challenge your knowledge of the Word of God',
+      whoTitle: 'Who Am I?',
+      whoDesc: 'Discover Bible characters through special clues',
+      orderTitle: 'Order the Phrases',
+      orderDesc: 'Arrange Bible verses and phrases in the correct order',
+      playNow: 'Play Now',
+      ctaTitle: 'Ready to start your journey?',
+      ctaDesc: 'Join thousands of families who have already discovered the joy of learning while playing. Start right now!',
+      ctaBtn: 'Start for Free',
+      footerTitle: 'Games in Christ',
+      footerDesc: 'Developing games that build, educate, and entertain the whole Christian family.',
+      footerGames: 'Games',
+      footerSupport: 'Support',
+      footerAbout: 'About the Game',
+      footerAboutDesc1: 'This game was created to teach and reinforce the principles of the Restoration of the Gospel of Jesus Christ in a fun and interactive way.',
+      footerAboutDesc2: 'Through the memory game mechanics, we want to encourage families, youth, and children to remember important events, symbols, and teachings related to the First Vision, the prophet Joseph Smith, and the restoration of the Church of Jesus Christ on Earth.',
+      footerAboutMore: 'More',
+      footerAboutModalTitle: 'Creation and Development',
+      footerAboutModalDesc: 'Project conceived and developed by Edmozer Cavalcante.<br />Learn more or get in touch: ',
+      footerAboutModalDev: 'Technical Development <span class="align-middle">▼</span>',
+      footerAboutModalTech: [
+        'Next.js and React for site structure and logic',
+        'TypeScript for typing and safety',
+        'TailwindCSS for modern and responsive styling',
+        'AI integration (GitHub Copilot) for optimization and best practices',
+        'CSS animations for a smooth experience',
+        'Fully responsive and adaptive layout',
+      ],
+      footerAboutModalCopy: '© 2025 — This project is a personal, non-profit effort.<br />Developed with AI assistance in an innovative programming process.',
+      footerCopy: '© {year} Games in Christ. Made with ❤️ for the glory of God.',
+      terms: 'Terms of Use',
+      privacy: 'Privacy',
+      supportHow: 'How to Play',
+      supportFAQ: 'FAQ',
+      supportContact: 'Contact',
+      supportFeedback: 'Feedback',
+    },
+  }
+  // Fallback to 'pt' if language is 'es'
+  const currentLang = language === 'es' ? 'pt' : language;
 
   // Fecha dropdown ao clicar fora ou pressionar ESC
   React.useEffect(() => {
@@ -55,37 +173,22 @@ export default function LandingPage() {
   return (
     <div className="relative flex flex-col min-h-screen font-sans text-brand-text-dark">
       <Head>
-        <title>Jogos em Cristo — Jogos Cristãos Divertidos e Educativos para Toda a Família</title>
-        <meta
-          name="description"
-          content="Descubra jogos cristãos que fortalecem a fé, ensinam valores e proporcionam diversão para crianças, jovens e famílias. Jogue online, aprenda e cresça espiritualmente!"
-        />
-        <meta
-          name="keywords"
-          content="jogos cristãos, jogos bíblicos, jogo da memória bíblico, quiz bíblico, quem sou eu bíblico, restauração, joseph smith, família cristã, ensino religioso, lds, igreja, mormon"
-        />
+        <title>{translations[currentLang].title}</title>
+        <meta name="description" content={translations[currentLang].description} />
+        <meta name="keywords" content={translations[currentLang].keywords} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Edmozer Cavalcante" />
-
         {/* Open Graph / Facebook */}
-        <meta property="og:title" content="Jogos em Cristo — Edifique sua fé brincando" />
-        <meta
-          property="og:description"
-          content="Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão para todas as idades. Experimente gratuitamente!"
-        />
+        <meta property="og:title" content={translations[currentLang].ogTitle} />
+        <meta property="og:description" content={translations[currentLang].ogDescription} />
         <meta property="og:image" content="/images/social-card.jpg" />
         <meta property="og:url" content="https://www.jogosemcristo.com" />
         <meta property="og:type" content="website" />
-
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jogos em Cristo — Edifique sua fé brincando" />
-        <meta
-          name="twitter:description"
-          content="Jogos bíblicos, educativos e gratuitos para toda a família. Comece agora!"
-        />
+        <meta name="twitter:title" content={translations[currentLang].twitterTitle} />
+        <meta name="twitter:description" content={translations[currentLang].twitterDescription} />
         <meta name="twitter:image" content="/images/social-card.jpg" />
-
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="fixed inset-0 bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-no-repeat -z-10" />
@@ -97,13 +200,13 @@ export default function LandingPage() {
             <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-brand-primary-50">
               <Image
                 src="/images/logo-black.png"
-                alt="Jogos em Cristo Logo"
+                alt="Logo"
                 width={64}
                 height={64}
                 className="w-12 h-12 object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
+            <span className="text-xl font-bold text-brand-primary-800 font-heading">{translations[currentLang].headerTitle}</span>
           </Link>
           <nav className="flex gap-4 sm:gap-6">
             {/* Language Selector only */}
@@ -143,13 +246,9 @@ export default function LandingPage() {
             <div className="grid gap-8 lg:grid-cols-[1fr_450px] lg:gap-12 xl:grid-cols-[1fr_550px] items-center">
               <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
                 <div className="space-y-4">
-                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-brand-primary-900 leading-tight font-heading">
-                    Jogos que <span className="text-brand-primary-600">edificam</span> e{" "}
-                    <span className="text-brand-secondary-700">divertem</span>
-                  </h1>
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-brand-primary-900 leading-tight font-heading" dangerouslySetInnerHTML={{__html: translations[currentLang].heroTitle}} />
                   <p className="max-w-[600px] text-brand-text-medium md:text-xl leading-relaxed mx-auto lg:mx-0 font-sans">
-                    Descubra uma coleção especial de jogos cristãos que combinam diversão, aprendizado e crescimento
-                    espiritual. Perfeito para toda a família!
+                    {translations[currentLang].heroDesc}
                   </p>
                 </div>
                 <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start">
@@ -158,7 +257,7 @@ export default function LandingPage() {
                     className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-lg transition-all duration-200"
                     onClick={scrollToJogos}
                   >
-                    Começar a Jogar
+                    {translations[currentLang].startPlaying}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                   <Button
@@ -166,7 +265,7 @@ export default function LandingPage() {
                     size="lg"
                     className="border-brand-primary-100 text-brand-primary-700 hover:bg-brand-primary-50 bg-transparent transition-all duration-200"
                   >
-                    Saiba Mais
+                    {translations[currentLang].learnMore}
                   </Button>
                 </div>
               </div>
@@ -227,24 +326,13 @@ export default function LandingPage() {
                 <div className="flex items-center justify-center space-x-3">
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
                   <span className="text-brand-primary-600 font-medium tracking-wide uppercase text-sm px-4 py-1 rounded-full bg-brand-primary-50">
-                    Nossa Missão
+                    {translations[currentLang].dividerMission}
                   </span>
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
                 </div>
 
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-primary-900 font-heading">
-                  Diversão que <span className="text-brand-primary-600">fortalece</span> a fé
-                  <div className="absolute -right-8 -top-8 w-16 h-16 bg-brand-secondary-100 rounded-full flex items-center justify-center transform rotate-12 opacity-80 shadow-lg">
-                    <Cross className="h-8 w-8 text-brand-secondary-600" />
-                  </div>
-                </h2>
-
-                <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
-                  Cada jogo foi <span className="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar 
-                  momentos de <span className="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece 
-                  <span className="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e 
-                  <span className="text-brand-primary-600 font-medium"> valores cristãos</span>.
-                </p>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-primary-900 font-heading" dangerouslySetInnerHTML={{__html: translations[currentLang].dividerTitle}} />
+                <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative" dangerouslySetInnerHTML={{__html: translations[currentLang].dividerDesc}} />
               </div>
             </div>
 
@@ -261,9 +349,9 @@ export default function LandingPage() {
                       className="w-16 h-16 object-contain"
                     />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Jogo da Memória</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{translations[currentLang].memoryTitle}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Teste sua memória com versículos e personagens bíblicos
+                    {translations[currentLang].memoryDesc}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -285,9 +373,9 @@ export default function LandingPage() {
                       className="w-16 h-16 object-contain"
                     />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Quiz Bíblico</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{translations[currentLang].quizTitle}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Desafie seus conhecimentos sobre a Palavra de Deus
+                    {translations[currentLang].quizDesc}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -301,9 +389,9 @@ export default function LandingPage() {
                   <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <Users className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Quem Sou Eu?</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{translations[currentLang].whoTitle}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Descubra personagens bíblicos através de dicas especiais
+                    {translations[currentLang].whoDesc}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -317,15 +405,15 @@ export default function LandingPage() {
                   <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
                     <Puzzle className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Ordem das Frases</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{translations[currentLang].orderTitle}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Organize versículos e frases bíblicas na ordem correta
+                    {translations[currentLang].orderDesc}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
-                    Jogar Agora
-                  </Button>
+                    <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
+                      {translations[currentLang].playNow}
+                    </Button>
                 </CardContent>
               </Card>
             </div>
@@ -338,10 +426,10 @@ export default function LandingPage() {
             <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
               <div className="flex flex-col items-center space-y-6 text-center">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white font-heading max-w-2xl">
-                  Pronto para começar sua jornada?
+                  {translations[currentLang].ctaTitle}
                 </h2>
                 <p className="text-brand-primary-50 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans max-w-[600px]">
-                  Junte-se a milhares de famílias que já descobriram a alegria de aprender brincando. Comece agora mesmo!
+                  {translations[currentLang].ctaDesc}
                 </p>
                 <div className="flex items-center justify-center mt-8">
                   <Button
@@ -349,7 +437,7 @@ export default function LandingPage() {
                     variant="secondary"
                     className="bg-white text-brand-primary-700 hover:bg-brand-primary-50 shadow-lg transform hover:scale-105 transition-all duration-200"
                   >
-                    Começar Gratuitamente
+                    {translations[currentLang].ctaBtn}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -368,84 +456,84 @@ export default function LandingPage() {
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand-primary-50">
                   <Image
                     src="/images/logo-black.png"
-                    alt="Jogos em Cristo Logo"
+                    alt="Logo"
                     width={48}
                     height={48}
                     className="w-9 h-9 object-contain"
                   />
                 </div>
-                <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
+                <span className="text-xl font-bold text-brand-primary-800 font-heading">{translations[currentLang].footerTitle}</span>
               </div>
               <p className="text-sm text-brand-text-medium font-sans">
-                Desenvolvendo jogos que edificam, educam e divertem toda a família cristã.
+                {translations[currentLang].footerDesc}
               </p>
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Jogos</h4>
+              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">{translations[currentLang].footerGames}</h4>
               <ul className="space-y-2 text-sm text-brand-text-medium font-sans">
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Jogo da Memória
+                    {translations[currentLang].memoryTitle}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Quiz Bíblico
+                    {translations[currentLang].quizTitle}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Quem Sou Eu?
+                    {translations[currentLang].whoTitle}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Ordem das Frases
+                    {translations[currentLang].orderTitle}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Suporte</h4>
+              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">{translations[currentLang].footerSupport}</h4>
               <ul className="space-y-2 text-sm text-brand-text-medium font-sans">
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Como Jogar
+                    {translations[currentLang].supportHow}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    FAQ
+                    {translations[currentLang].supportFAQ}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Contato
+                    {translations[currentLang].supportContact}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Feedback
+                    {translations[currentLang].supportFeedback}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4" id="sobre">
-              <h4 className="text-xl font-bold text-brand-primary-900 font-heading">Sobre o Jogo</h4>
+              <h4 className="text-xl font-bold text-brand-primary-900 font-heading">{translations[currentLang].footerAbout}</h4>
               <p className="text-sm text-brand-text-medium font-sans">
-                Este jogo foi criado com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.
+                {translations[currentLang].footerAboutDesc1}
               </p>
               <p className="text-sm text-brand-text-medium font-sans">
-                Através da mecânica de memória, queremos incentivar famílias, jovens e crianças a se lembrarem de eventos, símbolos e ensinamentos importantes relacionados à Primeira Visão, ao profeta Joseph Smith e à restauração da Igreja de Jesus Cristo na Terra.
+                {translations[currentLang].footerAboutDesc2}
               </p>
               <button
                 className="mt-2 px-4 py-2 rounded-full bg-brand-primary-700 text-white font-semibold shadow hover:bg-brand-primary-800 transition-all"
                 onClick={() => setShowSobreModal(true)}
               >
-                Mais
+                {translations[currentLang].footerAboutMore}
               </button>
               {showSobreModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -457,23 +545,19 @@ export default function LandingPage() {
                     >
                       ×
                     </button>
-                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2">Criação e Desenvolvimento</h5>
+                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2">{translations[currentLang].footerAboutModalTitle}</h5>
                     <p className="text-sm text-brand-text-medium font-sans mb-4">
-                      Projeto idealizado e desenvolvido por Edmozer Cavalcante.<br />
-                      Saiba mais ou entre em contato: <a href="https://www.linkedin.com/in/edmozer" target="_blank" rel="noopener noreferrer" className="text-brand-primary-700 underline">LinkedIn</a>
+                      <span dangerouslySetInnerHTML={{__html: translations[currentLang].footerAboutModalDesc}} />
+                      <a href="https://www.linkedin.com/in/edmozer" target="_blank" rel="noopener noreferrer" className="text-brand-primary-700 underline">LinkedIn</a>
                     </p>
-                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2">Desenvolvimento Técnico <span className="align-middle">▼</span></h5>
+                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2" dangerouslySetInnerHTML={{__html: translations[currentLang].footerAboutModalDev}} />
                     <ul className="list-disc list-inside text-sm text-brand-text-medium font-sans mb-4">
-                      <li>Next.js e React para estrutura e lógica do site</li>
-                      <li>TypeScript para tipagem e segurança</li>
-                      <li>TailwindCSS para estilização moderna e responsiva</li>
-                      <li>Integração com IA (GitHub Copilot) para otimização e boas práticas</li>
-                      <li>Animações CSS para uma experiência fluida</li>
-                      <li>Layout totalmente responsivo e adaptativo</li>
+                      {translations[currentLang].footerAboutModalTech.map((item: string, idx: number) => (
+                        <li key={idx}>{item}</li>
+                      ))}
                     </ul>
                     <p className="text-xs text-brand-text-medium font-sans">
-                      © 2025 — Este projeto é um esforço pessoal e sem fins lucrativos.<br />
-                      Desenvolvido com auxílio de IA em um processo de programação inovador.
+                      <span dangerouslySetInnerHTML={{__html: translations[currentLang].footerAboutModalCopy}} />
                     </p>
                   </div>
                 </div>
@@ -483,14 +567,14 @@ export default function LandingPage() {
 
           <div className="mt-8 pt-8 border-t border-brand-primary-100 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-xs text-brand-text-medium font-sans">
-              © {new Date().getFullYear()} Jogos em Cristo. Feito com ❤️ para a glória de Deus.
+              {translations[currentLang].footerCopy.replace('{year}', new Date().getFullYear().toString())}
             </p>
             <nav className="flex gap-4 mt-4 sm:mt-0">
               <Link href="#" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
-                Termos de Uso
+                {translations[currentLang].terms}
               </Link>
               <Link href="#" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
-                Privacidade
+                {translations[currentLang].privacy}
               </Link>
             </nav>
           </div>
