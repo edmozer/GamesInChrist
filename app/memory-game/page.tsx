@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useLanguage } from "@/context/LanguageContext"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,10 +13,39 @@ import { useRouter } from "next/navigation" // Importar useRouter
 
 export default function MemoryGameSetupPage() {
   const router = useRouter() // Inicializar useRouter
+  const { language, setLanguage } = useLanguage()
   const [numPlayers, setNumPlayers] = useState(1)
-  const [playerNames, setPlayerNames] = useState<string[]>(["Jogador 1"])
+  const [playerNames, setPlayerNames] = useState<string[]>([language === 'en' ? "Player 1" : "Jogador 1"])
   const [numCardPairs, setNumCardPairs] = useState(14) // Default to 14 pairs
   const [numCardPairsInput, setNumCardPairsInput] = useState("14")
+
+  // Translations
+  const translations: Record<'pt' | 'en', any> = {
+    pt: {
+      setupTitle: "Configurar Jogo da Memória",
+      setupDesc: "Defina as opções para sua partida e prepare-se para testar sua memória!",
+      numPlayers: "Número de Jogadores",
+      playerNames: "Nome dos Jogadores:",
+      playerPlaceholder: "Jogador",
+      numCardPairs: "Número de Pares de Cartas",
+      minMaxPairs: "(Min: 2, Max: 25 pares)",
+      startGame: "Iniciar Jogo",
+      backToHome: "Voltar ao Início",
+    },
+    en: {
+      setupTitle: "Memory Game Setup",
+      setupDesc: "Set your game options and get ready to test your memory!",
+      numPlayers: "Number of Players",
+      playerNames: "Player Names:",
+      playerPlaceholder: "Player",
+      numCardPairs: "Number of Card Pairs",
+      minMaxPairs: "(Min: 2, Max: 25 pairs)",
+      startGame: "Start Game",
+      backToHome: "Back to Home",
+    },
+  }
+  // Fallback to 'pt' if language is 'es'
+  const currentLang = language === 'es' ? 'pt' : language;
 
   const handleNumPlayersChange = (value: number[]) => {
     const newNumPlayers = value[0]
@@ -62,24 +92,24 @@ export default function MemoryGameSetupPage() {
     <div className="flex flex-col min-h-screen items-center justify-center bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed p-4">
       {/* Main Card */}
       <Card className="w-full max-w-2xl border border-brand-primary-100/30 bg-white/30 backdrop-blur-sm shadow-lg mb-4 rounded-3xl">
-        <CardHeader className="text-center pb-6">
-          <div className="w-20 h-20 mx-auto bg-brand-primary-600/90 rounded-full flex items-center justify-center mb-4 overflow-hidden">
-            <img src="/images/cards.png" alt="Memory Game Cards" className="w-16 h-16 object-contain" />
-          </div>
-          <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Configurar Jogo da Memória</CardTitle>
-          <CardDescription className="text-brand-text-medium/90">
-            Defina as opções para sua partida e prepare-se para testar sua memória!
-          </CardDescription>
-        </CardHeader>
+      <CardHeader className="text-center pb-6">
+        <div className="w-20 h-20 mx-auto bg-brand-primary-600/90 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+          <img src="/images/cards.png" alt="Memory Game Cards" className="w-16 h-16 object-contain" />
+        </div>
+        <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{translations[currentLang].setupTitle}</CardTitle>
+        <CardDescription className="text-brand-text-medium/90">
+          {translations[currentLang].setupDesc}
+        </CardDescription>
+      </CardHeader>
         <CardContent className="space-y-8">
           {/* Número de Jogadores */}
           <div className="space-y-4">
-            <Label
-              className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
-            >
-              <Users className="h-5 w-5 text-brand-primary-700" />
-              Número de Jogadores
-            </Label>
+          <Label
+            className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
+          >
+            <Users className="h-5 w-5 text-brand-primary-700" />
+            {translations[currentLang].numPlayers}
+          </Label>
             <div className="flex gap-6 justify-center items-center flex-wrap">
               {[1, 2, 3, 4].map((num) => (
                 <label key={num} className="flex items-center gap-2 cursor-pointer">
@@ -97,7 +127,7 @@ export default function MemoryGameSetupPage() {
 
           {/* Nomes dos Jogadores com Animação */}
           <div className="space-y-4">
-            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">Nome dos Jogadores:</Label>
+            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">{translations[currentLang].playerNames}</Label>
             <div className="grid gap-4">
               <AnimatePresence initial={false}>
                 {Array.from({ length: numPlayers }).map((_, index) => (
@@ -113,7 +143,7 @@ export default function MemoryGameSetupPage() {
                     </Label>
                     <Input
                       id={`player-name-${index + 1}`}
-                      placeholder={`Jogador ${index + 1}`}
+                      placeholder={`${translations[currentLang].playerPlaceholder} ${index + 1}`}
                       value={playerNames[index]}
                       onChange={(e) => handlePlayerNameChange(index, e.target.value)}
                       className="bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
@@ -126,13 +156,13 @@ export default function MemoryGameSetupPage() {
 
           {/* Número de Pares de Cartas */}
           <div className="space-y-4">
-            <Label
-              htmlFor="num-card-pairs"
-              className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
-            >
-              <Brain className="h-5 w-5 text-brand-primary-600" />
-              Número de Pares de Cartas
-            </Label>
+          <Label
+            htmlFor="num-card-pairs"
+            className="text-lg font-semibold text-brand-primary-900 flex items-center gap-2 drop-shadow-md"
+          >
+            <Brain className="h-5 w-5 text-brand-primary-600" />
+            {translations[currentLang].numCardPairs}
+          </Label>
             <div className="flex items-center gap-4">
               <Input
                 id="num-card-pairs"
@@ -142,7 +172,7 @@ export default function MemoryGameSetupPage() {
                 className={`w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl ${!isNumCardPairsValid() ? 'border-red-500' : ''}`}
               />
               <span className={`text-sm ${!isNumCardPairsValid() ? 'text-red-600 font-semibold' : 'text-brand-text-medium'}`}>
-                (Min: 2, Max: 25 pares)
+                {translations[currentLang].minMaxPairs}
               </span>
             </div>
           </div>
@@ -154,7 +184,7 @@ export default function MemoryGameSetupPage() {
               className={`w-full bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg text-lg py-6 rounded-full ${!isNumCardPairsValid() ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Play className="mr-2 h-5 w-5" />
-              Iniciar Jogo
+              {translations[currentLang].startGame}
             </Button>
           </div>
         </CardContent>
@@ -166,7 +196,7 @@ export default function MemoryGameSetupPage() {
         variant="outline"
         className="fixed bottom-6 left-6 z-50 border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-white/30 backdrop-blur-sm shadow-md rounded-full py-4"
       >
-        Voltar ao Início
+        {translations[currentLang].backToHome}
       </Button>
     </div>
   )

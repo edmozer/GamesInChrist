@@ -7,11 +7,12 @@ import { Heart, Brain, Users, ArrowRight, Cross, Star, BookOpen, Puzzle } from "
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import { useLanguage } from "@/context/LanguageContext"
 import React from "react"
 
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
-  const [language, setLanguage] = useState<'pt' | 'en' | 'es'>('pt');
+  const { language, setLanguage } = useLanguage()
   const languageLabels = {
     pt: 'Português',
     en: 'English',
@@ -141,6 +142,8 @@ export default function LandingPage() {
   }
   // Fallback to 'pt' if language is 'es'
   const currentLang = language === 'es' ? 'pt' : language;
+
+
 
   // Fecha dropdown ao clicar fora ou pressionar ESC
   React.useEffect(() => {

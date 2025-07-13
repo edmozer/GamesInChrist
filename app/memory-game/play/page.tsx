@@ -9,6 +9,7 @@ import { MemoryCard } from "@/components/memory-card"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
+import { useLanguage } from "@/context/LanguageContext"
 
 // Types
 interface GameCard {
@@ -60,6 +61,45 @@ const cardContents = [
 export default function MemoryGamePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { language } = useLanguage()
+
+  // Translations
+  const translations = {
+    pt: {
+      title: "Jogo da Memória",
+      scoreboard: "Placar",
+      pair: "par",
+      pairs: "pares",
+      time: "Tempo",
+      back: "Voltar",
+      restart: "Reiniciar",
+      turn: "Vez de",
+      winner: "O vencedor é",
+      congrats: "Parabéns!",
+      foundAll: "Você encontrou todos os pares!",
+      playAgain: "Jogar Novamente",
+      mainMenu: "Menu Principal",
+      startTime: "Tempo:",
+    },
+    en: {
+      title: "Memory Game",
+      scoreboard: "Scoreboard",
+      pair: "pair",
+      pairs: "pairs",
+      time: "Time",
+      back: "Back",
+      restart: "Restart",
+      turn: "Turn of",
+      winner: "The winner is",
+      congrats: "Congratulations!",
+      foundAll: "You found all pairs!",
+      playAgain: "Play Again",
+      mainMenu: "Main Menu",
+      startTime: "Time:",
+    },
+  }
+  const currentLang = language === 'es' ? 'pt' : language;
+
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
   const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
@@ -442,7 +482,7 @@ const cardContents = [
             <div className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
               <span className="flex items-center gap-2 text-base font-medium text-brand-primary-800">
                 <svg className="h-4 w-4 text-brand-primary-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                Tempo
+                {translations[currentLang].time}
               </span>
             </div>
             <div className={`transition-all duration-300 ${isScoreboardCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'opacity-100'} overflow-hidden`}>
@@ -509,7 +549,7 @@ const cardContents = [
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-brand-primary-700 shrink-0" />
               <span className="text-base font-medium text-brand-primary-800 truncate">
-                Placar
+                {translations[currentLang].scoreboard}
               </span>
             </div>
             <button 
@@ -550,7 +590,7 @@ const cardContents = [
                       }`}
                     >
                       <span className="font-medium truncate mr-2">{name}</span>
-                      <span className="font-bold whitespace-nowrap">{pairs} {pairs === 1 ? 'par' : 'pares'}</span>
+                      <span className="font-bold whitespace-nowrap">{pairs} {pairs === 1 ? translations[currentLang].pair : translations[currentLang].pairs}</span>
                     </div>
                   );
                 })}
@@ -575,7 +615,9 @@ const cardContents = [
       
       {/* Título no topo */}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
-        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória</h1>
+        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">
+          {translations[currentLang].title}
+        </h1>
       </div>
 
       {/* Placar Arrastável */}
@@ -645,7 +687,7 @@ const cardContents = [
                 className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full"
                 size="sm"
               >
-                Voltar
+                {translations[currentLang].back}
               </Button>
               <Button
                 onClick={() => {
@@ -658,7 +700,7 @@ const cardContents = [
                 size="sm"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reiniciar
+                {translations[currentLang].restart}
               </Button>
             </div>
 
@@ -667,12 +709,16 @@ const cardContents = [
               {playerNames.length === 1 ? (
                 <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                   <svg className="h-6 w-6 text-brand-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  <span className="text-xl font-bold whitespace-nowrap">Tempo: {formatTime(timer)}</span>
+                  <span className="text-xl font-bold whitespace-nowrap">
+                    {translations[currentLang].startTime} {formatTime(timer)}
+                  </span>
                 </div>
               ) : (
                 <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                   <Users className="h-6 w-6 text-brand-primary-600" />
-                  <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                  <span className="text-xl font-bold whitespace-nowrap">
+                    {translations[currentLang].turn} {playerNames[currentPlayerIndex]}
+                  </span>
                 </div>
               )}
             </div>

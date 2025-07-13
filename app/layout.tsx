@@ -1,3 +1,4 @@
+import { LanguageProvider } from "@/context/LanguageContext";
 import type React from "react"
 import type { Metadata } from "next"
 import { Red_Hat_Display } from "next/font/google"
@@ -25,8 +26,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={redHat.variable}>
       <body>
-        {children}
-        <Toaster />
+        <LanguageProvider>
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   )
