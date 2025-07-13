@@ -11,6 +11,14 @@ import { useState } from "react"
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
 
+  // Função para scroll suave até a seção de jogos
+  const scrollToJogos = () => {
+    const jogosSection = document.getElementById("jogos")
+    if (jogosSection) {
+      jogosSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <div className="relative flex flex-col min-h-screen font-sans text-brand-text-dark">
       <Head>
@@ -108,6 +116,7 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-lg transition-all duration-200"
+                    onClick={scrollToJogos}
                   >
                     Começar a Jogar
                     <ArrowRight className="ml-2 h-4 w-4" />

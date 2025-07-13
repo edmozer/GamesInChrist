@@ -15,11 +15,11 @@ export default function MemoryGameSetupPage() {
   const [numPlayers, setNumPlayers] = useState(1)
   const [playerNames, setPlayerNames] = useState<string[]>(["Jogador 1"])
   const [numCardPairs, setNumCardPairs] = useState(14) // Default to 14 pairs
+  const [numCardPairsInput, setNumCardPairsInput] = useState("14")
 
   const handleNumPlayersChange = (value: number[]) => {
     const newNumPlayers = value[0]
     setNumPlayers(newNumPlayers)
-    // Adjust player names array size
     setPlayerNames((prevNames) => {
       const newNames = [...prevNames]
       while (newNames.length < newNumPlayers) {
@@ -37,15 +37,23 @@ export default function MemoryGameSetupPage() {
     })
   }
 
+  // Permitir qualquer valor no input
   const handleNumCardPairsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNumCardPairsInput(event.target.value)
     const value = parseInt(event.target.value)
-    if (isNaN(value)) return
-    const clampedValue = Math.min(Math.max(value, 2), 25)
-    setNumCardPairs(clampedValue)
+    if (!isNaN(value)) {
+      setNumCardPairs(value)
+    }
+  }
+
+  // Verificação de limites
+  const isNumCardPairsValid = () => {
+    const value = parseInt(numCardPairsInput)
+    return !isNaN(value) && value >= 2 && value <= 25
   }
 
   const startGame = () => {
-    // Navegar para a página do jogo, passando as configurações via query parameters
+    if (!isNumCardPairsValid()) return
     const encodedPlayerNames = encodeURIComponent(JSON.stringify(playerNames))
     router.push(`/memory-game/play?players=${encodedPlayerNames}&pairs=${numCardPairs}`)
   }
@@ -129,13 +137,11 @@ export default function MemoryGameSetupPage() {
               <Input
                 id="num-card-pairs"
                 type="number"
-                min={2}
-                max={25}
-                value={numCardPairs}
+                value={numCardPairsInput}
                 onChange={handleNumCardPairsChange}
-                className="w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
+                className={`w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl ${!isNumCardPairsValid() ? 'border-red-500' : ''}`}
               />
-              <span className="text-sm text-brand-text-medium">
+              <span className={`text-sm ${!isNumCardPairsValid() ? 'text-red-600 font-semibold' : 'text-brand-text-medium'}`}>
                 (Min: 2, Max: 25 pares)
               </span>
             </div>
@@ -144,7 +150,8 @@ export default function MemoryGameSetupPage() {
           <div className="flex flex-col gap-4">
             <Button
               onClick={startGame}
-              className="w-full bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg text-lg py-6 rounded-full"
+              disabled={!isNumCardPairsValid()}
+              className={`w-full bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-lg text-lg py-6 rounded-full ${!isNumCardPairsValid() ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Play className="mr-2 h-5 w-5" />
               Iniciar Jogo
