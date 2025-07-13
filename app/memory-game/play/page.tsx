@@ -380,10 +380,14 @@ const cardContents = [
           />
         </div>
         <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
-          Parabéns!
+          {playerNames.length === 1
+            ? <>Parabéns, <span className="text-brand-primary-700">{playerNames[0]}</span>!</>
+            : "Parabéns!"}
         </h2>
         <p className="text-xl text-brand-text-medium mb-2">
-          O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!
+          {playerNames.length === 1
+            ? <span className="font-bold text-brand-primary-700">Você encontrou todos os pares!</span>
+            : <>O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!</>}
         </p>
         {playerNames.length === 1 && (
           <div className="mt-0 text-base text-brand-primary-800 mb-4">
