@@ -52,7 +52,7 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
           }}
         >
           <Image
-            src="/images/back-min.jpg"
+            src="/images/back-christ.png"
             alt="Verso da carta"
             fill
             style={{ objectFit: "cover" }}

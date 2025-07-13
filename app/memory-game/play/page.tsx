@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CustomToast } from "@/components/custom-toast"
@@ -81,7 +81,7 @@ export default function MemoryGamePage() {
   
   // UI state
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
-  const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: 20, y: 20 })
+  const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
 
   // Game initialization
@@ -375,6 +375,7 @@ const cardContents = [
   const DraggableScoreBoard = () => {
     const [isDragging, setIsDragging] = useState(false)
     const [cardWidth] = useState(200) // 200px - tamanho intermediário
+    const dragInfo = useRef({ mouseDown: false, startX: 0, startY: 0, moved: false })
 
     return (
       <motion.div
@@ -402,9 +403,27 @@ const cardContents = [
           }}
         >
           {/* Barra superior com alça para arrastar e botão de colapso */}
-          <div 
+          <div
             className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4"
-            onClick={() => setIsScoreboardCollapsed(!isScoreboardCollapsed)}
+            onMouseDown={e => {
+              dragInfo.current.mouseDown = true;
+              dragInfo.current.startX = e.clientX;
+              dragInfo.current.startY = e.clientY;
+              dragInfo.current.moved = false;
+            }}
+            onMouseMove={e => {
+              if (dragInfo.current.mouseDown) {
+                const dx = Math.abs(e.clientX - dragInfo.current.startX);
+                const dy = Math.abs(e.clientY - dragInfo.current.startY);
+                if (dx > 5 || dy > 5) dragInfo.current.moved = true;
+              }
+            }}
+            onMouseUp={e => {
+              if (!dragInfo.current.moved) {
+                setIsScoreboardCollapsed(v => !v);
+              }
+              dragInfo.current.mouseDown = false;
+            }}
           >
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-brand-primary-700 shrink-0" />
