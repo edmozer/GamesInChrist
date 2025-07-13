@@ -7,9 +7,42 @@ import { Heart, Brain, Users, ArrowRight, Cross, Star, BookOpen, Puzzle } from "
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import React from "react"
 
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
+  const [language, setLanguage] = useState<'pt' | 'en' | 'es'>('pt')
+  const languageLabels = {
+    pt: 'Português',
+    en: 'English',
+    es: 'Español',
+  }
+  const languageIcons = {
+    pt: '🇧🇷',
+    en: '🇺🇸',
+    es: '🇪🇸',
+  }
+  const [showLangDropdown, setShowLangDropdown] = useState(false)
+
+  // Fecha dropdown ao clicar fora ou pressionar ESC
+  React.useEffect(() => {
+    if (!showLangDropdown) return;
+    const handleClick = (e: MouseEvent) => {
+      const dropdown = document.getElementById('lang-dropdown');
+      if (dropdown && !dropdown.contains(e.target as Node)) {
+        setShowLangDropdown(false);
+      }
+    };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowLangDropdown(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [showLangDropdown]);
 
   // Função para scroll suave até a seção de jogos
   const scrollToJogos = () => {
@@ -73,24 +106,31 @@ export default function LandingPage() {
             <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
           </Link>
           <nav className="flex gap-4 sm:gap-6">
-            <Link
-              href="#jogos"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Jogos
-            </Link>
-            <Link
-              href="#sobre"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Sobre
-            </Link>
-            <Link
-              href="#contato"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Contato
-            </Link>
+            {/* Language Selector only */}
+            <div className="relative">
+              <button
+                className="flex items-center gap-1 px-2 py-1 rounded bg-white shadow border border-brand-primary-100 hover:bg-brand-primary-50 transition-all text-sm font-medium text-brand-primary-700"
+                onClick={() => setShowLangDropdown((v) => !v)}
+              >
+                <span className="text-xl">🌐</span>
+                <span>{languageLabels[language]}</span>
+                <span className="text-lg">{languageIcons[language]}</span>
+              </button>
+              {showLangDropdown && (
+                <div id="lang-dropdown" className="absolute right-0 mt-2 bg-white border border-brand-primary-100 rounded-lg shadow-lg p-2 flex flex-col min-w-[140px] z-50">
+                  {Object.entries(languageLabels).map(([key, label]) => (
+                    <button
+                      key={key}
+                      className={`flex items-center gap-2 px-2 py-2 rounded hover:bg-brand-primary-50 text-left ${language === key ? 'bg-brand-primary-100 font-bold' : ''}`}
+                      onClick={() => { setLanguage(key as 'pt' | 'en' | 'es'); setShowLangDropdown(false) }}
+                    >
+                      <span className="text-lg">{languageIcons[key as keyof typeof languageIcons]}</span>
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>
