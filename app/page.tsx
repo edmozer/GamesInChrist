@@ -250,7 +250,13 @@ export default function LandingPage() {
               <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                    <Users className="h-8 w-8 text-white" />
+                    <Image
+                      src="/images/christ.png"
+                      alt="Logo Cristo"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-contain"
+                    />
                   </div>
                   <CardTitle className="text-brand-primary-900 font-heading mb-2">Quem Sou Eu?</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
