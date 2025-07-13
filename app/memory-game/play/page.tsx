@@ -60,7 +60,6 @@ const cardContents = [
 export default function MemoryGamePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
   const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
@@ -78,12 +77,46 @@ export default function MemoryGamePage() {
   const [showWinnerModal, setShowWinnerModal] = useState(false)
   const [winner, setWinner] = useState<string>("")
   const [hasGameEnded, setHasGameEnded] = useState(false)
-  
+
   // UI state
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
 
+  // Timer para modo solo
+  const [timer, setTimer] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Iniciar/parar timer conforme modo solo e fim de jogo
+  useEffect(() => {
+    if (playerNames.length === 1 && !hasGameEnded) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => prev + 1)
+      }, 1000)
+    }
+    if (playerNames.length === 1 && hasGameEnded && timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [playerNames.length, hasGameEnded])
+
+  // Resetar timer ao reiniciar
+  useEffect(() => {
+    setTimer(0)
+  }, [numCardPairs, playerNames.length])
+
+  // Função para formatar mm:ss
+  const formatTime = (seconds: number) => {
+    const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
+    const ss = String(seconds % 60).padStart(2, '0')
+    return `${mm}:${ss}`
+  }
   // Game initialization
   const resetGame = useCallback(() => {
     setFlippedCards([])
@@ -349,9 +382,14 @@ const cardContents = [
         <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
           Parabéns!
         </h2>
-        <p className="text-xl text-brand-text-medium mb-6">
+        <p className="text-xl text-brand-text-medium mb-2">
           O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!
         </p>
+        {playerNames.length === 1 && (
+          <div className="mt-0 text-base text-brand-primary-800 mb-4">
+            Seu tempo foi <span className="font-bold">{formatTime(timer)}</span>
+          </div>
+        )}
         <div className="flex gap-4 justify-center">
           <Button
             onClick={handleRestart}
@@ -377,7 +415,46 @@ const cardContents = [
     const [cardWidth] = useState(200) // 200px - tamanho intermediário
     const dragInfo = useRef({ mouseDown: false, startX: 0, startY: 0, moved: false })
 
+    // Se modo solo, mostrar timer
+    if (playerNames.length === 1) {
+      return (
+        <motion.div
+          drag
+          dragMomentum={false}
+          initial={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
+          animate={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={(event, info) => {
+            setIsDragging(false)
+            setScoreBoardPosition({
+              x: scoreBoardPosition.x + info.offset.x,
+              y: scoreBoardPosition.y + info.offset.y
+            })
+          }}
+          className="fixed z-50 touch-none select-none"
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
+          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border-brand-primary-100 rounded-2xl overflow-hidden" style={{ width: `${cardWidth}px`, height: isScoreboardCollapsed ? '40px' : 'auto', transition: 'height 0.3s ease' }}>
+            <div className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
+              <span className="flex items-center gap-2 text-base font-medium text-brand-primary-800">
+                <svg className="h-4 w-4 text-brand-primary-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                Tempo
+              </span>
+            </div>
+            <div className={`transition-all duration-300 ${isScoreboardCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'opacity-100'} overflow-hidden`}>
+              <CardContent className="p-4">
+                <div className="flex justify-center items-center text-3xl font-bold text-brand-primary-700">
+                  {formatTime(timer)}
+                </div>
+              </CardContent>
+            </div>
+          </Card>
+        </motion.div>
+      )
+    }
+    // ...placar normal para multiplayer
     return (
+      // ...existing code...
       <motion.div
         drag
         dragMomentum={false}
@@ -402,7 +479,7 @@ const cardContents = [
             transition: 'height 0.3s ease'
           }}
         >
-          {/* Barra superior com alça para arrastar e botão de colapso */}
+          {/* ...placar original... */}
           <div
             className="h-10 w-full bg-brand-primary-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4"
             onMouseDown={e => {
@@ -449,8 +526,7 @@ const cardContents = [
               </svg>
             </button>
           </div>
-          
-          {/* Conteúdo do placar - escondido quando colapsado */}
+          {/* ...conteúdo do placar original... */}
           <div
             className={`transition-all duration-300 ${
               isScoreboardCollapsed ? 'h-0 opacity-0 pointer-events-none' : 'opacity-100'
@@ -582,12 +658,19 @@ const cardContents = [
               </Button>
             </div>
 
-            {/* Grupo do centro: vez do jogador */}
+            {/* Grupo do centro: vez do jogador ou timer solo */}
             <div className="flex justify-center items-center">
-              <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
-                <Users className="h-6 w-6 text-brand-primary-600" />
-                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
-              </div>
+              {playerNames.length === 1 ? (
+                <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+                  <svg className="h-6 w-6 text-brand-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  <span className="text-xl font-bold whitespace-nowrap">Tempo: {formatTime(timer)}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+                  <Users className="h-6 w-6 text-brand-primary-600" />
+                  <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                </div>
+              )}
             </div>
 
             {/* Espaço à direita para manter simetria */}
@@ -595,15 +678,7 @@ const cardContents = [
           </div>
 
           {/* Mensagem de vitória */}
-          {allCardsMatched && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-center text-lg font-semibold text-brand-primary-700"
-            >
-              {playerNames[scores.indexOf(Math.max(...scores))]} venceu o jogo!
-            </motion.div>
-          )}
+          {/* Mensagem de vitória removida do rodapé */}
         </div>
       </div>
 
