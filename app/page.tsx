@@ -26,7 +26,7 @@ export default function LandingPage() {
   const [showLangDropdown, setShowLangDropdown] = useState(false)
 
   // Translation object for all UI texts
-  const translations: Record<'pt' | 'en', any> = {
+  const translations: Record<'pt' | 'en' | 'es', any> = {
     pt: {
       title: 'Jogos em Cristo — Jogos Cristãos Divertidos e Educativos para Toda a Família',
       description: 'Descubra jogos cristãos que fortalecem a fé, ensinam valores e proporcionam diversão para crianças, jovens e famílias. Jogue online, aprenda e cresça espiritualmente!',
@@ -139,9 +139,65 @@ export default function LandingPage() {
       supportContact: 'Contact',
       supportFeedback: 'Feedback',
     },
+    es: {
+      title: 'Juegos en Cristo — Juegos Cristianos Divertidos y Educativos para Toda la Familia',
+      description: 'Descubre juegos cristianos que fortalecen la fe, enseñan valores y brindan diversión para niños, jóvenes y familias. ¡Juega en línea, aprende y crece espiritualmente!',
+      keywords: 'juegos cristianos, juegos bíblicos, juego de memoria bíblico, quiz bíblico, ¿quién soy bíblico?, restauración, joseph smith, familia cristiana, educación religiosa, lds, iglesia, mormón',
+      ogTitle: 'Juegos en Cristo — Edifica tu fe jugando',
+      ogDescription: 'Plataforma de juegos cristianos que combinan aprendizaje bíblico con diversión para todas las edades. ¡Pruébalo gratis!',
+      twitterTitle: 'Juegos en Cristo — Edifica tu fe jugando',
+      twitterDescription: 'Juegos bíblicos, educativos y gratuitos para toda la familia. ¡Comienza ahora!',
+      headerTitle: 'Juegos en Cristo',
+      heroTitle: 'Juegos que <span class="text-brand-primary-600">edifican</span> y <span class="text-brand-secondary-700">divierten</span>',
+      heroDesc: 'Descubre una colección especial de juegos cristianos que combinan diversión, aprendizaje y crecimiento espiritual. ¡Perfecto para toda la familia!',
+      startPlaying: 'Comenzar a Jugar',
+      learnMore: 'Saber Más',
+      dividerMission: 'Nuestra Misión',
+      dividerTitle: 'Diversión que <span class="text-brand-primary-600">fortalece</span> la fe',
+      dividerDesc: 'Cada juego fue <span class="text-brand-primary-700 font-medium">cuidadosamente desarrollado</span> para brindar momentos de <span class="text-brand-accent-600 font-medium">alegría</span> mientras fortalece <span class="text-brand-secondary-600 font-medium"> conocimientos bíblicos</span> y <span class="text-brand-primary-600 font-medium"> valores cristianos</span>.',
+      memoryTitle: 'Juego de Memoria',
+      memoryDesc: 'Pon a prueba tu memoria con versículos y personajes bíblicos',
+      quizTitle: 'Quiz Bíblico',
+      quizDesc: 'Desafía tus conocimientos sobre la Palabra de Dios',
+      whoTitle: '¿Quién Soy?',
+      whoDesc: 'Descubre personajes bíblicos a través de pistas especiales',
+      orderTitle: 'Ordena las Frases',
+      orderDesc: 'Organiza versículos y frases bíblicas en el orden correcto',
+      playNow: 'Jugar Ahora',
+      ctaTitle: '¿Listo para comenzar tu viaje?',
+      ctaDesc: 'Únete a miles de familias que ya han descubierto la alegría de aprender jugando. ¡Comienza ahora mismo!',
+      ctaBtn: 'Comenzar Gratis',
+      footerTitle: 'Juegos en Cristo',
+      footerDesc: 'Desarrollando juegos que edifican, educan y divierten a toda la familia cristiana.',
+      footerGames: 'Juegos',
+      footerSupport: 'Soporte',
+      footerAbout: 'Sobre el Juego',
+      footerAboutDesc1: 'Este juego fue creado con el objetivo de enseñar y reforzar los principios de la Restauración del Evangelio de Jesucristo de manera divertida e interactiva.',
+      footerAboutDesc2: 'A través de la mecánica de memoria, queremos incentivar a familias, jóvenes y niños a recordar eventos, símbolos y enseñanzas importantes relacionados con la Primera Visión, el profeta Joseph Smith y la restauración de la Iglesia de Jesucristo en la Tierra.',
+      footerAboutMore: 'Más',
+      footerAboutModalTitle: 'Creación y Desarrollo',
+      footerAboutModalDesc: 'Proyecto ideado y desarrollado por Edmozer Cavalcante.<br />Saber más o contactar: ',
+      footerAboutModalDev: 'Desarrollo Técnico <span class="align-middle">▼</span>',
+      footerAboutModalTech: [
+        'Next.js y React para la estructura y lógica del sitio',
+        'TypeScript para tipado y seguridad',
+        'TailwindCSS para estilos modernos y responsivos',
+        'Integración con IA (GitHub Copilot) para optimización y buenas prácticas',
+        'Animaciones CSS para una experiencia fluida',
+        'Diseño totalmente responsivo y adaptativo',
+      ],
+      footerAboutModalCopy: '© 2025 — Este proyecto es un esfuerzo personal y sin fines de lucro.<br />Desarrollado con ayuda de IA en un proceso de programación innovador.',
+      footerCopy: '© {year} Juegos en Cristo. Hecho con ❤️ para la gloria de Dios.',
+      terms: 'Términos de Uso',
+      privacy: 'Privacidad',
+      supportHow: 'Cómo Jugar',
+      supportFAQ: 'FAQ',
+      supportContact: 'Contacto',
+      supportFeedback: 'Feedback',
+    },
   }
-  // Fallback to 'pt' if language is 'es'
-  const currentLang = language === 'es' ? 'pt' : language;
+  // Use selected language directly
+  const currentLang = language;
 
 
 
