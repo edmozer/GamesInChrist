@@ -108,6 +108,10 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-lg transition-all duration-200"
+                    onClick={() => {
+                      const el = document.getElementById('jogos');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
                   >
                     Começar a Jogar
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -193,8 +197,8 @@ export default function LandingPage() {
                 <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
                   Cada jogo foi <span className="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar 
                   momentos de <span className="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece 
-                  <span className="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e 
-                  <span className="text-brand-primary-600 font-medium"> valores cristãos</span>.
+                  <span className="text-brand-secondary-800 font-medium"> conhecimento das escrituras</span> e 
+                  <span className="text-brand-primary-600 font-medium"> atributos de Cristo</span>.
                 </p>
               </div>
             </div>
