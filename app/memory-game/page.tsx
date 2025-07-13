@@ -55,8 +55,8 @@ export default function MemoryGameSetupPage() {
       {/* Main Card */}
       <Card className="w-full max-w-2xl border border-brand-primary-100/30 bg-white/30 backdrop-blur-sm shadow-lg mb-4 rounded-3xl">
         <CardHeader className="text-center pb-6">
-          <div className="w-20 h-20 mx-auto bg-brand-primary-600/90 rounded-full flex items-center justify-center mb-4">
-            <Brain className="h-10 w-10 text-white" />
+          <div className="w-20 h-20 mx-auto bg-brand-primary-600/90 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+            <img src="/images/cards.png" alt="Memory Game Cards" className="w-16 h-16 object-contain" />
           </div>
           <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Configurar Jogo da Memória</CardTitle>
           <CardDescription className="text-brand-text-medium/90">
