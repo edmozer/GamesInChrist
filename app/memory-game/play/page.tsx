@@ -1,5 +1,7 @@
 "use client"
 
+// Função para lidar com clique nas cartas (dentro do componente para acessar estados)
+// ...existing code...
 import { useState, useEffect, useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,6 +22,16 @@ interface GameCard {
 }
 
 // Helper functions
+// Função para formatar mm:ss
+function formatTime(seconds: number): string {
+  const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
+  const ss = String(seconds % 60).padStart(2, '0')
+  return `${mm}:${ss}`
+}
+
+// Função para resetar o jogo
+// (Será sobrescrita pelo useCallback dentro do componente, mas garante escopo global)
+function resetGame() {}
 const shuffleArray = <T,>(array: T[]): T[] => {
   const newArray = [...array]
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -59,6 +71,17 @@ const cardContents = [
 ]
 
 export default function MemoryGamePage() {
+  // ...existing code...
+
+  // Função para lidar com clique nas cartas (deve estar dentro do componente)
+  const handleCardClick = (id: string) => {
+    if (lockBoard) return;
+    const clickedCard = cards.find((card: GameCard) => card.id === id);
+    if (!clickedCard || clickedCard.isFlipped || clickedCard.isMatched) return;
+    const newCards = cards.map((card: GameCard) => (card.id === id ? { ...card, isFlipped: true } : card));
+    setCards(newCards);
+    setFlippedCards((prev: string[]) => [...prev, id]);
+  }
   const router = useRouter()
   const searchParams = useSearchParams()
   const { language } = useLanguage()
@@ -118,6 +141,28 @@ export default function MemoryGamePage() {
   const [winner, setWinner] = useState<string>("")
   const [hasGameEnded, setHasGameEnded] = useState(false)
 
+  // Função para inicializar ou resetar o jogo
+  const resetGame = useCallback(() => {
+    setFlippedCards([])
+    setCurrentPlayerIndex(0)
+    setScores(playerNames.map(() => 0))
+    setLockBoard(false)
+    setHasGameEnded(false)
+    setShowWinnerModal(false)
+    setToastMessage("")
+    setShowToast(false)
+    setTimer(0)
+    // Seleciona e embaralha os pares
+    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
+    const newCards = shuffleArray(
+      selectedContents.flatMap((content) => [
+        { id: `${content}-a-${Math.random()}`, content, isFlipped: false, isMatched: false },
+        { id: `${content}-b-${Math.random()}`, content, isFlipped: false, isMatched: false },
+      ])
+    )
+    setCards(newCards)
+  }, [playerNames, numCardPairs])
+
   // UI state
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
@@ -146,43 +191,12 @@ export default function MemoryGamePage() {
     }
   }, [playerNames.length, hasGameEnded])
 
-  // Resetar timer ao reiniciar
-  useEffect(() => {
-    setTimer(0)
-  }, [numCardPairs, playerNames.length])
-
-  // Função para formatar mm:ss
-  const formatTime = (seconds: number) => {
-    const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
-    const ss = String(seconds % 60).padStart(2, '0')
-    return `${mm}:${ss}`
-  }
-  // Game initialization
-  const resetGame = useCallback(() => {
-    setFlippedCards([])
-    setCurrentPlayerIndex(0)
-    setScores(playerNames.map(() => 0))
-    setLockBoard(false)
-    setHasGameEnded(false)
-    
-    // Create and shuffle new cards
-    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
-    const newCards = shuffleArray(
-      selectedContents
-        .flatMap((content) => [
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-        ])
-    )
-    setCards(newCards)
-  }, [numCardPairs, playerNames])
-
-  // Initialize game on mount
+  // Inicializar o jogo ao montar ou quando o número de pares mudar
   useEffect(() => {
     resetGame()
   }, [resetGame])
 
-  // Handle flipped cards
+  // Handle flipped cards and turn logic (single effect)
   useEffect(() => {
     if (flippedCards.length === 2) {
       setLockBoard(true)
@@ -193,30 +207,28 @@ export default function MemoryGamePage() {
       if (firstCard?.content === secondCard?.content) {
         // Match!
         setTimeout(() => {
-          setCards((prevCards) =>
-            prevCards.map((card) =>
-              card.id === firstCardId || card.id === secondCardId
-                ? { ...card, isMatched: true }
-                : card
-            )
+          const newCards = cards.map((card) =>
+            card.id === firstCardId || card.id === secondCardId ? { ...card, isMatched: true } : card
           )
+          setCards(newCards)
           setScores((prevScores) => {
             const newScores = [...prevScores]
-            newScores[currentPlayerIndex]++
+            newScores[currentPlayerIndex] += 1
             return newScores
           })
           setFlippedCards([])
           setLockBoard(false)
-          // Removido o toast daqui pois já existe outro mais abaixo
+          setToastMessage("🎉 CORRETO! 🎉")
+          setShowToast(true)
+          setTimeout(() => setShowToast(false), 1500)
         }, 500)
+        // Do NOT advance turn on match
       } else {
-        // No match
+        // No match, flip back after a delay and advance turn
         setTimeout(() => {
           setCards((prevCards) =>
             prevCards.map((card) =>
-              card.id === firstCardId || card.id === secondCardId
-                ? { ...card, isFlipped: false }
-                : card
+              card.id === firstCardId || card.id === secondCardId ? { ...card, isFlipped: false } : card
             )
           )
           setFlippedCards([])
@@ -227,132 +239,7 @@ export default function MemoryGamePage() {
     }
   }, [flippedCards, cards, currentPlayerIndex, playerNames])
 
-// Helper para embaralhar um array
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
-  }
-  return newArray
-}
-
-// Array com os caminhos das imagens para as cartas
-const cardContents = [
-    "/images/img1-min.jpg",
-    "/images/img2-min.jpg",
-    "/images/img3-min.jpg",
-    "/images/img4-min.jpg",
-    "/images/img5-min.jpg",
-    "/images/img6-min.jpg",
-    "/images/img7-min.jpg",
-    "/images/img8-min.jpg",
-    "/images/img9-min.jpg",
-    "/images/img10-min.jpg",
-    "/images/img11-min.jpg",
-    "/images/img12-min.jpg",
-    "/images/img13-min.jpg",
-    "/images/img14-min.jpg",
-    "/images/img15-min.jpg",
-    "/images/img16-min.jpg",
-    "/images/img17-min.jpg",
-    "/images/img18-min.jpg",
-    "/images/img19-min.jpg",
-    "/images/img20-min.jpg",
-    "/images/img21-min.jpg",
-    "/images/img22-min.jpg",
-    "/images/img23-min.jpg",
-    "/images/img24-min.jpg",
-    "/images/img25-min.jpg",
-  ]
-
-  // Initialize or reset the game
-  const initializeGame = () => {
-    // Reset all game states
-    setFlippedCards([])
-    setCurrentPlayerIndex(0)
-    setScores(playerNames.map(() => 0))
-    setLockBoard(false)
-    setHasGameEnded(false)
-    
-    // Create and shuffle new cards
-    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
-    const newCards = shuffleArray(
-      selectedContents
-        .flatMap((content) => [
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-        ])
-    )
-    setCards(newCards)
-  }
-
-  // Initialize game on mount and when game parameters change
-  useEffect(() => {
-    initializeGame()
-  }, [numCardPairs]) // Only reinitialize when number of pairs changes
-
-  const handleCardClick = (id: string) => {
-    // Não permita cliques se o tabuleiro estiver bloqueado
-    if (lockBoard) return
-
-    // Encontre a carta clicada
-    const clickedCard = cards.find((card) => card.id === id)
-    
-    // Não permita cliques em cartas já viradas, já combinadas ou inexistentes
-    if (!clickedCard || clickedCard.isFlipped || clickedCard.isMatched) return
-
-    // Vire a carta clicada
-    const newCards = cards.map((card) => (card.id === id ? { ...card, isFlipped: true } : card))
-    setCards(newCards)
-    setFlippedCards((prev) => [...prev, id])
-  }
-
-  useEffect(() => {
-    if (flippedCards.length === 2) {
-      setLockBoard(true)
-      const [firstCardId, secondCardId] = flippedCards
-      const firstCard = cards.find((card) => card.id === firstCardId)
-      const secondCard = cards.find((card) => card.id === secondCardId)
-
-      if (firstCard?.content === secondCard?.content) {
-        // Match!
-        const newCards = cards.map((card) =>
-          card.id === firstCardId || card.id === secondCardId ? { ...card, isMatched: true } : card
-        )
-        
-        setCards(newCards)
-        setScores((prevScores) => {
-          const newScores = [...prevScores]
-          newScores[currentPlayerIndex] += 1
-          return newScores
-        })
-        setFlippedCards([])
-        setLockBoard(false)
-        
-        // Verificar se é a última jogada antes de mostrar o toast
-        const isLastMatch = newCards.every(card => card.isMatched || (card.id === firstCardId || card.id === secondCardId))
-        if (!isLastMatch) {
-          setToastMessage("🎉 CORRETO! 🎉")
-          setShowToast(true)
-          setTimeout(() => setShowToast(false), 1500)
-        }
-      } else {
-        // No match, flip back after a delay
-        setTimeout(() => {
-          setCards((prevCards) =>
-            prevCards.map((card) =>
-              card.id === firstCardId || card.id === secondCardId ? { ...card, isFlipped: false } : card,
-            ),
-          )
-          setFlippedCards([])
-          setLockBoard(false)
-          // Next player's turn
-          setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length)
-        }, 1000)
-      }
-    }
-  }, [flippedCards, cards, currentPlayerIndex, playerNames])
+// ...existing code...
 
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
 
@@ -375,7 +262,6 @@ const cardContents = [
 
   // Função para reiniciar o jogo
   const handleRestart = () => {
-    setShowWinnerModal(false)
     resetGame()
   }
 
