@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Heart, Brain, Users, ArrowRight, Cross, Star, BookOpen, Puzzle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import ImageCarousel from "@/components/image-carousel"
 import { useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
 import React from "react"
@@ -42,7 +43,7 @@ export default function LandingPage() {
       learnMore: 'Saiba Mais',
       dividerMission: 'Nossa Missão',
       dividerTitle: 'Diversão que <span class="text-brand-primary-600">fortalece</span> a fé',
-      dividerDesc: 'Cada jogo foi <span class="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar momentos de <span class="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece <span class="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e <span class="text-brand-primary-600 font-medium"> valores cristãos</span>.',
+      dividerDesc: 'Cada jogo foi <span class="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar momentos de <span class="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece <span class="text-brand-primary-900 font-medium"> conhecimentos bíblicos</span> e <span class="text-brand-primary-600 font-medium"> valores cristãos</span>.',
       memoryTitle: 'Jogo da Memória',
       memoryDesc: 'Teste sua memória com versículos e personagens bíblicos',
       quizTitle: 'Quiz Bíblico',
@@ -98,7 +99,7 @@ export default function LandingPage() {
       learnMore: 'Learn More',
       dividerMission: 'Our Mission',
       dividerTitle: 'Fun that <span class="text-brand-primary-600">strengthens</span> faith',
-      dividerDesc: 'Each game was <span class="text-brand-primary-700 font-medium">carefully developed</span> to provide moments of <span class="text-brand-accent-600 font-medium">joy</span> while strengthening <span class="text-brand-secondary-600 font-medium"> biblical knowledge</span> and <span class="text-brand-primary-600 font-medium"> Christian values</span>.',
+      dividerDesc: 'Each game was <span class="text-brand-primary-700 font-medium">carefully developed</span> to provide moments of <span class="text-brand-accent-600 font-medium">joy</span> while strengthening <span class="text-brand-primary-900 font-medium"> biblical knowledge</span> and <span class="text-brand-primary-600 font-medium"> Christian values</span>.',
       memoryTitle: 'Memory Game',
       memoryDesc: 'Test your memory with Bible verses and characters',
       quizTitle: 'Bible Quiz',
@@ -154,7 +155,7 @@ export default function LandingPage() {
       learnMore: 'Saber Más',
       dividerMission: 'Nuestra Misión',
       dividerTitle: 'Diversión que <span class="text-brand-primary-600">fortalece</span> la fe',
-      dividerDesc: 'Cada juego fue <span class="text-brand-primary-700 font-medium">cuidadosamente desarrollado</span> para brindar momentos de <span class="text-brand-accent-600 font-medium">alegría</span> mientras fortalece <span class="text-brand-secondary-600 font-medium"> conocimientos bíblicos</span> y <span class="text-brand-primary-600 font-medium"> valores cristianos</span>.',
+      dividerDesc: 'Cada juego fue <span class="text-brand-primary-700 font-medium">cuidadosamente desarrollado</span> para brindar momentos de <span class="text-brand-accent-600 font-medium">alegría</span> mientras fortalece <span class="text-brand-primary-900 font-medium"> conocimientos bíblicos</span> y <span class="text-brand-primary-600 font-medium"> valores cristianos</span>.',
       memoryTitle: 'Juego de Memoria',
       memoryDesc: 'Pon a prueba tu memoria con versículos y personajes bíblicos',
       quizTitle: 'Quiz Bíblico',
@@ -329,14 +330,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-center justify-center relative">
-                <Image
-                  src="/images/family-playing-games.png"
-                  width={500}
-                  height={400}
-                  alt="Família jogando jogos cristãos juntos"
-                  className="rounded-xl object-cover shadow-2xl border-4 border-white"
-                  priority
-                />
+                {/* Carrossel de imagens da família */}
+                <ImageCarousel />
                 <div className="absolute -top-6 -right-6 w-20 h-20 bg-brand-secondary-100 rounded-full flex items-center justify-center shadow-xl transform rotate-12">
                   <Star className="h-10 w-10 text-brand-secondary-700" />
                 </div>
