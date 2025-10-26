@@ -55,8 +55,12 @@ export default function MemoryGameSetupPage() {
     }
   }
 
+  const bgImage = version === 'natal' ? "/images/Christmas/natal_bg.png" : "/images/beack-bg.png"
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed p-4">
+    <div
+      className="flex flex-col min-h-screen items-center justify-center bg-cover bg-center bg-fixed p-4 transition-[background-image] duration-300 ease-in-out"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       {/* Main Card */}
       <Card className="w-full max-w-2xl border border-brand-primary-100/30 bg-white/30 backdrop-blur-sm shadow-lg mb-4 rounded-3xl">
         <CardHeader className="text-center pb-6">

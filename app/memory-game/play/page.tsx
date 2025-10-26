@@ -379,7 +379,10 @@ export default function MemoryGamePage() {
   // Removido: getPlayerPairs. Usamos `scores` por jogador.
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
+    <div
+      className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
+      style={{ backgroundImage: "url(/images/beack-bg.png)" }}
+    >
       {/* Modal de Vencedor */}
       {showWinnerModal && <WinnerModal />}
       

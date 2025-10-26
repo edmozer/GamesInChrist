@@ -63,6 +63,9 @@ export default function MemoryGameChristmasPage() {
   const [lockBoard, setLockBoard] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
+  const [showWinnerModal, setShowWinnerModal] = useState(false)
+  const [winner, setWinner] = useState<string>("")
+  const [hasGameEnded, setHasGameEnded] = useState(false)
 
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
   // Evitar mismatch: iniciar com posição fixa; ajustar depois se necessário
@@ -74,6 +77,7 @@ export default function MemoryGameChristmasPage() {
     setCurrentPlayerIndex(0)
     setScores(playerNames.map(() => 0))
     setLockBoard(false)
+    setHasGameEnded(false)
 
     // Limitar ao máximo disponível
     const maxPairs = Math.min(numCardPairs, Math.floor(christmasContents.length))
@@ -116,14 +120,15 @@ export default function MemoryGameChristmasPage() {
           s[currentPlayerIndex] += 1
 
           const allMatchedNext = newCards.every((c) => c.isMatched)
-          if (allMatchedNext) {
+          if (allMatchedNext && !hasGameEnded) {
             const maxScore = Math.max(...s)
             const winnerIndex = s.indexOf(maxScore)
             const winnerName = playerNames[winnerIndex]
-            // Exibir modal de vencedor na última jogada
-            alert(`Vencedor: ${winnerName}`)
+            setWinner(winnerName)
+            setShowWinnerModal(true)
+            setHasGameEnded(true)
           } else {
-            setToastMessage("🎄 Acertou um par! 🎄")
+            setToastMessage("🎉 CORRETO! 🎉")
             setShowToast(true)
             setTimeout(() => setShowToast(false), 1500)
           }
@@ -202,8 +207,44 @@ export default function MemoryGameChristmasPage() {
 
   const allCardsMatched = cards.length > 0 && cards.every((card) => card.isMatched)
 
+  const handleRestart = () => {
+    setShowWinnerModal(false)
+    resetGame()
+  }
+
+  const WinnerModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.5, opacity: 0 }}
+        className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
+      >
+        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
+          <Image src="/images/confetti.png" alt="Confetti left" width={120} height={120} className="animate-float-left" />
+        </div>
+        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
+          <Image src="/images/confetti.png" alt="Confetti right" width={120} height={120} className="animate-float-right" />
+        </div>
+        <div className="w-24 h-24 mx-auto mb-4">
+          <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
+        </div>
+        <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">Parabéns!</h2>
+        <p className="text-xl text-brand-text-medium mb-6">O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!</p>
+        <div className="flex gap-4 justify-center">
+          <Button onClick={handleRestart} className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white">Jogar Novamente</Button>
+          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-brand-primary-100 text-brand-primary-700">Menu Principal</Button>
+        </div>
+      </motion.div>
+    </div>
+  )
+
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
+    <div
+      className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
+      style={{ backgroundImage: "url(/images/Christmas/natal_bg.png)" }}
+    >
+      {showWinnerModal && <WinnerModal />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória - Natal</h1>
       </div>
@@ -245,13 +286,13 @@ export default function MemoryGameChristmasPage() {
           <div className="grid grid-cols-3 items-center gap-4">
             <div className="flex items-center gap-3 justify-start">
               <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full" size="sm">Voltar</Button>
-              <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-md rounded-full" size="sm">
+              <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md rounded-full" size="sm">
                 <RotateCcw className="mr-2 h-4 w-4" /> Reiniciar
               </Button>
             </div>
             <div className="flex justify-center items-center">
-              <div className="flex items-center gap-3 text-red-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
-                <Users className="h-6 w-6 text-red-600" />
+              <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+                <Users className="h-6 w-6 text-brand-primary-600" />
                 <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
               </div>
             </div>
