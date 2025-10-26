@@ -10,6 +10,14 @@ import { useState } from "react"
 
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
+  const handleScrollToMemory = () => {
+    if (typeof window === 'undefined') return
+    const el = document.getElementById('missao-tag')
+    if (!el) return
+    const headerOffset = 80
+    const y = el.getBoundingClientRect().top + window.scrollY - headerOffset
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }
 
   return (
     <div className="relative flex flex-col min-h-screen font-sans text-brand-text-dark">
@@ -64,26 +72,7 @@ export default function LandingPage() {
             </div>
             <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
           </Link>
-          <nav className="flex gap-4 sm:gap-6">
-            <Link
-              href="#jogos"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Jogos
-            </Link>
-            <Link
-              href="#sobre"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Sobre
-            </Link>
-            <Link
-              href="#contato"
-              className="text-sm font-medium text-brand-text-medium hover:text-brand-primary-700 hover:underline underline-offset-4"
-            >
-              Contato
-            </Link>
-          </nav>
+          <nav className="hidden" />
         </div>
       </header>
 
@@ -107,6 +96,7 @@ export default function LandingPage() {
                 <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start">
                   <Button
                     size="lg"
+                    onClick={handleScrollToMemory}
                     className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-lg transition-all duration-200"
                   >
                     Começar a Jogar
@@ -177,7 +167,7 @@ export default function LandingPage() {
               <div className="space-y-6 relative">
                 <div className="flex items-center justify-center space-x-3">
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
-                  <span className="text-brand-primary-600 font-medium tracking-wide uppercase text-sm px-4 py-1 rounded-full bg-brand-primary-50">
+                  <span id="missao-tag" className="text-brand-primary-600 font-medium tracking-wide uppercase text-sm px-4 py-1 rounded-full bg-brand-primary-50">
                     Nossa Missão
                   </span>
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
@@ -190,10 +180,10 @@ export default function LandingPage() {
                   </div>
                 </h2>
 
-                <p className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
+                <p id="intro-descricao" className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
                   Cada jogo foi <span className="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar 
                   momentos de <span className="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece 
-                  <span className="text-brand-secondary-600 font-medium"> conhecimentos bíblicos</span> e 
+                  <span className="text-brand-secondary-800 font-semibold"> conhecimento das escrituras</span> e 
                   <span className="text-brand-primary-600 font-medium"> valores cristãos</span>.
                 </p>
               </div>
@@ -201,7 +191,7 @@ export default function LandingPage() {
 
             {/* Grid de Cartões de Jogos */}
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 place-items-center max-w-7xl mx-auto">
-              <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
+              <Card id="jogo-memoria" className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
                   <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
                     <Image
