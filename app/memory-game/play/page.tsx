@@ -64,6 +64,7 @@ export default function MemoryGamePage() {
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
   const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
+  const selectedVersion = (searchParams.get("version") as 'restauracao' | 'natal') ?? 'restauracao'
 
   // Game state
   const [playerNames] = useState<string[]>(initialPlayerNames)
@@ -93,6 +94,7 @@ export default function MemoryGamePage() {
     setHasGameEnded(false)
     
     // Create and shuffle new cards
+    // Futuro: variar conteúdos por versão (restauracao/natal)
     const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
     const newCards = shuffleArray(
       selectedContents
@@ -142,18 +144,24 @@ export default function MemoryGamePage() {
         setScores((prevScores) => {
           const newScores = [...prevScores]
           newScores[currentPlayerIndex] += 1
+
+          const allMatchedNext = newCards.every((c) => c.isMatched)
+          if (allMatchedNext && !hasGameEnded) {
+            const maxScore = Math.max(...newScores)
+            const winnerIndex = newScores.indexOf(maxScore)
+            const winnerName = playerNames[winnerIndex]
+            setWinner(winnerName)
+            setShowWinnerModal(true)
+            setHasGameEnded(true)
+          } else {
+            setToastMessage("🎉 CORRETO! 🎉")
+            setShowToast(true)
+            setTimeout(() => setShowToast(false), 1500)
+          }
           return newScores
         })
         setFlippedCards([])
         setLockBoard(false)
-        
-        // Verificar se é a última jogada antes de mostrar o toast
-        const isLastMatch = newCards.every(card => card.isMatched || (card.id === firstCardId || card.id === secondCardId))
-        if (!isLastMatch) {
-          setToastMessage("🎉 CORRETO! 🎉")
-          setShowToast(true)
-          setTimeout(() => setShowToast(false), 1500)
-        }
       } else {
         // No match, flip back after a delay
         setTimeout(() => {

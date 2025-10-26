@@ -15,6 +15,7 @@ export default function MemoryGameSetupPage() {
   const [numPlayers, setNumPlayers] = useState(1)
   const [playerNames, setPlayerNames] = useState<string[]>(["Jogador 1"])
   const [numCardPairs, setNumCardPairs] = useState(14) // Default to 14 pairs
+  const [version, setVersion] = useState<'restauracao' | 'natal'>('restauracao')
 
   const handleNumPlayersChange = (value: number[]) => {
     const newNumPlayers = value[0]
@@ -47,7 +48,11 @@ export default function MemoryGameSetupPage() {
   const startGame = () => {
     // Navegar para a página do jogo, passando as configurações via query parameters
     const encodedPlayerNames = encodeURIComponent(JSON.stringify(playerNames))
-    router.push(`/memory-game/play?players=${encodedPlayerNames}&pairs=${numCardPairs}`)
+    if (version === 'natal') {
+      router.push(`/memory-game/play/christmas?players=${encodedPlayerNames}&pairs=${numCardPairs}`)
+    } else {
+      router.push(`/memory-game/play?players=${encodedPlayerNames}&pairs=${numCardPairs}`)
+    }
   }
 
   return (
@@ -113,6 +118,21 @@ export default function MemoryGameSetupPage() {
                   </motion.div>
                 ))}
               </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Versão do jogo */}
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">Versão</Label>
+            <div>
+              <select
+                value={version}
+                onChange={(e) => setVersion(e.target.value as 'restauracao' | 'natal')}
+                className="w-full bg-white/60 border-brand-primary-100 text-brand-text-dark focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl p-3"
+              >
+                <option value="restauracao">Restauração</option>
+                <option value="natal">Natal</option>
+              </select>
             </div>
           </div>
 
