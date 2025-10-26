@@ -109,116 +109,6 @@ export default function MemoryGamePage() {
     resetGame()
   }, [resetGame])
 
-  // Handle flipped cards
-  useEffect(() => {
-    if (flippedCards.length === 2) {
-      setLockBoard(true)
-      const [firstCardId, secondCardId] = flippedCards
-      const firstCard = cards.find((card) => card.id === firstCardId)
-      const secondCard = cards.find((card) => card.id === secondCardId)
-
-      if (firstCard?.content === secondCard?.content) {
-        // Match!
-        setTimeout(() => {
-          setCards((prevCards) =>
-            prevCards.map((card) =>
-              card.id === firstCardId || card.id === secondCardId
-                ? { ...card, isMatched: true }
-                : card
-            )
-          )
-          setScores((prevScores) => {
-            const newScores = [...prevScores]
-            newScores[currentPlayerIndex]++
-            return newScores
-          })
-          setFlippedCards([])
-          setLockBoard(false)
-          // Removido o toast daqui pois já existe outro mais abaixo
-        }, 500)
-      } else {
-        // No match
-        setTimeout(() => {
-          setCards((prevCards) =>
-            prevCards.map((card) =>
-              card.id === firstCardId || card.id === secondCardId
-                ? { ...card, isFlipped: false }
-                : card
-            )
-          )
-          setFlippedCards([])
-          setLockBoard(false)
-          setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length)
-        }, 1000)
-      }
-    }
-  }, [flippedCards, cards, currentPlayerIndex, playerNames])
-
-// Helper para embaralhar um array
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
-  }
-  return newArray
-}
-
-// Array com os caminhos das imagens para as cartas
-const cardContents = [
-    "/images/img1-min.jpg",
-    "/images/img2-min.jpg",
-    "/images/img3-min.jpg",
-    "/images/img4-min.jpg",
-    "/images/img5-min.jpg",
-    "/images/img6-min.jpg",
-    "/images/img7-min.jpg",
-    "/images/img8-min.jpg",
-    "/images/img9-min.jpg",
-    "/images/img10-min.jpg",
-    "/images/img11-min.jpg",
-    "/images/img12-min.jpg",
-    "/images/img13-min.jpg",
-    "/images/img14-min.jpg",
-    "/images/img15-min.jpg",
-    "/images/img16-min.jpg",
-    "/images/img17-min.jpg",
-    "/images/img18-min.jpg",
-    "/images/img19-min.jpg",
-    "/images/img20-min.jpg",
-    "/images/img21-min.jpg",
-    "/images/img22-min.jpg",
-    "/images/img23-min.jpg",
-    "/images/img24-min.jpg",
-    "/images/img25-min.jpg",
-  ]
-
-  // Initialize or reset the game
-  const initializeGame = () => {
-    // Reset all game states
-    setFlippedCards([])
-    setCurrentPlayerIndex(0)
-    setScores(playerNames.map(() => 0))
-    setLockBoard(false)
-    setHasGameEnded(false)
-    
-    // Create and shuffle new cards
-    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
-    const newCards = shuffleArray(
-      selectedContents
-        .flatMap((content) => [
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-          { id: `${content}-${Math.random()}`, content, isFlipped: false, isMatched: false },
-        ])
-    )
-    setCards(newCards)
-  }
-
-  // Initialize game on mount and when game parameters change
-  useEffect(() => {
-    initializeGame()
-  }, [numCardPairs]) // Only reinitialize when number of pairs changes
-
   const handleCardClick = (id: string) => {
     // Não permita cliques se o tabuleiro estiver bloqueado
     if (lockBoard) return
@@ -289,7 +179,6 @@ const cardContents = [
     if (isGameComplete && !hasGameEnded) {
       // Pequeno delay para garantir que todas as animações de carta terminaram
       setTimeout(() => {
-        const scores = playerNames.map((_, index) => getPlayerPairs(index));
         const maxScore = Math.max(...scores)
         const winnerIndex = scores.indexOf(maxScore)
         const winnerName = playerNames[winnerIndex]
@@ -458,22 +347,19 @@ const cardContents = [
           >
             <CardContent className="p-4">
               <div className="space-y-2">
-                {playerNames.map((name, index) => {
-                  const pairs = getPlayerPairs(index);
-                  return (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center p-2 rounded-lg transition-colors ${
-                        index === currentPlayerIndex
-                          ? "bg-brand-primary-100 text-brand-primary-800 font-medium"
-                          : "text-brand-text-medium hover:bg-brand-primary-50"
-                      }`}
-                    >
-                      <span className="font-medium truncate mr-2">{name}</span>
-                      <span className="font-bold whitespace-nowrap">{pairs} {pairs === 1 ? 'par' : 'pares'}</span>
-                    </div>
-                  );
-                })}
+                {playerNames.map((name, index) => (
+                  <div
+                    key={index}
+                    className={`flex justify-between items-center p-2 rounded-lg transition-colors ${
+                      index === currentPlayerIndex
+                        ? "bg-brand-primary-100 text-brand-primary-800 font-medium"
+                        : "text-brand-text-medium hover:bg-brand-primary-50"
+                    }`}
+                  >
+                    <span className="font-medium truncate mr-2">{name}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </div>
@@ -482,11 +368,7 @@ const cardContents = [
     )
   }
 
-  // Função para calcular o número real de pares
-  const getPlayerPairs = (index: number) => {
-    const matchedCards = cards.filter(card => card.isMatched).length;
-    return Math.floor(matchedCards / 2);
-  }
+  // Removido: getPlayerPairs. Usamos `scores` por jogador.
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-fixed">
