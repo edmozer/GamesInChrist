@@ -122,11 +122,11 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-center justify-center relative">
-                <Image
-                  src="/images/family-playing-games.png"
+                  <Image
+                    src="/images/familia_jogando.png"
                   width={500}
                   height={400}
-                  alt="Família jogando jogos cristãos juntos"
+                    alt="Família jogando jogos cristãos juntos"
                   className="rounded-xl object-cover shadow-2xl border-4 border-white"
                   priority
                 />
@@ -242,8 +242,8 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-md group-hover:shadow-lg">
-                    Jogar Agora
+                  <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
+                    Em breve
                   </Button>
                 </CardContent>
               </Card>
@@ -258,8 +258,8 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md group-hover:shadow-lg">
-                    Jogar Agora
+                  <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
+                    Em breve
                   </Button>
                 </CardContent>
               </Card>
@@ -274,8 +274,8 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
-                    Jogar Agora
+                  <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
+                    Em breve
                   </Button>
                 </CardContent>
               </Card>

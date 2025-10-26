@@ -57,6 +57,26 @@ const cardContents = [
   "/images/img25-min.jpg",
 ]
 
+// Christmas-specific contents (same folder used by the Christmas-themed page)
+const christmasContents = [
+  "/images/Christmas/anjo_gabriel.png",
+  "/images/Christmas/anjos.png",
+  "/images/Christmas/belém.png",
+  "/images/Christmas/censo.png",
+  "/images/Christmas/estabulo.png",
+  "/images/Christmas/estrela_belem.png",
+  "/images/Christmas/incenso.png",
+  "/images/Christmas/jesus_bebe.png",
+  "/images/Christmas/jose.png",
+  "/images/Christmas/manjedoura.png",
+  "/images/Christmas/maria.png",
+  "/images/Christmas/mirra.png",
+  "/images/Christmas/nazare.png",
+  "/images/Christmas/ouro.png",
+  "/images/Christmas/ovelhas.png",
+  "/images/Christmas/tres_reis_magos.png",
+]
+
 export default function MemoryGamePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -64,7 +84,8 @@ export default function MemoryGamePage() {
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
   const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
-  const selectedVersion = (searchParams.get("version") as 'restauracao' | 'natal') ?? 'restauracao'
+  // Default to natal so the memory game opens with the Christmas set unless overridden
+  const selectedVersion = (searchParams.get("version") as 'restauracao' | 'natal') ?? 'natal'
 
   // Game state
   const [playerNames] = useState<string[]>(initialPlayerNames)
@@ -93,9 +114,9 @@ export default function MemoryGamePage() {
     setLockBoard(false)
     setHasGameEnded(false)
     
-    // Create and shuffle new cards
-    // Futuro: variar conteúdos por versão (restauracao/natal)
-    const selectedContents = shuffleArray([...cardContents]).slice(0, numCardPairs)
+  // Create and shuffle new cards. Choose content set according to selectedVersion.
+  const pool = selectedVersion === 'natal' ? christmasContents : cardContents
+  const selectedContents = shuffleArray([...pool]).slice(0, numCardPairs)
     const newCards = shuffleArray(
       selectedContents
         .flatMap((content) => [
@@ -381,7 +402,7 @@ export default function MemoryGamePage() {
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
-      style={{ backgroundImage: "url(/images/beack-bg.png)" }}
+      style={{ backgroundImage: "url(/images/nauvoo.jpeg)" }}
     >
       {/* Modal de Vencedor */}
       {showWinnerModal && <WinnerModal />}

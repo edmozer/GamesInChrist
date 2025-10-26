@@ -176,7 +176,7 @@ export default function MemoryGameChristmasPage() {
           <div className="h-10 w-full bg-red-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-red-700 shrink-0" />
-              <span className="text-base font-medium text-red-800 truncate">Placar (Natal)</span>
+              <span className="text-base font-medium text-red-800 truncate">Placar</span>
             </div>
             <button 
               className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-red-200/50 transition-colors shrink-0"
@@ -192,7 +192,7 @@ export default function MemoryGameChristmasPage() {
             <CardContent className="p-4">
               <div className="space-y-2">
                 {playerNames.map((name, index) => (
-                  <div key={index} className={`flex justify-between items-center p-2 rounded-lg transition-colors ${index === currentPlayerIndex ? "bg-red-100 text-red-800 font-medium" : "text-brand-text-medium hover:bg-red-50"}`}>
+                  <div key={index} className={`flex justify-between items-center p-2 rounded-2xl transition-colors ${index === currentPlayerIndex ? "bg-red-100 text-red-800 font-medium" : "text-brand-text-medium hover:bg-red-50"}`}>
                     <span className="font-medium truncate mr-2">{name}</span>
                     <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
                   </div>
@@ -229,11 +229,11 @@ export default function MemoryGameChristmasPage() {
         <div className="w-24 h-24 mx-auto mb-4">
           <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
         </div>
-        <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">Parabéns!</h2>
-        <p className="text-xl text-brand-text-medium mb-6">O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!</p>
+        <h2 className="text-3xl font-bold text-red-900 mb-4">Parabéns!</h2>
+        <p className="text-xl text-red-800 mb-6">O vencedor é <span className="font-bold text-red-700">{winner}</span>!</p>
         <div className="flex gap-4 justify-center">
-          <Button onClick={handleRestart} className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white">Jogar Novamente</Button>
-          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-brand-primary-100 text-brand-primary-700">Menu Principal</Button>
+          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">Jogar Novamente</Button>
+          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">Menu Principal</Button>
         </div>
       </motion.div>
     </div>
@@ -242,10 +242,10 @@ export default function MemoryGameChristmasPage() {
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
-      style={{ backgroundImage: "url(/images/Christmas/natal_bg.png)" }}
+      style={{ backgroundImage: "url(/images/Christmas/natal_bg.jpeg)" }}
     >
       {showWinnerModal && <WinnerModal />}
-      <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
+      <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória - Natal</h1>
       </div>
 
@@ -281,18 +281,18 @@ export default function MemoryGameChristmasPage() {
         </div>
       </div>
 
-      <div className="relative z-10 w-full bg-white/30 backdrop-blur-sm border-t border-brand-primary-100/30 py-3 px-4 shadow-md">
+      <div className="relative z-10 w-full bg-white/30 backdrop-blur-sm border-t border-red-100/30 py-3 px-4 shadow-md">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 items-center gap-4">
             <div className="flex items-center gap-3 justify-start">
-              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full" size="sm">Voltar</Button>
-              <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800 text-white shadow-md rounded-full" size="sm">
+              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100/30 text-white hover:text-white hover:bg-red-50/30 bg-transparent rounded-full" size="sm">Voltar</Button>
+              <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-md rounded-full" size="sm">
                 <RotateCcw className="mr-2 h-4 w-4" /> Reiniciar
               </Button>
             </div>
             <div className="flex justify-center items-center">
-              <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
-                <Users className="h-6 w-6 text-brand-primary-600" />
+              <div className="flex items-center gap-3 text-red-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+                <Users className="h-6 w-6 text-red-600" />
                 <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
               </div>
             </div>
