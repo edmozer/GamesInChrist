@@ -2,9 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* font-family will be provided via next/font and Tailwind variables (--font-manrope, --font-outfit) */
+/* Remove explicit fallback to Arial to allow project fonts to apply */
 
 @layer utilities {
   .text-balance {
