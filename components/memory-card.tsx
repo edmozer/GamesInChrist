@@ -60,8 +60,8 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
-          {/* Dark overlay for better contrast */}
-          <div className="absolute inset-0 bg-black/60" />
+          {/* Dark overlay for better contrast, only if matched */}
+          {isMatched && <div className="absolute inset-0 bg-black/60" />}
         </div>
 
         {/* Frente da Carta (Imagem a ser revelada) */}
@@ -81,8 +81,8 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
-          {/* Dark overlay for better contrast */}
-          <div className="absolute inset-0 bg-black/60" />
+          {/* Dark overlay for better contrast, only if matched */}
+          {isMatched && <div className="absolute inset-0 bg-black/60" />}
           {/* Blurred/shadowed text overlay for contrast (if content is a char/emoji) */}
           {typeof content === 'string' && content.match(/\.(png|jpg|jpeg|gif|svg)$/i) === null && (
             <span
