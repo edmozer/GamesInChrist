@@ -1,3 +1,5 @@
+
+"use client"
 // --- Types and helpers from christmas/page.tsx ---
 interface GameCard {
   id: string;
@@ -38,7 +40,6 @@ const cardContents = [
   "/images/Restoration/temple-sealing.png",
   "/images/Restoration/mission-call.png",
 ];
-"use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
