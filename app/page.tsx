@@ -61,13 +61,13 @@ export default function LandingPage() {
       <header className="h-16 flex items-center border-b border-brand-primary-100 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center justify-center gap-2">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-brand-primary-50">
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center">
               <Image
                 src="/images/logo-black.png"
                 alt="Jogos em Cristo Logo"
                 width={64}
                 height={64}
-                className="w-12 h-12 object-contain"
+                className="w-12 h-12 object-contain logo-img"
               />
             </div>
             <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
@@ -132,17 +132,17 @@ export default function LandingPage() {
         </section>
 
         {/* Divider Section */}
-        <section className="w-full py-12 bg-brand-primary-800 flex items-center justify-center">
+    <section className="w-full py-2 bg-brand-primary-800 flex items-center justify-center">
           <div className="container px-4 md:px-6 text-center">
             <div className="flex items-center justify-center gap-4">
               <div className="w-24 h-1 bg-brand-primary-50 rounded-full"></div>
-              <div className="w-20 h-20 rounded-lg flex items-center justify-center bg-brand-primary-800">
+              <div className="w-36 h-36 rounded-lg flex items-center justify-center bg-brand-primary-800">
                 <Image
                   src="/images/logo-white.png"
                   alt="Jogos em Cristo Logo"
-                  width={64}
-                  height={64}
-                  className="w-16 h-16 object-contain"
+                  width={128}
+                  height={128}
+                  className="w-32 h-32 object-contain"
                 />
               </div>
               <div className="w-24 h-1 bg-brand-primary-50 rounded-full"></div>
@@ -273,7 +273,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Call to Action */}
+        {/* Call to Action - Jesus Cristo */}
         <section className="w-full py-16 md:py-28 lg:py-36 bg-gradient-to-r from-brand-primary-700 to-brand-primary-800">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
@@ -282,17 +282,16 @@ export default function LandingPage() {
                   Jesus Cristo é o seu Salvador
                 </h2>
                 <p className="text-brand-primary-50 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans max-w-[600px]">
-                  Jesus Cristo é o Filho de Deus — seu Salvador e Redentor, enviado para salvar a todos nós. Graças a Ele, você pode encontrar alegria, sabendo que pode viver com Deus e com seus entes queridos para a eternidade.
+                  Conheça mais sobre Jesus Cristo, Seu amor e Seu papel central em nossa vida e salvação.
                 </p>
                 <div className="flex items-center justify-center mt-8">
                   <a
                     href="https://www.churchofjesuschrist.org/welcome/savior-jesus-christ?lang=por"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border hover:text-accent-foreground h-11 rounded-md px-8 border-brand-primary-100 text-brand-primary-700 bg-white hover:bg-gray-100 transition-all duration-200"
+                    className="inline-block px-8 py-3 rounded-md bg-white text-brand-primary-700 hover:bg-brand-primary-50 shadow-lg transform hover:scale-105 transition-all duration-200 font-semibold text-lg"
                   >
-                    Saiba Mais
-                    <ArrowRight />
+                    Saiba mais sobre Jesus Cristo
                   </a>
                 </div>
               </div>
@@ -307,13 +306,13 @@ export default function LandingPage() {
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-brand-primary-50">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center">
                   <Image
                     src="/images/logo-black.png"
                     alt="Jogos em Cristo Logo"
                     width={48}
                     height={48}
-                    className="w-9 h-9 object-contain"
+                    className="w-9 h-9 object-contain logo-img"
                   />
                 </div>
                 <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
