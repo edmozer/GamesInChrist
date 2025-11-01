@@ -3,11 +3,11 @@ export type Language = 'pt' | 'en';
 export const translations = {
   pt: {
     // Home
-    homeTitle: 'Jogos em Cristo',
-    homeDescription: 'Divirta-se enquanto fortalece sua fé',
-    ourMission: 'Nossa Missão',
-    funThatStrengthens: 'Diversão que fortalece a fé',
-    eachGameDescription: 'Cada jogo é cuidadosamente criado para trazer alegria enquanto fortalece o conhecimento das escrituras e os valores cristãos.',
+  homeTitle: 'Jogos que edificam e divertem',
+  homeDescription: 'Descubra uma coleção especial de jogos cristãos que combinam diversão, aprendizado e crescimento espiritual. Perfeito para toda a família!',
+  ourMission: 'Nossa Missão',
+  funThatStrengthens: 'Diversão que fortalece a fé',
+  eachGameDescription: 'Cada jogo foi cuidadosamente desenvolvido para proporcionar momentos de alegria enquanto fortalece conhecimento das escrituras e valores cristãos.',
     aboutSite: 'Sobre o Site',
     termsOfUse: 'Termos de Uso',
     siteAboutText: 'Este site oferece jogos cristãos gratuitos, começando com um jogo da memória onde os cards contêm lindas ilustrações de temas bíblicos. É um projeto pessoal construído com amor e dedicação.',
@@ -18,8 +18,8 @@ export const translations = {
     
     // Memory Game
     memoryGame: 'Jogo da Memória',
-    memoryGameDescription: 'Jogo com versículos e personagens bíblicos',
-    playNow: 'Jogar Agora',
+  memoryGameDescription: 'Teste sua memória com versículos e personagens bíblicos',
+  playNow: 'Começar a Jogar',
     comingSoon: 'Em breve',
     bibleQuiz: 'Quiz Bíblico',
     bibleQuizDescription: 'Desafie seus conhecimentos sobre a Palavra de Deus',
@@ -64,7 +64,7 @@ export const translations = {
     // Section Titles
     games: 'Jogos',
     aboutGames: 'Sobre os Jogos',
-    aboutGamesText: 'Estes jogos foram criados com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.',
+  aboutGamesText: 'Este jogo foi criado com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.',
     madeWithLove: 'Feito com ❤️ para a glória de Deus.',
     
     // Jesus Section
