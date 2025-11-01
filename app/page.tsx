@@ -202,9 +202,9 @@ export default function LandingPage() {
                       className="w-16 h-16 object-contain"
                     />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Jogo da Memória</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Memória</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Teste sua memória com versículos e personagens bíblicos
+                    Jogo com versículos e personagens bíblicos
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -304,6 +304,7 @@ export default function LandingPage() {
       <footer className="flex flex-col gap-2 sm:flex-row py-12 w-full shrink-0 px-4 md:px-6 border-t border-brand-primary-100 bg-white/60 backdrop-blur-md">
         <div className="container mx-auto">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center">
@@ -321,6 +322,8 @@ export default function LandingPage() {
                 Desenvolvendo jogos que edificam, educam e divertem toda a família cristã.
               </p>
             </div>
+
+
 
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Jogos</h4>
@@ -348,77 +351,13 @@ export default function LandingPage() {
               </ul>
             </div>
 
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Suporte</h4>
-              <ul className="space-y-2 text-sm text-brand-text-medium font-sans">
-                <li>
-                  <Link href="#" className="hover:text-brand-primary-700">
-                    Como Jogar
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-brand-primary-700">
-                    FAQ
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-brand-primary-700">
-                    Contato
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-brand-primary-700">
-                    Feedback
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
+            <div></div>
             <div className="space-y-4" id="sobre">
-              <h4 className="text-xl font-bold text-brand-primary-900 font-heading">Sobre o Jogo</h4>
+              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Sobre os Jogos</h4>
               <p className="text-sm text-brand-text-medium font-sans">
-                Este jogo foi criado com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.
+                Estes jogos foram criados com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.
               </p>
-              <p className="text-sm text-brand-text-medium font-sans">
-                Através da mecânica de memória, queremos incentivar famílias, jovens e crianças a se lembrarem de eventos, símbolos e ensinamentos importantes relacionados à Primeira Visão, ao profeta Joseph Smith e à restauração da Igreja de Jesus Cristo na Terra.
-              </p>
-              <button
-                className="mt-2 px-4 py-2 rounded-full bg-brand-primary-700 text-white font-semibold shadow hover:bg-brand-primary-800 transition-all"
-                onClick={() => setShowSobreModal(true)}
-              >
-                Mais
-              </button>
-              {showSobreModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                  <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 relative">
-                    <button
-                      className="absolute top-2 right-2 text-brand-primary-700 hover:text-brand-primary-900 text-xl font-bold"
-                      onClick={() => setShowSobreModal(false)}
-                      aria-label="Fechar"
-                    >
-                      ×
-                    </button>
-                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2">Criação e Desenvolvimento</h5>
-                    <p className="text-sm text-brand-text-medium font-sans mb-4">
-                      Projeto idealizado e desenvolvido por Edmozer Cavalcante.<br />
-                      Saiba mais ou entre em contato: <a href="https://www.linkedin.com/in/edmozer" target="_blank" rel="noopener noreferrer" className="text-brand-primary-700 underline">LinkedIn</a>
-                    </p>
-                    <h5 className="text-base font-semibold text-brand-primary-900 mb-2">Desenvolvimento Técnico <span className="align-middle">▼</span></h5>
-                    <ul className="list-disc list-inside text-sm text-brand-text-medium font-sans mb-4">
-                      <li>Next.js e React para estrutura e lógica do site</li>
-                      <li>TypeScript para tipagem e segurança</li>
-                      <li>TailwindCSS para estilização moderna e responsiva</li>
-                      <li>Integração com IA (GitHub Copilot) para otimização e boas práticas</li>
-                      <li>Animações CSS para uma experiência fluida</li>
-                      <li>Layout totalmente responsivo e adaptativo</li>
-                    </ul>
-                    <p className="text-xs text-brand-text-medium font-sans">
-                      © 2025 — Este projeto é um esforço pessoal e sem fins lucrativos.<br />
-                      Desenvolvido com auxílio de IA em um processo de programação inovador.
-                    </p>
-                  </div>
-                </div>
-              )}
+              
             </div>
           </div>
 
