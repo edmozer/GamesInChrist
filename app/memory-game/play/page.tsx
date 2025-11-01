@@ -1,4 +1,45 @@
+
 "use client"
+// --- Types and helpers from christmas/page.tsx ---
+interface GameCard {
+  id: string;
+  content: string;
+  isFlipped: boolean;
+  isMatched: boolean;
+}
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+  return newArray
+}
+
+// TODO: Replace with correct image set for this game mode if needed
+const cardContents = [
+  "/images/Restoration/angel-moroni.png",
+  "/images/Restoration/book-of-mormon.png",
+  "/images/Restoration/first-vision.png",
+  "/images/Restoration/joseph-smith.png",
+  "/images/Restoration/golden-plates.png",
+  "/images/Restoration/temple.png",
+  "/images/Restoration/jesus-christ.png",
+  "/images/Restoration/prophet.png",
+  "/images/Restoration/missionary.png",
+  "/images/Restoration/baptism.png",
+  "/images/Restoration/holy-ghost.png",
+  "/images/Restoration/prayer.png",
+  "/images/Restoration/family.png",
+  "/images/Restoration/zion.png",
+  "/images/Restoration/faith.png",
+  "/images/Restoration/repentance.png",
+  "/images/Restoration/charity.png",
+  "/images/Restoration/service.png",
+  "/images/Restoration/temple-sealing.png",
+  "/images/Restoration/mission-call.png",
+];
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,57 +50,10 @@ import { MemoryCard } from "@/components/memory-card"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
-
-// Types
-interface GameCard {
-  id: string;
-  content: string;
-  isFlipped: boolean;
-  isMatched: boolean;
-}
-
-// Helper functions
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
-  }
-  return newArray
-}
-
-// Card contents - moved outside component to prevent recreation
-const cardContents = [
-  "/images/img1-min.jpg",
-  "/images/img2-min.jpg",
-  "/images/img3-min.jpg",
-  "/images/img4-min.jpg",
-  "/images/img5-min.jpg",
-  "/images/img6-min.jpg",
-  "/images/img7-min.jpg",
-  "/images/img8-min.jpg",
-  "/images/img9-min.jpg",
-  "/images/img10-min.jpg",
-  "/images/img11-min.jpg",
-  "/images/img12-min.jpg",
-  "/images/img13-min.jpg",
-  "/images/img14-min.jpg",
-  "/images/img15-min.jpg",
-  "/images/img16-min.jpg",
-  "/images/img17-min.jpg",
-  "/images/img18-min.jpg",
-  "/images/img19-min.jpg",
-  "/images/img20-min.jpg",
-  "/images/img21-min.jpg",
-  "/images/img22-min.jpg",
-  "/images/img23-min.jpg",
-  "/images/img24-min.jpg",
-  "/images/img25-min.jpg",
-]
-
-// This page intentionally uses only the Restoration image set.
+import { useTranslation } from "@/lib/i18n/use-translation"
 
 export default function MemoryGamePage() {
+  const { t } = useTranslation();
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -271,24 +265,24 @@ export default function MemoryGamePage() {
           />
         </div>
         <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
-          Parabéns!
+          {t('congratulations')}
         </h2>
         <p className="text-xl text-brand-text-medium mb-6">
-          O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!
+          {t('winnerIs', { winner })}
         </p>
         <div className="flex gap-4 justify-center">
           <Button
             onClick={handleRestart}
             className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white"
           >
-            Jogar Novamente
+            {t('playAgain')}
           </Button>
           <Button
             onClick={() => router.push("/memory-game")}
             variant="outline"
             className="border-brand-primary-100 text-brand-primary-700"
           >
-            Menu Principal
+            {t('mainMenu')}
           </Button>
         </div>
       </motion.div>
@@ -352,7 +346,7 @@ export default function MemoryGamePage() {
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-brand-primary-700 shrink-0" />
               <span className="text-base font-medium text-brand-primary-800 truncate">
-                Placar
+                {t('scoreboard')}
               </span>
             </div>
             <button 
@@ -392,7 +386,7 @@ export default function MemoryGamePage() {
                     }`}
                   >
                     <span className="font-medium truncate mr-2">{name}</span>
-                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} {t(scores[index] === 1 ? 'pair' : 'pairs')}</span>
                   </div>
                 ))}
               </div>
@@ -402,8 +396,6 @@ export default function MemoryGamePage() {
       </motion.div>
     )
   }
-
-  // Removido: getPlayerPairs. Usamos `scores` por jogador.
 
   return (
     <div
@@ -415,7 +407,7 @@ export default function MemoryGamePage() {
       
       {/* Título no topo */}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
-        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória</h1>
+        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')}</h1>
       </div>
 
       {/* Placar Arrastável */}
@@ -445,7 +437,7 @@ export default function MemoryGamePage() {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  <span className="bubble-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>Ajuste o tamanho dos cards por aqui!</span>
+                  <span className="bubble-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('adjustCards')}</span>
                   <button
                     onClick={dismissCardSizeHint}
                     className="close"
@@ -527,7 +519,7 @@ export default function MemoryGamePage() {
                 className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full"
                 size="sm"
               >
-                Voltar
+                {t('back')}
               </Button>
               <Button
                 onClick={() => {
@@ -540,7 +532,7 @@ export default function MemoryGamePage() {
                 size="sm"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reiniciar
+                {t('restart')}
               </Button>
             </div>
 
@@ -548,7 +540,7 @@ export default function MemoryGamePage() {
             <div className="flex justify-center items-center">
               <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-brand-primary-600" />
-                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                <span className="text-xl font-bold whitespace-nowrap">{t('turnOf', { player: playerNames[currentPlayerIndex] })}</span>
               </div>
             </div>
 
@@ -563,7 +555,7 @@ export default function MemoryGamePage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 text-center text-lg font-semibold text-brand-primary-700"
             >
-              {playerNames[scores.indexOf(Math.max(...scores))]} venceu o jogo!
+              {t('winnerMessage', { player: playerNames[scores.indexOf(Math.max(...scores))] })}
             </motion.div>
           )}
         </div>

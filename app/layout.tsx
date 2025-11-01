@@ -10,6 +10,9 @@ export const metadata = {
   description: "Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão.",
 }
 
+import { LanguageProvider } from "@/lib/i18n/language-context"
+import LanguageSelector from "@/components/language-selector"
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${manrope.variable} ${outfit.variable}`}>
@@ -23,7 +26,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="512x512" href="/favicons/android-chrome-512x512.png" />
       </head>
       <body className="min-h-screen bg-white text-brand-text-dark antialiased">
-        {children}
+        <LanguageProvider>
+          <div className="relative">
+            {children}
+            <div className="fixed top-4 right-4 z-50">
+              <LanguageSelector />
+            </div>
+          </div>
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

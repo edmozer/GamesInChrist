@@ -152,6 +152,13 @@
   100% { transform: translate(0, 0) scale(1) scaleX(-1); }
 }
 
+/* Utilities merged from styles/globals.css to make app/globals.css the single source of truth */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
 .animate-float-left {
   animation: pulse-left 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
   transform-origin: center center;
