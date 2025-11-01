@@ -9,6 +9,7 @@ import { MemoryCard } from "@/components/memory-card"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
+import { useTranslation } from "@/lib/i18n/use-translation"
 
 interface GameCard {
   id: string;
@@ -48,6 +49,7 @@ const christmasContents = [
 ]
 
 export default function MemoryGameChristmasPage() {
+  const { t } = useTranslation();
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -140,7 +142,7 @@ export default function MemoryGameChristmasPage() {
             setShowWinnerModal(true)
             setHasGameEnded(true)
           } else {
-            setToastMessage("🎉 CORRETO! 🎉")
+            setToastMessage(t('correct'))
             setShowToast(true)
             setTimeout(() => setShowToast(false), 1500)
           }
@@ -188,7 +190,7 @@ export default function MemoryGameChristmasPage() {
           <div className="h-10 w-full bg-red-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-red-700 shrink-0" />
-              <span className="text-base font-medium text-red-800 truncate">Placar</span>
+              <span className="text-base font-medium text-red-800 truncate">{t('scoreboard')}</span>
             </div>
             <button 
               className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-red-200/50 transition-colors shrink-0"
@@ -206,7 +208,7 @@ export default function MemoryGameChristmasPage() {
                 {playerNames.map((name, index) => (
                   <div key={index} className={`flex justify-between items-center p-2 rounded-2xl transition-colors ${index === currentPlayerIndex ? "bg-red-100 text-red-800 font-medium" : "text-brand-text-medium hover:bg-red-50"}`}>
                     <span className="font-medium truncate mr-2">{name}</span>
-                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? t('pair') : t('pairs')}</span>
                   </div>
                 ))}
               </div>
@@ -241,7 +243,7 @@ export default function MemoryGameChristmasPage() {
         <div className="w-24 h-24 mx-auto mb-4">
           <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
         </div>
-        <h2 className="text-3xl font-bold text-red-900 mb-4">{isDraw ? "Empate!" : "Parabéns!"}</h2>
+        <h2 className="text-3xl font-bold text-red-900 mb-4">{isDraw ? 'Empate!' : t('congratulations')}</h2>
         {isDraw ? (
           <>
             <p className="text-xl text-red-800 mb-2">Houve um empate entre <span className="font-bold text-red-700">{winner}</span>!</p>
@@ -250,11 +252,11 @@ export default function MemoryGameChristmasPage() {
             </p>
           </>
         ) : (
-          <p className="text-xl text-red-800 mb-6">O vencedor é <span className="font-bold text-red-700">{winner}</span>!</p>
+          <p className="text-xl text-red-800 mb-6">{t('winnerIs', { winner })}</p>
         )}
         <div className="flex gap-4 justify-center">
-          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">Jogar Novamente</Button>
-          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">Menu Principal</Button>
+          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">{t('playAgain')}</Button>
+          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">{t('mainMenu')}</Button>
         </div>
       </motion.div>
     </div>
@@ -295,7 +297,7 @@ export default function MemoryGameChristmasPage() {
     >
       {showWinnerModal && <WinnerModal />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
-        <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória - Natal</h1>
+        <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')} - Natal</h1>
       </div>
 
       <DraggableScoreBoard />
@@ -328,7 +330,7 @@ export default function MemoryGameChristmasPage() {
                   <button
                     onClick={dismissCardSizeHint}
                     className="close"
-                    aria-label="Fechar"
+                    aria-label={t('close')}
                     style={{
                       position: 'absolute',
                       right: 14,
@@ -398,15 +400,15 @@ export default function MemoryGameChristmasPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 items-center gap-4">
             <div className="flex items-center gap-3 justify-start">
-              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100/30 text-white hover:text-white hover:bg-red-50/30 bg-transparent rounded-full" size="sm">Voltar</Button>
+              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100/30 text-white hover:text-white hover:bg-red-50/30 bg-transparent rounded-full" size="sm">{t('back')}</Button>
               <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-md rounded-full" size="sm">
-                <RotateCcw className="mr-2 h-4 w-4" /> Reiniciar
+                <RotateCcw className="mr-2 h-4 w-4" /> {t('restart')}
               </Button>
             </div>
             <div className="flex justify-center items-center">
               <div className="flex items-center gap-3 text-red-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-red-600" />
-                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                <span className="text-xl font-bold whitespace-nowrap">{t('turnOf', { player: playerNames[currentPlayerIndex] })}</span>
               </div>
             </div>
             <div></div>
