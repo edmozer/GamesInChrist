@@ -63,21 +63,21 @@ export default function MemoryGameSetupPage() {
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       {/* Main Card */}
-      <Card className={`w-full max-w-2xl border ${isChristmas ? 'border-red-100/30' : 'border-brand-primary-100/30'} bg-white/30 backdrop-blur-sm shadow-lg mb-4 rounded-3xl`}>
+  <Card className={`w-full max-w-2xl border ${isChristmas ? 'border-red-100/30' : 'border-brand-primary-100/30'} bg-white/20 backdrop-blur-lg shadow-lg mb-4 rounded-3xl`}>
         <CardHeader className="text-center pb-6">
           <div className={`w-20 h-20 mx-auto ${isChristmas ? 'bg-red-600/90' : 'bg-brand-primary-600/90'} rounded-full flex items-center justify-center mb-4`}>
             <Brain className="h-10 w-10 text-white" />
           </div>
-          <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Configurar Jogo da Memória</CardTitle>
+          <CardTitle className="text-3xl font-semibold text-brand-primary-900/90 bg-white/15 px-4 py-2 rounded-2xl backdrop-blur-lg inline-block tracking-tight">Configurar Jogo da Memória</CardTitle>
           
         </CardHeader>
         <CardContent className="space-y-8">
           {/* Número de Jogadores */}
           <div className="space-y-4">
             <Label
-              className={`text-lg font-semibold ${isChristmas ? 'text-red-900' : 'text-brand-primary-900'} flex items-center gap-2 drop-shadow-md`}
+              className={`text-lg font-semibold ${isChristmas ? 'text-red-700' : 'text-brand-primary-900'} flex items-center gap-2 drop-shadow-md`}
             >
-              <Users className={`h-5 w-5 ${isChristmas ? 'text-red-700' : 'text-brand-primary-700'}`} />
+              <Users className={`h-5 w-5 ${isChristmas ? 'text-red-600' : 'text-brand-primary-700'}`} />
               Número de Jogadores
             </Label>
             <div className="flex gap-6 justify-center items-center flex-wrap">
@@ -89,7 +89,7 @@ export default function MemoryGameSetupPage() {
                   className={`flex items-center gap-2 cursor-pointer rounded-full px-3 py-1.5 transition-colors ${
                     isChristmas
                       ? selected
-                        ? 'bg-red-100 text-red-900 drop-shadow-sm'
+                        ? 'bg-red-100 text-red-700 drop-shadow-sm'
                         : 'hover:bg-red-50'
                       : selected
                         ? 'bg-brand-primary-100 text-brand-primary-900 drop-shadow-sm'
@@ -100,9 +100,9 @@ export default function MemoryGameSetupPage() {
                     type="radio"
                     checked={numPlayers === num}
                     onChange={() => handleNumPlayersChange([num])}
-                    className={`h-5 w-5 ${isChristmas ? 'text-red-600 border-red-500/30 checked:bg-red-600 checked:border-red-600 focus:ring-red-500' : 'text-brand-accent-600 border-brand-accent-500/30 checked:bg-brand-accent-600 checked:border-brand-accent-600 focus:ring-brand-accent-500'} border-2 rounded-full focus:ring-2 focus:ring-offset-2 transition-all cursor-pointer`}
+                    className={`h-5 w-5 ${isChristmas ? 'text-red-500 border-red-400/30 checked:bg-red-500 checked:border-red-500 focus:ring-red-400' : 'text-brand-accent-600 border-brand-accent-500/30 checked:bg-brand-accent-600 checked:border-brand-accent-600 focus:ring-brand-accent-500'} border-2 rounded-full focus:ring-2 focus:ring-offset-2 transition-all cursor-pointer`}
                   />
-                  <span className={`${isChristmas ? 'text-red-900' : 'text-brand-primary-900'} text-lg font-semibold`}>{num}</span>
+                  <span className={`${isChristmas ? 'text-red-700' : 'text-brand-primary-900'} text-lg font-semibold`}>{num}</span>
                 </label>
               )})}
             </div>
@@ -110,7 +110,7 @@ export default function MemoryGameSetupPage() {
 
           {/* Nomes dos Jogadores com Animação */}
           <div className="space-y-4">
-            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">Nome dos Jogadores:</Label>
+            <Label className={`${isChristmas ? 'text-red-700' : 'text-brand-primary-900'} text-lg font-semibold drop-shadow-md`}>Nome dos Jogadores:</Label>
             <div className="grid gap-4">
               <AnimatePresence initial={false}>
                 {Array.from({ length: numPlayers }).map((_, index) => (
@@ -139,7 +139,7 @@ export default function MemoryGameSetupPage() {
 
           {/* Versão do jogo */}
           <div className="space-y-4">
-            <Label className="text-lg font-semibold text-brand-primary-900 drop-shadow-md">Versão</Label>
+            <Label className={`${isChristmas ? 'text-red-700' : 'text-brand-primary-900'} text-lg font-semibold drop-shadow-md`}>Versão</Label>
             <div>
               <select
                 value={version}
@@ -154,10 +154,7 @@ export default function MemoryGameSetupPage() {
 
           {/* Número de Pares de Cartas */}
           <div className="space-y-4">
-            <Label
-              htmlFor="num-card-pairs"
-              className={`text-lg font-semibold ${isChristmas ? 'text-red-900' : 'text-brand-primary-900'} flex items-center gap-2 drop-shadow-md`}
-            >
+            <Label htmlFor="num-card-pairs" className={`text-lg font-semibold ${isChristmas ? 'text-red-700' : 'text-brand-primary-900'} flex items-center gap-2 drop-shadow-md`}>
               <Brain className={`h-5 w-5 ${isChristmas ? 'text-red-600' : 'text-brand-primary-600'}`} />
               Número de Pares de Cartas
             </Label>
@@ -171,7 +168,7 @@ export default function MemoryGameSetupPage() {
                 onChange={handleNumCardPairsChange}
                 className="w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
               />
-              <span className="text-sm text-brand-text-medium">
+              <span className={`${isChristmas ? 'text-red-600' : 'text-brand-text-medium'} text-sm`}>
                 (Min: 2, Max: 25 pares)
               </span>
             </div>

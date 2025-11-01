@@ -45,7 +45,7 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
       >
         {/* Verso da Carta (Imagem do verso - back-min.jpg) */}
         <div
-          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border-2 border-white/50"
+          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.18)] border-2 border-white/50"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -60,11 +60,13 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
+          {/* Dark overlay for better contrast */}
+          <div className="absolute inset-0 bg-black/60" />
         </div>
 
         {/* Frente da Carta (Imagem a ser revelada) */}
         <div
-          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border-2 border-white/50"
+          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.18)] border-2 border-white/50"
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
@@ -79,6 +81,17 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
+          {/* Dark overlay for better contrast */}
+          <div className="absolute inset-0 bg-black/60" />
+          {/* Blurred/shadowed text overlay for contrast (if content is a char/emoji) */}
+          {typeof content === 'string' && content.match(/\.(png|jpg|jpeg|gif|svg)$/i) === null && (
+            <span
+              className="absolute inset-0 flex items-center justify-center text-5xl font-extrabold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] blur-[0.5px] select-none pointer-events-none"
+              style={{ zIndex: 2 }}
+            >
+              {content}
+            </span>
+          )}
         </div>
       </motion.div>
     </motion.div>
