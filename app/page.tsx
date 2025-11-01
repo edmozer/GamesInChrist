@@ -279,20 +279,21 @@ export default function LandingPage() {
             <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
               <div className="flex flex-col items-center space-y-6 text-center">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white font-heading max-w-2xl">
-                  Pronto para começar sua jornada?
+                  Jesus Cristo é o seu Salvador
                 </h2>
                 <p className="text-brand-primary-50 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans max-w-[600px]">
-                  Junte-se a milhares de famílias que já descobriram a alegria de aprender brincando. Comece agora mesmo!
+                  Jesus Cristo é o Filho de Deus — seu Salvador e Redentor, enviado para salvar a todos nós. Graças a Ele, você pode encontrar alegria, sabendo que pode viver com Deus e com seus entes queridos para a eternidade.
                 </p>
                 <div className="flex items-center justify-center mt-8">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="bg-white text-brand-primary-700 hover:bg-brand-primary-50 shadow-lg transform hover:scale-105 transition-all duration-200"
+                  <a
+                    href="https://www.churchofjesuschrist.org/welcome/savior-jesus-christ?lang=por"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border hover:text-accent-foreground h-11 rounded-md px-8 border-brand-primary-100 text-brand-primary-700 bg-white hover:bg-gray-100 transition-all duration-200"
                   >
-                    Começar Gratuitamente
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                    Saiba Mais
+                    <ArrowRight />
+                  </a>
                 </div>
               </div>
             </div>
