@@ -1,0 +1,5 @@
+.logo-img {
+  display: block;
+  background: transparent !important;
+  mix-blend-mode: multiply;
+}
