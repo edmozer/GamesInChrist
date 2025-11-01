@@ -102,13 +102,6 @@ export default function LandingPage() {
                     Começar a Jogar
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-brand-primary-100 text-brand-primary-700 hover:bg-brand-primary-50 bg-transparent transition-all duration-200"
-                  >
-                    Saiba Mais
-                  </Button>
                 </div>
               </div>
               <div className="flex items-center justify-center relative">
@@ -239,7 +232,7 @@ export default function LandingPage() {
               </Card>
               <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
-                  <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
                     <Users className="h-8 w-8 text-white" />
                   </div>
                   <CardTitle className="text-brand-primary-900 font-heading mb-2">Quem Sou Eu?</CardTitle>
@@ -255,7 +248,7 @@ export default function LandingPage() {
               </Card>
               <Card className="group hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 ease-out border border-brand-primary-100 bg-white/60 backdrop-blur-md rounded-xl shadow-md w-full max-w-sm transform-gpu will-change-transform hover:border-brand-primary-200">
                 <CardHeader className="text-center pb-4 h-[200px] flex flex-col items-center justify-start">
-                  <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
                     <Puzzle className="h-8 w-8 text-white" />
                   </div>
                   <CardTitle className="text-brand-primary-900 font-heading mb-2">Ordem das Frases</CardTitle>
@@ -369,8 +362,8 @@ export default function LandingPage() {
               <Link href="#" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
                 Termos de Uso
               </Link>
-              <Link href="#" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
-                Privacidade
+              <Link href="/about" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
+                Sobre
               </Link>
             </nav>
           </div>
