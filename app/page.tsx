@@ -8,8 +8,12 @@ import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 
+import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
 export default function LandingPage() {
   const [showSobreModal, setShowSobreModal] = useState(false)
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   const handleScrollToMemory = () => {
     if (typeof window === 'undefined') return
     const el = document.getElementById('missao-tag')
@@ -22,10 +26,10 @@ export default function LandingPage() {
   return (
     <div className="relative flex flex-col min-h-screen font-sans text-brand-text-dark">
       <Head>
-        <title>Jogos em Cristo — Jogos Cristãos Divertidos e Educativos para Toda a Família</title>
+        <title>{t('homeTitle')}</title>
         <meta
           name="description"
-          content="Descubra jogos cristãos que fortalecem a fé, ensinam valores e proporcionam diversão para crianças, jovens e famílias. Jogue online, aprenda e cresça espiritualmente!"
+          content={t('homeDescription')}
         />
         <meta
           name="keywords"
@@ -35,7 +39,7 @@ export default function LandingPage() {
         <meta name="author" content="Edmozer Cavalcante" />
 
         {/* Open Graph / Facebook */}
-        <meta property="og:title" content="Jogos em Cristo — Edifique sua fé brincando" />
+        <meta property="og:title" content="Games in Christ — Build your faith while playing" />
         <meta
           property="og:description"
           content="Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão para todas as idades. Experimente gratuitamente!"
@@ -46,12 +50,13 @@ export default function LandingPage() {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jogos em Cristo — Edifique sua fé brincando" />
+        <meta name="twitter:title" content="Games in Christ — Build your faith while playing" />
         <meta
           name="twitter:description"
-          content="Jogos bíblicos, educativos e gratuitos para toda a família. Comece agora!"
+          content="Free, educational Bible games for the whole family. Start now!"
         />
         <meta name="twitter:image" content="/images/social-card.jpg" />
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="fixed inset-0 bg-[url('/images/beack-bg.png')] bg-cover bg-center bg-no-repeat -z-10" />
@@ -63,15 +68,18 @@ export default function LandingPage() {
             <div className="w-16 h-16 rounded-lg flex items-center justify-center">
               <Image
                 src="/images/logo-black.png"
-                alt="Jogos em Cristo Logo"
+                alt="Games in Christ Logo"
                 width={64}
                 height={64}
                 className="w-12 h-12 object-contain logo-img"
               />
             </div>
-            <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
+            <span className="text-xl font-bold text-brand-primary-800 font-heading">
+              {language === 'en' ? 'Games in Christ' : 'Jogos em Cristo'}
+            </span>
           </Link>
-          <nav className="hidden" />
+          <nav className="flex items-center gap-4">
+          </nav>
         </div>
       </header>
 
@@ -84,11 +92,18 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-brand-primary-900 leading-tight font-heading">
-                    Jogos que <span className="text-brand-primary-600">edificam</span> e{" "}
-                    <span className="text-brand-secondary-700">divertem</span>
+                    {language === 'en' ? (
+                      <>
+                        Games that <span className="text-brand-primary-600">build up your faith</span> and <span className="text-brand-secondary-700">entertain</span>
+                      </>
+                    ) : (
+                      <>
+                        Jogos que <span className="text-brand-primary-600">edificam</span> e <span className="text-brand-secondary-700">divertem</span>
+                      </>
+                    )}
                   </h1>
                   <p className="max-w-[600px] text-brand-text-medium md:text-xl leading-relaxed mx-auto lg:mx-0 font-sans">
-                    Descubra uma coleção especial de jogos cristãos que combinam diversão, aprendizado e crescimento espiritual. Perfeito para toda a família!
+                    {t('homeDescription')}
                   </p>
                 </div>
                 <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start">
@@ -97,7 +112,7 @@ export default function LandingPage() {
                     onClick={handleScrollToMemory}
                     className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white shadow-lg transition-all duration-200"
                   >
-                    Começar a Jogar
+                    {t('startGame')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -130,7 +145,7 @@ export default function LandingPage() {
               <div className="w-36 h-36 rounded-lg flex items-center justify-center bg-brand-primary-800">
                 <Image
                   src="/images/logo-white.png"
-                  alt="Jogos em Cristo Logo"
+                  alt="Games in Christ Logo"
                   width={128}
                   height={128}
                   className="w-32 h-32 object-contain"
@@ -159,20 +174,20 @@ export default function LandingPage() {
                 <div className="flex items-center justify-center space-x-3">
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
                   <span id="missao-tag" className="text-brand-primary-600 font-medium tracking-wide uppercase text-sm px-4 py-1 rounded-full bg-brand-primary-50">
-                    Nossa Missão
+                    {t('ourMission')}
                   </span>
                   <div className="h-[2px] w-16 bg-gradient-to-r from-transparent via-brand-primary-400 to-transparent"></div>
                 </div>
 
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-primary-900 font-heading">
-                  Diversão que <span className="text-brand-primary-600">fortalece</span> a fé
+                  {t('funThatStrengthens')}
                   <div className="absolute -right-8 -top-8 w-16 h-16 bg-brand-secondary-100 rounded-full flex items-center justify-center transform rotate-12 opacity-80 shadow-lg">
                     <Cross className="h-8 w-8 text-brand-secondary-600" />
                   </div>
                 </h2>
 
                 <p id="intro-descricao" className="max-w-[900px] text-brand-text-medium md:text-xl/relaxed lg:text-xl/relaxed xl:text-xl/relaxed font-sans mx-auto relative">
-                  Cada jogo foi <span className="text-brand-primary-700 font-medium">cuidadosamente desenvolvido</span> para proporcionar momentos de <span className="text-brand-accent-600 font-medium">alegria</span> enquanto fortalece <span className="text-brand-secondary-800 font-semibold"> conhecimento das escrituras</span> e <span className="text-brand-primary-600 font-medium"> valores cristãos</span>.
+                  {t('eachGameDescription')}
                 </p>
               </div>
             </div>
@@ -190,15 +205,15 @@ export default function LandingPage() {
                       className="w-16 h-16 object-contain"
                     />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Memória</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{t('memoryGame')}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Jogo com versículos e personagens bíblicos
+                    {t('memoryGameDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Link href="/memory-game" className="w-full">
                     <Button className="w-full bg-brand-accent-600 hover:bg-brand-accent-700 text-white shadow-md group-hover:shadow-lg">
-                      Jogar Agora
+                      {t('playNow')}
                     </Button>
                   </Link>
                 </CardContent>
@@ -214,14 +229,14 @@ export default function LandingPage() {
                       className="w-16 h-16 object-contain"
                     />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Quiz Bíblico</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{t('bibleQuiz')}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Desafie seus conhecimentos sobre a Palavra de Deus
+                    {t('bibleQuizDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
-                    Em breve
+                    {t('comingSoon')}
                   </Button>
                 </CardContent>
               </Card>
@@ -230,14 +245,14 @@ export default function LandingPage() {
                   <div className="w-16 h-16 mx-auto bg-brand-secondary-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
                     <Users className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Quem Sou Eu?</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{t('whoAmI')}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Descubra personagens bíblicos através de dicas especiais
+                    {t('whoAmIDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
-                    Em breve
+                    {t('comingSoon')}
                   </Button>
                 </CardContent>
               </Card>
@@ -246,14 +261,14 @@ export default function LandingPage() {
                   <div className="w-16 h-16 mx-auto bg-brand-accent-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg overflow-hidden">
                     <Puzzle className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-brand-primary-900 font-heading mb-2">Ordem das Frases</CardTitle>
+                  <CardTitle className="text-brand-primary-900 font-heading mb-2">{t('orderOfPhrases')}</CardTitle>
                   <CardDescription className="text-brand-text-medium font-sans">
-                    Organize versículos e frases bíblicas na ordem correta
+                    {t('orderOfPhrasesDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button disabled className="w-full bg-gray-300 text-gray-600 cursor-not-allowed">
-                    Em breve
+                    {t('comingSoon')}
                   </Button>
                 </CardContent>
               </Card>
@@ -267,10 +282,10 @@ export default function LandingPage() {
             <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
               <div className="flex flex-col items-center space-y-6 text-center">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white font-heading max-w-2xl">
-                  Jesus Cristo é o seu Salvador
+                  {t('jesusIsSavior')}
                 </h2>
                 <p className="text-brand-primary-50 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-sans max-w-[600px]">
-                  Conheça mais sobre Jesus Cristo, Seu amor e Seu papel central em nossa vida e salvação.
+                  {t('aboutJesus')}
                 </p>
                 <div className="flex items-center justify-center mt-8">
                   <a
@@ -279,7 +294,7 @@ export default function LandingPage() {
                     rel="noopener noreferrer"
                     className="inline-block px-8 py-3 rounded-md bg-white text-brand-primary-700 hover:bg-brand-primary-50 shadow-lg transform hover:scale-105 transition-all duration-200 font-semibold text-lg"
                   >
-                    Saiba mais sobre Jesus Cristo
+                    {t('learnMoreAboutJesus')}
                   </a>
                 </div>
               </div>
@@ -292,47 +307,48 @@ export default function LandingPage() {
       <footer className="flex flex-col gap-2 sm:flex-row py-12 w-full shrink-0 px-4 md:px-6 border-t border-brand-primary-100 bg-white/60 backdrop-blur-md">
         <div className="container mx-auto">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center">
                   <Image
                     src="/images/logo-black.png"
-                    alt="Jogos em Cristo Logo"
+                    alt="Games in Christ Logo"
                     width={48}
                     height={48}
                     className="w-9 h-9 object-contain logo-img"
                   />
                 </div>
-                <span className="text-xl font-bold text-brand-primary-800 font-heading">Jogos em Cristo</span>
+                <span className="text-xl font-bold text-brand-primary-800 font-heading">{t('homeTitle')}</span>
               </div>
               <p className="text-sm text-brand-text-medium font-sans">
-                Desenvolvendo jogos que edificam, educam e divertem toda a família cristã.
+                {t('aboutGamesText')}
               </p>
             </div>
 
 
 
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Jogos</h4>
+              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">{t('games')}</h4>
               <ul className="space-y-2 text-sm text-brand-text-medium font-sans">
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Jogo da Memória
+                    {t('memoryGame')}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Quiz Bíblico
+                    {t('bibleQuiz')}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Quem Sou Eu?
+                    {t('whoAmI')}
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-brand-primary-700">
-                    Ordem das Frases
+                    {t('orderOfPhrases')}
                   </Link>
                 </li>
               </ul>
@@ -340,9 +356,9 @@ export default function LandingPage() {
 
             <div></div>
             <div className="space-y-4" id="sobre">
-              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">Sobre os Jogos</h4>
+              <h4 className="text-sm font-semibold text-brand-primary-900 font-heading">{t('aboutGames')}</h4>
               <p className="text-sm text-brand-text-medium font-sans">
-                Estes jogos foram criados com o objetivo de ensinar e reforçar os princípios da Restauração do Evangelho de Jesus Cristo de maneira divertida e interativa.
+                {t('aboutGamesText')}
               </p>
               
             </div>
@@ -350,18 +366,18 @@ export default function LandingPage() {
 
           <div className="mt-8 pt-8 border-t border-brand-primary-100 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-xs text-brand-text-medium font-sans">
-              © {new Date().getFullYear()} Jogos em Cristo. Feito com ❤️ para a glória de Deus.
+              © {new Date().getFullYear()} {t('homeTitle')}. {t('madeWithLove')}
             </p>
             <nav className="flex gap-4 mt-4 sm:mt-0">
               <Link href="/termos-de-uso" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
-                Termos de Uso
+                {t('termsOfUse')}
               </Link>
               <button
                 type="button"
                 className="text-xs text-brand-text-medium hover:text-brand-primary-700 underline"
                 onClick={() => setShowSobreModal(true)}
               >
-                Sobre
+                {t('aboutSite')}
               </button>
             </nav>
           </div>
@@ -374,27 +390,28 @@ export default function LandingPage() {
             <button
               className="absolute top-2 right-2 text-brand-primary-700 hover:text-brand-primary-900 text-xl font-bold"
               onClick={() => setShowSobreModal(false)}
-              aria-label="Fechar"
+              aria-label={t('close')}
             >
               ×
             </button>
-            <h1 className="text-3xl font-bold mb-6 text-brand-primary-900 font-heading">Sobre o Desenvolvimento do Sistema</h1>
+            <h1 className="text-3xl font-bold mb-6 text-brand-primary-900 font-heading">{t('aboutDevTitle')}</h1>
             <p className="mb-4 text-brand-text-medium font-sans">
-              Este site foi desenvolvido com <b>Next.js</b> (React), utilizando componentes reutilizáveis, estilização com <b>Tailwind CSS</b> e deploy moderno. O desenvolvimento contou com auxílio da IA <b>Claude Sonnet</b> para código e estrutura.
+              {t('aboutDevText1')}
             </p>
             <p className="mb-4 text-brand-text-medium font-sans">
-              A maioria das imagens foi gerada/editada por IA utilizando o <b>Google Gemini 2.5 Flash Image</b>, conhecido popularmente como <b>Nano Banana</b>.
+              {t('aboutDevText2')}
             </p>
             <p className="mb-4 text-brand-text-medium font-sans">
-              Um dos objetivos do site é mostrar como a inteligência artificial pode ser usada em prol do evangelho de Jesus Cristo.
+              {t('aboutDevText3')}
             </p>
             <p className="mb-4 text-brand-text-medium font-sans">
-              Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto <b>Edmozer Cavalcante</b> no <a href="https://www.linkedin.com/in/edmozer-cavalcante/" target="_blank" rel="noopener noreferrer" className="underline text-brand-primary-700 hover:text-brand-primary-900">LinkedIn</a>.
+              {t('aboutDevText4')}
             </p>
           </div>
         </div>
       )}
       </div>
     </div>
+
   )
 }

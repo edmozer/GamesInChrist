@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 interface GameCard {
   id: string;
@@ -27,9 +28,9 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return newArray
 }
 
-// Christmas image set (folder: public/images/Christmas)
-// Lista confirmada de imagens em public/images/Christmas
-const christmasContents = [
+
+// Christmas image sets
+const christmasContentsPT = [
   "/images/Christmas/anjo_gabriel.png",
   "/images/Christmas/anjos.png",
   "/images/Christmas/belém.png",
@@ -46,10 +47,30 @@ const christmasContents = [
   "/images/Christmas/ouro.png",
   "/images/Christmas/ovelhas.png",
   "/images/Christmas/tres_reis_magos.png",
-]
+];
+
+const christmasContentsEN = [
+  "/images/Christmas/christmas-english/angel-gabriel.jpg",
+  "/images/Christmas/christmas-english/angels.jpg",
+  "/images/Christmas/christmas-english/bethlehem.png",
+  "/images/Christmas/christmas-english/census.jpg",
+  "/images/Christmas/christmas-english/the-stable.jpg",
+  "/images/Christmas/christmas-english/bethlehem-star.jpg",
+  "/images/Christmas/christmas-english/incense.jpg",
+  "/images/Christmas/christmas-english/baby-jesus.jpg",
+  "/images/Christmas/christmas-english/joseph.jpg",
+  "/images/Christmas/christmas-english/the-manger.jpg",
+  "/images/Christmas/christmas-english/mary.jpg",
+  "/images/Christmas/christmas-english/myrh.jpg",
+  "/images/Christmas/christmas-english/bethlehem.jpg", // used as nazare equivalent
+  "/images/Christmas/christmas-english/gold.jpg",
+  "/images/Christmas/christmas-english/sheep.jpg",
+  "/images/Christmas/christmas-english/3-wise-men.jpg",
+];
 
 export default function MemoryGameChristmasPage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -82,9 +103,10 @@ export default function MemoryGameChristmasPage() {
     setLockBoard(false)
     setHasGameEnded(false)
 
-    // Limitar ao máximo disponível
-    const maxPairs = Math.min(numCardPairs, Math.floor(christmasContents.length))
-    const selectedContents = shuffleArray([...christmasContents]).slice(0, maxPairs)
+  // Escolher imagens conforme o idioma
+  const contents = language === 'en' ? christmasContentsEN : christmasContentsPT;
+  const maxPairs = Math.min(numCardPairs, Math.floor(contents.length))
+  const selectedContents = shuffleArray([...contents]).slice(0, maxPairs)
     const doubled = selectedContents.flatMap((content) => [content, content])
     const withIds = shuffleArray(doubled).map((content, idx) => ({
       id: `${content}#${idx}`, // id determinístico (sem Math.random)
@@ -93,7 +115,7 @@ export default function MemoryGameChristmasPage() {
       isMatched: false,
     }))
     setCards(withIds)
-  }, [numCardPairs, playerNames])
+  }, [numCardPairs, playerNames, language])
 
   // Ajustar posição do placar após montar (opcional)
   useEffect(() => {

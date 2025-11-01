@@ -1,3 +1,43 @@
+// --- Types and helpers from christmas/page.tsx ---
+interface GameCard {
+  id: string;
+  content: string;
+  isFlipped: boolean;
+  isMatched: boolean;
+}
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+  return newArray
+}
+
+// TODO: Replace with correct image set for this game mode if needed
+const cardContents = [
+  "/images/Restoration/angel-moroni.png",
+  "/images/Restoration/book-of-mormon.png",
+  "/images/Restoration/first-vision.png",
+  "/images/Restoration/joseph-smith.png",
+  "/images/Restoration/golden-plates.png",
+  "/images/Restoration/temple.png",
+  "/images/Restoration/jesus-christ.png",
+  "/images/Restoration/prophet.png",
+  "/images/Restoration/missionary.png",
+  "/images/Restoration/baptism.png",
+  "/images/Restoration/holy-ghost.png",
+  "/images/Restoration/prayer.png",
+  "/images/Restoration/family.png",
+  "/images/Restoration/zion.png",
+  "/images/Restoration/faith.png",
+  "/images/Restoration/repentance.png",
+  "/images/Restoration/charity.png",
+  "/images/Restoration/service.png",
+  "/images/Restoration/temple-sealing.png",
+  "/images/Restoration/mission-call.png",
+];
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
