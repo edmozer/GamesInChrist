@@ -11,10 +11,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation" // Importar useRouter
 
 export default function MemoryGameSetupPage() {
+  const [numCardPairsError, setNumCardPairsError] = useState("");
   const router = useRouter() // Inicializar useRouter
   const [numPlayers, setNumPlayers] = useState(1)
   const [playerNames, setPlayerNames] = useState<string[]>(["Jogador 1"])
-  const [numCardPairs, setNumCardPairs] = useState(14) // Default to 14 pairs
+  const [numCardPairs, setNumCardPairs] = useState(14) // Valor numérico
+  const [numCardPairsInput, setNumCardPairsInput] = useState("14") // Valor do input como string
   const [version, setVersion] = useState<'restauracao' | 'natal'>('natal')
 
   const handleNumPlayersChange = (value: number[]) => {
@@ -39,13 +41,28 @@ export default function MemoryGameSetupPage() {
   }
 
   const handleNumCardPairsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value)
-    if (isNaN(value)) return
-    const clampedValue = Math.min(Math.max(value, 2), 25)
-    setNumCardPairs(clampedValue)
+    const raw = event.target.value;
+    setNumCardPairsInput(raw);
+    setNumCardPairsError("");
+    if (raw === "") return;
+    const value = parseInt(raw);
+    if (!isNaN(value)) {
+      if (value < 2 || value > 25) {
+        setNumCardPairsError("O número de pares deve ser entre 2 e 25.");
+      } else {
+        setNumCardPairs(value);
+      }
+    }
   }
 
+  const isNumCardPairsValid =
+    numCardPairsInput !== "" &&
+    !isNaN(Number(numCardPairsInput)) &&
+    Number(numCardPairsInput) >= 2 &&
+    Number(numCardPairsInput) <= 25;
+
   const startGame = () => {
+    if (!isNumCardPairsValid) return;
     // Navegar para a página do jogo, passando as configurações via query parameters
     const encodedPlayerNames = encodeURIComponent(JSON.stringify(playerNames))
     if (version === 'natal') {
@@ -164,19 +181,23 @@ export default function MemoryGameSetupPage() {
                 type="number"
                 min={2}
                 max={25}
-                value={numCardPairs}
+                value={numCardPairsInput}
                 onChange={handleNumCardPairsChange}
                 className="w-28 text-center bg-white/60 border-brand-primary-100 text-brand-text-dark placeholder:text-brand-text-light focus:border-brand-accent-500 focus:ring-brand-accent-500 rounded-2xl"
               />
               <span className={`${isChristmas ? 'text-red-600' : 'text-brand-text-medium'} text-sm`}>
                 (Min: 2, Max: 25 pares)
               </span>
+              {numCardPairsError && (
+                <span className="text-red-600 text-xs font-semibold block mt-1">{numCardPairsError}</span>
+              )}
             </div>
           </div>
 
           <div className="flex flex-col gap-4">
             <Button
               onClick={startGame}
+              disabled={!isNumCardPairsValid}
               className={`w-full bg-gradient-to-r ${isChristmas ? 'from-red-600 to-red-700 hover:from-red-700 hover:to-red-800' : 'from-brand-primary-600 to-brand-primary-700 hover:from-brand-primary-700 hover:to-brand-primary-800'} text-white shadow-lg text-lg py-6 rounded-full`}
             >
               <Play className="mr-2 h-5 w-5" />

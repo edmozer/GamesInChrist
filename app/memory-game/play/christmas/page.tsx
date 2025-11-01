@@ -65,6 +65,7 @@ export default function MemoryGameChristmasPage() {
   const [toastMessage, setToastMessage] = useState("")
   const [showWinnerModal, setShowWinnerModal] = useState(false)
   const [winner, setWinner] = useState<string>("")
+  const [isDraw, setIsDraw] = useState(false)
   const [hasGameEnded, setHasGameEnded] = useState(false)
 
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
@@ -122,9 +123,20 @@ export default function MemoryGameChristmasPage() {
           const allMatchedNext = newCards.every((c) => c.isMatched)
           if (allMatchedNext && !hasGameEnded) {
             const maxScore = Math.max(...s)
-            const winnerIndex = s.indexOf(maxScore)
-            const winnerName = playerNames[winnerIndex]
-            setWinner(winnerName)
+            const winners = playerNames.filter((_, idx) => s[idx] === maxScore)
+            if (winners.length > 1) {
+              setIsDraw(true)
+              let winnerStr = ""
+              if (winners.length === 2) {
+                winnerStr = winners.join(" e ")
+              } else {
+                winnerStr = winners.slice(0, -1).join(", ") + " e " + winners[winners.length - 1]
+              }
+              setWinner(winnerStr)
+            } else {
+              setIsDraw(false)
+              setWinner(winners[0])
+            }
             setShowWinnerModal(true)
             setHasGameEnded(true)
           } else {
@@ -229,8 +241,17 @@ export default function MemoryGameChristmasPage() {
         <div className="w-24 h-24 mx-auto mb-4">
           <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
         </div>
-        <h2 className="text-3xl font-bold text-red-900 mb-4">Parabéns!</h2>
-        <p className="text-xl text-red-800 mb-6">O vencedor é <span className="font-bold text-red-700">{winner}</span>!</p>
+        <h2 className="text-3xl font-bold text-red-900 mb-4">{isDraw ? "Empate!" : "Parabéns!"}</h2>
+        {isDraw ? (
+          <>
+            <p className="text-xl text-red-800 mb-2">Houve um empate entre <span className="font-bold text-red-700">{winner}</span>!</p>
+            <p className="text-base text-red-700 mb-6 italic flex items-center justify-center gap-2">
+              Não acho que quem ganhar ou quem perder, nem quem ganhar nem perder, vai ganhar ou perder. Vai todo mundo perder. <span aria-label="riso" title="riso">😄</span>
+            </p>
+          </>
+        ) : (
+          <p className="text-xl text-red-800 mb-6">O vencedor é <span className="font-bold text-red-700">{winner}</span>!</p>
+        )}
         <div className="flex gap-4 justify-center">
           <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">Jogar Novamente</Button>
           <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">Menu Principal</Button>
