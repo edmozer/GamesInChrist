@@ -12,7 +12,7 @@ export default function TermosDeUso() {
         <li>Não garantimos a disponibilidade contínua do site, nem a exatidão ou atualização constante das informações.</li>
         <li>Não coletamos dados pessoais dos usuários, exceto o mínimo necessário para o funcionamento do site.</li>
         <li>Ao utilizar este site, você concorda em respeitar os princípios cristãos de respeito, amor ao próximo e honestidade.</li>
-        <li>Caso tenha dúvidas, sugestões ou queira solicitar a remoção de algum conteúdo, entre em contato pelo <Link href="https://www.linkedin.com/in/edmozer" target="_blank" className="text-brand-primary-700 underline">LinkedIn do desenvolvedor</Link>.</li>
+        <li>Caso tenha dúvidas, sugestões ou queira solicitar a remoção de algum conteúdo, entre em contato pelo <Link href="https://www.linkedin.com/in/edmozer-cavalcante/" target="_blank" className="text-brand-primary-700 underline">LinkedIn do desenvolvedor</Link>.</li>
       </ul>
       <p className="mb-4 text-brand-text-medium font-sans">
         Estes termos podem ser atualizados a qualquer momento, sem aviso prévio.

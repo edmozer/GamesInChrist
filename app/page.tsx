@@ -359,16 +359,47 @@ export default function LandingPage() {
               © {new Date().getFullYear()} Jogos em Cristo. Feito com ❤️ para a glória de Deus.
             </p>
             <nav className="flex gap-4 mt-4 sm:mt-0">
-              <Link href="#" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
+              <Link href="/termos-de-uso" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
                 Termos de Uso
               </Link>
-              <Link href="/about" className="text-xs text-brand-text-medium hover:text-brand-primary-700">
+              <button
+                type="button"
+                className="text-xs text-brand-text-medium hover:text-brand-primary-700 underline"
+                onClick={() => setShowSobreModal(true)}
+              >
                 Sobre
-              </Link>
+              </button>
             </nav>
           </div>
         </div>
       </footer>
+      {/* Modal Sobre */}
+      {showSobreModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full m-4 p-6 relative max-h-[90vh] flex flex-col overflow-y-auto">
+            <button
+              className="absolute top-2 right-2 text-brand-primary-700 hover:text-brand-primary-900 text-xl font-bold"
+              onClick={() => setShowSobreModal(false)}
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <h1 className="text-3xl font-bold mb-6 text-brand-primary-900 font-heading">Sobre o Desenvolvimento do Sistema</h1>
+            <p className="mb-4 text-brand-text-medium font-sans">
+              Este site foi desenvolvido com <b>Next.js</b> (React), utilizando componentes reutilizáveis, estilização com <b>Tailwind CSS</b> e deploy moderno. O desenvolvimento contou com auxílio da IA <b>Claude Sonnet</b> para código e estrutura.
+            </p>
+            <p className="mb-4 text-brand-text-medium font-sans">
+              A maioria das imagens foi gerada/editada por IA utilizando o <b>Google Gemini 2.5 Flash Image</b>, conhecido popularmente como <b>Nano Banana</b>.
+            </p>
+            <p className="mb-4 text-brand-text-medium font-sans">
+              Um dos objetivos do site é mostrar como a inteligência artificial pode ser usada em prol do evangelho de Jesus Cristo.
+            </p>
+            <p className="mb-4 text-brand-text-medium font-sans">
+              Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto <b>Edmozer Cavalcante</b> no <a href="https://www.linkedin.com/in/edmozer-cavalcante/" target="_blank" rel="noopener noreferrer" className="underline text-brand-primary-700 hover:text-brand-primary-900">LinkedIn</a>.
+            </p>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   )

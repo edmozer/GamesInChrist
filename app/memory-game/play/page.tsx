@@ -85,6 +85,8 @@ export default function MemoryGamePage() {
   const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
+  const [showCardSizeHint, setShowCardSizeHint] = useState(false);
+  const [hintFading, setHintFading] = useState(false);
 
   // Game initialization
   const resetGame = useCallback(() => {
@@ -110,6 +112,31 @@ export default function MemoryGamePage() {
   useEffect(() => {
     resetGame()
   }, [resetGame])
+
+  useEffect(() => {
+    const lastHint = localStorage.getItem("cardSizeHintLastShown")
+    const now = Date.now()
+    const threeDays = 1000 * 60 * 60 * 24 * 3
+    if (!lastHint || now - Number(lastHint) > threeDays) {
+      setShowCardSizeHint(true)
+      localStorage.setItem("cardSizeHintLastShown", now.toString())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showCardSizeHint) {
+      const timer = setTimeout(() => {
+        setHintFading(true);
+        setTimeout(() => setShowCardSizeHint(false), 400);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showCardSizeHint]);
+
+  const dismissCardSizeHint = useCallback(() => {
+    setHintFading(true);
+    setTimeout(() => setShowCardSizeHint(false), 400);
+  }, []);
 
   const handleCardClick = (id: string) => {
     // Não permita cliques se o tabuleiro estiver bloqueado
@@ -399,29 +426,71 @@ export default function MemoryGamePage() {
         <div className="absolute inset-0 overflow-y-auto z-0">
           <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-32">
             {/* Zoom controls */}
-            <div className="fixed bottom-20 right-6 flex flex-col gap-2 z-20">
-              <Button
-                onClick={() => setCardSize(prev => ({
-                  min: Math.min(prev.min + 10, 300),
-                  max: Math.min(prev.max + 10, 320)
-                }))}
-                variant="outline"
-                size="sm"
-                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
-              >
-                +
-              </Button>
-              <Button
-                onClick={() => setCardSize(prev => ({
-                  min: Math.max(prev.min - 10, 60),
-                  max: Math.max(prev.max - 10, 80)
-                }))}
-                variant="outline"
-                size="sm"
-                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
-              >
-                -
-              </Button>
+            <div className="bubble-wrap" style={{ position: 'fixed', right: 88, bottom: 96, zIndex: 40, pointerEvents: 'none' }}>
+              {showCardSizeHint && (
+                <div
+                  className={`speech-bubble${hintFading ? ' fade-out' : ''}`}
+                  style={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '12px 52px 12px 18px',
+                    maxWidth: 'min(90vw, 880px)',
+                    background: '#fff',
+                    color: '#6b2f00',
+                    borderRadius: 9999,
+                    boxShadow: '0 6px 20px rgba(0,0,0,.20)',
+                    pointerEvents: 'auto',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span className="bubble-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>Ajuste o tamanho dos cards por aqui!</span>
+                  <button
+                    onClick={dismissCardSizeHint}
+                    className="close"
+                    aria-label="Fechar"
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: 28,
+                      height: 28,
+                      borderRadius: 9999,
+                      background: 'rgba(255,255,255,.95)',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.14)',
+                      display: 'grid',
+                      placeItems: 'center',
+                      border: 0,
+                      cursor: 'pointer',
+                      zIndex: 2,
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 8.586l4.95-4.95a1 1 0 111.414 1.415L11.414 10l4.95 4.95a1 1 0 01-1.414 1.415L10 11.414l-4.95 4.95a1 1 0 01-1.415-1.415L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" clipRule="evenodd" /></svg>
+                  </button>
+                  <style>{`
+                    .speech-bubble.fade-out {
+                      opacity: 0;
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble {
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble::after,
+                    .speech-bubble::before {
+                      content: none !important;
+                      display: none !important;
+                    }
+                  `}</style>
+                </div>
+              )}
+            </div>
+            <div className="zoom-buttons" style={{ position: 'fixed', right: 24, bottom: 80, zIndex: 10 }}>
+              <div className="flex flex-col gap-2">
+                <Button onClick={() => setCardSize(prev => ({ min: Math.min(prev.min + 10, 300), max: Math.min(prev.max + 10, 320) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">+</Button>
+                <Button onClick={() => setCardSize(prev => ({ min: Math.max(prev.min - 10, 60), max: Math.max(prev.max - 10, 80) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">-</Button>
+              </div>
             </div>
             <div 
               className="grid gap-4 w-full auto-rows-fr"
