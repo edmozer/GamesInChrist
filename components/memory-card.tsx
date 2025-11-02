@@ -83,15 +83,7 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
           />
           {/* Dark overlay for better contrast, only if matched */}
           {isMatched && <div className="absolute inset-0 bg-black/60" />}
-          {/* Blurred/shadowed text overlay for contrast (if content is a char/emoji) */}
-          {typeof content === 'string' && content.match(/\.(png|jpg|jpeg|gif|svg)$/i) === null && (
-            <span
-              className="absolute inset-0 flex items-center justify-center text-5xl font-extrabold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] blur-[0.5px] select-none pointer-events-none"
-              style={{ zIndex: 2 }}
-            >
-              {content}
-            </span>
-          )}
+          {/* No text overlay for image cards */}
         </div>
       </motion.div>
     </motion.div>

@@ -74,7 +74,7 @@ export default function MemoryGameSetupPage() {
     }
   }
 
-  const bgImage = version === 'natal' ? "/images/Christmas/natal_bg.jpeg" : "/images/nauvoo.jpeg"
+  const bgImage = version === 'natal' ? "/images/Christmas/natal_bg.webp" : "/images/nauvoo.jpeg"
   const isChristmas = version === 'natal'
   return (
     <div

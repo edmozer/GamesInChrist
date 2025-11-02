@@ -31,28 +31,28 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 // Christmas image sets
 const christmasContentsPT = [
-  "/images/Christmas/anjo_gabriel.png",
-  "/images/Christmas/anjos.png",
-  "/images/Christmas/belém.png",
-  "/images/Christmas/censo.png",
-  "/images/Christmas/estabulo.png",
-  "/images/Christmas/estrela_belem.png",
-  "/images/Christmas/incenso.png",
-  "/images/Christmas/jesus_bebe.png",
-  "/images/Christmas/jose.png",
-  "/images/Christmas/manjedoura.png",
-  "/images/Christmas/maria.png",
-  "/images/Christmas/mirra.png",
-  "/images/Christmas/nazare.png",
-  "/images/Christmas/ouro.png",
-  "/images/Christmas/ovelhas.png",
-  "/images/Christmas/tres_reis_magos.png",
+  "/images/Christmas/anjo_gabriel.webp",
+  "/images/Christmas/anjos.webp",
+  "/images/Christmas/belém.webp",
+  "/images/Christmas/censo.webp",
+  "/images/Christmas/estabulo.webp",
+  "/images/Christmas/estrela_belem.webp",
+  "/images/Christmas/incenso.webp",
+  "/images/Christmas/jesus_bebe.webp",
+  "/images/Christmas/jose.webp",
+  "/images/Christmas/manjedoura.webp",
+  "/images/Christmas/maria.webp",
+  "/images/Christmas/mirra.jpg",
+  "/images/Christmas/nazare.webp",
+  "/images/Christmas/ouro.webp",
+  "/images/Christmas/ovelhas.webp",
+  "/images/Christmas/tres_reis_magos.webp",
 ];
 
 const christmasContentsEN = [
   "/images/Christmas/christmas-english/angel-gabriel.jpg",
   "/images/Christmas/christmas-english/angels.jpg",
-  "/images/Christmas/christmas-english/bethlehem.png",
+  "/images/Christmas/christmas-english/bethlehem.jpg",
   "/images/Christmas/christmas-english/census.jpg",
   "/images/Christmas/christmas-english/the-stable.jpg",
   "/images/Christmas/christmas-english/bethlehem-star.jpg",
@@ -315,7 +315,7 @@ export default function MemoryGameChristmasPage() {
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
-      style={{ backgroundImage: "url(/images/Christmas/natal_bg.jpeg)" }}
+  style={{ backgroundImage: "url(/images/Christmas/natal_bg.webp)" }}
     >
       {showWinnerModal && <WinnerModal />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
