@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 interface WinnerModalProps {
   winner: string;
@@ -12,94 +13,119 @@ interface WinnerModalProps {
 }
 
 export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModalProps) {
+  const { t } = useTranslation();
+  const winnerMsg = t('winnerMessage', { player: winner });
+  const shareUrl = 'https://games-in-christ.vercel.app/';
+  const shareText = `${winnerMsg} ${shareUrl}`;
+  const shareTextEncoded = encodeURIComponent(shareText);
+  const shareMsgEncoded = encodeURIComponent(winnerMsg);
+  const shareUrlEncoded = encodeURIComponent(shareUrl);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
     >
-      <div className="relative">
-        {/* Left confetti */}
-        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
-          <div className="confetti-pulse">
-            <Image
-              src="/images/confetti.png"
-              alt="Confetti"
-              width={120}
-              height={120}
-              className="object-contain"
-              priority
-              style={{ 
-                transform: 'translate3d(0,0,0)',
-                backfaceVisibility: 'hidden',
-                willChange: 'transform',
-                imageRendering: 'auto'
-              }}
-            />
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('congratulations')}</h2>
+          <p className="text-gray-600">{winnerMsg}</p>
+        </div>
+        <div className="space-y-3">
+          <Button
+            onClick={onPlayAgain}
+            className="w-full bg-brand-primary-600 hover:bg-brand-primary-700"
+          >
+            {t('playAgain')}
+          </Button>
+          <Button
+            onClick={onReturn}
+            variant="outline"
+            className="w-full border-brand-primary-200 text-brand-primary-700"
+          >
+            {t('mainMenu')}
+          </Button>
+          
+          {/* Social Share Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            {/* WhatsApp */}
+            <a
+              href={`https://wa.me/?text=${shareTextEncoded}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center"
+              style={{ minWidth: 64 }}
+            >
+              <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 transition shadow">
+                <Image
+                  src="/images/social-media/Digital_Glyph_White.png"
+                  alt="WhatsApp"
+                  width={28}
+                  height={28}
+                />
+              </span>
+              <span className="text-xs mt-1 text-green-700 font-medium">WhatsApp</span>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center"
+              style={{ minWidth: 64 }}
+            >
+              <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:from-pink-600 hover:via-red-600 hover:to-yellow-600 transition shadow">
+                <Image
+                  src="/images/social-media/Instagram_Glyph_White.png"
+                  alt="Instagram"
+                  width={28}
+                  height={28}
+                />
+              </span>
+              <span className="text-xs mt-1 text-pink-700 font-medium">Instagram</span>
+            </a>
+
+            {/* Facebook */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrlEncoded}&quote=${shareMsgEncoded}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center"
+              style={{ minWidth: 64 }}
+            >
+              <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 transition shadow">
+                <Image
+                  src="/images/social-media/Facebook_Logo_Primary.png"
+                  alt="Facebook"
+                  width={28}
+                  height={28}
+                />
+              </span>
+              <span className="text-xs mt-1 text-blue-700 font-medium">Facebook</span>
+            </a>
+
+            {/* X */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=${shareUrlEncoded}&text=${shareMsgEncoded}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center"
+              style={{ minWidth: 64 }}
+            >
+              <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-black hover:bg-gray-800 transition shadow">
+                <Image
+                  src="/images/social-media/logo-white.png"
+                  alt="X"
+                  width={28}
+                  height={28}
+                />
+              </span>
+              <span className="text-xs mt-1 text-gray-800 font-medium">X</span>
+            </a>
           </div>
         </div>
-
-        {/* Right confetti */}
-        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
-          <div className="confetti-pulse" style={{ animationDelay: '0.5s' }}>
-            <Image
-              src="/images/confetti.png"
-              alt="Confetti"
-              width={120}
-              height={120}
-              className="object-contain"
-              priority
-              style={{ 
-                transform: 'translate3d(0,0,0)',
-                backfaceVisibility: 'hidden',
-                willChange: 'transform',
-                imageRendering: 'auto'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Modal content */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center shadow-xl"
-        >
-          <div className="relative w-32 h-32 mx-auto mb-4">
-            <Image
-              src="/images/trophy.png"
-              alt="Trophy"
-              fill
-              className="object-contain"
-              priority
-              style={{ 
-                transform: 'translate3d(0,0,0)',
-                backfaceVisibility: 'hidden'
-              }}
-            />
-          </div>
-          <h2 className="text-3xl font-bold text-brand-primary-900 mb-2">
-            Parabéns!
-          </h2>
-          <p className="text-xl text-brand-primary-700 mb-6">
-            {winner} venceu com {score} {score === 1 ? 'ponto' : 'pontos'}!
-          </p>
-          <div className="space-y-3">
-            <Button
-              onClick={onPlayAgain}
-              className="w-full bg-brand-primary-600 hover:bg-brand-primary-700"
-            >
-              Jogar Novamente
-            </Button>
-            <Button
-              onClick={onReturn}
-              variant="outline"
-              className="w-full border-brand-primary-200 text-brand-primary-700"
-            >
-              Voltar ao Menu
-            </Button>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );

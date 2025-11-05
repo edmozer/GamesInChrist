@@ -1,7 +1,10 @@
+
 export type Language = 'pt' | 'en' | 'es';
 
 export const translations = {
   pt: {
+    // Share invitation
+    shareInvitation: 'Venha jogar e fortalecer sua fé com Games in Christ!',
     // Home
   homeTitle: 'Jogos que edificam e divertem',
   homeDescription: 'Descubra uma coleção especial de jogos cristãos que combinam diversão, aprendizado e crescimento espiritual. Perfeito para toda a família!',
@@ -80,6 +83,8 @@ export const translations = {
     aboutDevText4: 'Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto Edmozer Cavalcante no LinkedIn.',
   },
   en: {
+    // Share invitation
+    shareInvitation: 'Come play and strengthen your faith with Games in Christ!',
     // Home
     homeTitle: 'Games in Christ',
     homeDescription: 'Have fun while strengthening your faith',
@@ -158,6 +163,8 @@ export const translations = {
     aboutDevText4: 'Ideas and feedback are very welcome! You can find the project creator Edmozer Cavalcante on LinkedIn.',
   },
   es: {
+    // Share invitation
+    shareInvitation: '¡Ven a jugar y fortalecer tu fe con Games in Christ!',
     // Spanish (initially copy English, to be translated)
     homeTitle: 'Juegos en Cristo',
     homeDescription: '¡Diviértete mientras fortaleces tu fe!',

@@ -58,6 +58,7 @@ import Image from "next/image"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { useCardSize } from "@/hooks/use-card-size"
+import { WinnerModal } from "@/components/winner-modal-new"
 
 export default function MemoryGamePage() {
   const { t } = useTranslation();
@@ -232,70 +233,18 @@ export default function MemoryGamePage() {
     resetGame()
   }
 
-  // Componente do Modal de Vencedor
-  const WinnerModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.5, opacity: 0 }}
-        className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
-      >
-        {/* Confetti esquerdo */}
-        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
-          <Image
-            src="/images/confetti.png"
-            alt="Confetti left"
-            width={120}
-            height={120}
-            className="animate-float-left"
-          />
-        </div>
-
-        {/* Confetti direito */}
-        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
-          <Image
-            src="/images/confetti.png"
-            alt="Confetti right"
-            width={120}
-            height={120}
-            className="animate-float-right"
-          />
-        </div>
-
-        <div className="w-24 h-24 mx-auto mb-4">
-          <Image
-            src="/images/trophy.png"
-            alt="Troféu"
-            width={96}
-            height={96}
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
-          {t('congratulations')}
-        </h2>
-        <p className="text-xl text-brand-text-medium mb-6">
-          {t('winnerIs', { winner })}
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Button
-            onClick={handleRestart}
-            className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white"
-          >
-            {t('playAgain')}
-          </Button>
-          <Button
-            onClick={() => router.push("/memory-game")}
-            variant="outline"
-            className="border-brand-primary-100 text-brand-primary-700"
-          >
-            {t('mainMenu')}
-          </Button>
-        </div>
-      </motion.div>
-    </div>
-  )
+  // Renderização do Modal de Vencedor
+  const renderWinnerModal = () => {
+    if (!showWinnerModal) return null;
+    return (
+      <WinnerModal
+        winner={winner}
+        score={scores[scores.indexOf(Math.max(...scores))]}
+        onPlayAgain={handleRestart}
+        onReturn={() => router.push("/memory-game")}
+      />
+    );
+  }
 
   // Componente do Placar Arrastável
   const DraggableScoreBoard = () => {
@@ -411,7 +360,7 @@ export default function MemoryGamePage() {
       style={{ backgroundImage: "url(/images/nauvoo.jpeg)" }}
     >
       {/* Modal de Vencedor */}
-      {showWinnerModal && <WinnerModal />}
+      {renderWinnerModal()}
 
       {/* English language warning */}
       {language === 'en' && (

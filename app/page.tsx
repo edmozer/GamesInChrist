@@ -75,7 +75,9 @@ export default function LandingPage() {
               />
             </div>
             <span className="text-xl font-bold text-brand-primary-800 font-heading">
-              {language === 'en' ? 'Games in Christ' : 'Jogos em Cristo'}
+              {language === 'pt' && 'Jogos em Cristo'}
+              {language === 'en' && 'Games in Christ'}
+              {language === 'es' && 'Juegos en Cristo'}
             </span>
           </Link>
           <nav className="flex items-center gap-4">
@@ -92,13 +94,19 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-brand-primary-900 leading-tight font-heading">
-                    {language === 'en' ? (
+                    {language === 'pt' && (
+                      <>
+                        Jogos que <span className="text-brand-primary-600">edificam</span> e <span className="text-brand-secondary-700">divertem</span>
+                      </>
+                    )}
+                    {language === 'en' && (
                       <>
                         Games that <span className="text-brand-primary-600">build up your faith</span> and <span className="text-brand-secondary-700">entertain</span>
                       </>
-                    ) : (
+                    )}
+                    {language === 'es' && (
                       <>
-                        Jogos que <span className="text-brand-primary-600">edificam</span> e <span className="text-brand-secondary-700">divertem</span>
+                        Juegos que <span className="text-brand-primary-600">edifican</span> y <span className="text-brand-secondary-700">divierten</span>
                       </>
                     )}
                   </h1>
@@ -370,7 +378,74 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-brand-primary-100 flex flex-col sm:flex-row justify-between items-center">
+          {/* Share Buttons in Footer */}
+          <div className="flex gap-3 justify-center mt-8 mb-4">
+            {/* WhatsApp */}
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(t('shareInvitation') + ' https://games-in-christ.vercel.app/')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500 text-white font-semibold shadow hover:bg-green-600 transition"
+            >
+              <Image
+                src="/images/social-media/Digital_Glyph_White.png"
+                alt="WhatsApp"
+                width={24}
+                height={24}
+                style={{ display: 'inline-block' }}
+              />
+              WhatsApp
+            </a>
+            {/* Facebook */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=https://games-in-christ.vercel.app/&quote=${encodeURIComponent(t('shareInvitation'))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition"
+            >
+              <Image
+                src="/images/social-media/Facebook_Logo_Primary.png"
+                alt="Facebook"
+                width={24}
+                height={24}
+                style={{ display: 'inline-block' }}
+              />
+              Facebook
+            </a>
+            {/* Twitter */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=https://games-in-christ.vercel.app/&text=${encodeURIComponent(t('shareInvitation'))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-800 transition"
+            >
+              <Image
+                src="/images/social-media/logo-white.png"
+                alt="X"
+                width={24}
+                height={24}
+                style={{ display: 'inline-block' }}
+              />
+              X
+            </a>
+            {/* Instagram (profile link, as direct sharing is not supported) */}
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white font-semibold shadow hover:from-pink-600 hover:via-red-600 hover:to-yellow-600 transition"
+            >
+              <Image
+                src="/images/social-media/Instagram_Glyph_White.png"
+                alt="Instagram"
+                width={24}
+                height={24}
+                style={{ display: 'inline-block' }}
+              />
+              Instagram
+            </a>
+          </div>
+          <div className="mt-2 pt-8 border-t border-brand-primary-100 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-xs text-brand-text-medium font-sans">
               © {new Date().getFullYear()} {t('homeTitle')}. {t('madeWithLove')}
             </p>
