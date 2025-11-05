@@ -9,6 +9,9 @@ import { MemoryCard } from "@/components/memory-card"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
+import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { useCardSize } from "@/hooks/use-card-size"
 
 interface GameCard {
   id: string;
@@ -26,33 +29,54 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return newArray
 }
 
-// Christmas image set (folder: public/images/Christmas)
-// Lista confirmada de imagens em public/images/Christmas
-const christmasContents = [
-  "/images/Christmas/anjo_gabriel.png",
-  "/images/Christmas/anjos.png",
-  "/images/Christmas/belém.png",
-  "/images/Christmas/censo.png",
-  "/images/Christmas/estabulo.png",
-  "/images/Christmas/estrela_belem.png",
-  "/images/Christmas/incenso.png",
-  "/images/Christmas/jesus_bebe.png",
-  "/images/Christmas/jose.png",
-  "/images/Christmas/manjedoura.png",
-  "/images/Christmas/maria.png",
-  "/images/Christmas/mirra.png",
-  "/images/Christmas/nazare.png",
-  "/images/Christmas/ouro.png",
-  "/images/Christmas/ovelhas.png",
-  "/images/Christmas/tres_reis_magos.png",
-]
+
+// Christmas image sets
+const christmasContentsPT = [
+  "/images/Christmas/anjo_gabriel.webp",
+  "/images/Christmas/anjos.webp",
+  "/images/Christmas/belém.webp",
+  "/images/Christmas/censo.webp",
+  "/images/Christmas/estabulo.webp",
+  "/images/Christmas/estrela_belem.webp",
+  "/images/Christmas/incenso.webp",
+  "/images/Christmas/jesus_bebe.webp",
+  "/images/Christmas/jose.webp",
+  "/images/Christmas/manjedoura.webp",
+  "/images/Christmas/maria.webp",
+  "/images/Christmas/mirra.jpg",
+  "/images/Christmas/nazare.webp",
+  "/images/Christmas/ouro.webp",
+  "/images/Christmas/ovelhas.webp",
+  "/images/Christmas/tres_reis_magos.webp",
+];
+
+const christmasContentsEN = [
+  "/images/Christmas/christmas-english/angel-gabriel.jpg",
+  "/images/Christmas/christmas-english/angels.jpg",
+  "/images/Christmas/christmas-english/bethlehem.jpg",
+  "/images/Christmas/christmas-english/census.jpg",
+  "/images/Christmas/christmas-english/the-stable.jpg",
+  "/images/Christmas/christmas-english/bethlehem-star.jpg",
+  "/images/Christmas/christmas-english/incense.jpg",
+  "/images/Christmas/christmas-english/baby-jesus.jpg",
+  "/images/Christmas/christmas-english/joseph.jpg",
+  "/images/Christmas/christmas-english/the-manger.jpg",
+  "/images/Christmas/christmas-english/mary.jpg",
+  "/images/Christmas/christmas-english/myrh.jpg",
+  "/images/Christmas/christmas-english/bethlehem.jpg", // used as nazare equivalent
+  "/images/Christmas/christmas-english/gold.jpg",
+  "/images/Christmas/christmas-english/sheep.jpg",
+  "/images/Christmas/christmas-english/3-wise-men.jpg",
+];
 
 export default function MemoryGameChristmasPage() {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
-  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
+  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 5
 
   const [playerNames] = useState<string[]>(initialPlayerNames)
   const [numCardPairs] = useState<number>(initialNumCardPairs)
@@ -65,10 +89,11 @@ export default function MemoryGameChristmasPage() {
   const [toastMessage, setToastMessage] = useState("")
   const [showWinnerModal, setShowWinnerModal] = useState(false)
   const [winner, setWinner] = useState<string>("")
+  const [isDraw, setIsDraw] = useState(false)
   const [hasGameEnded, setHasGameEnded] = useState(false)
 
-  const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
-  // Evitar mismatch: iniciar com posição fixa; ajustar depois se necessário
+  const { cardSize, setCardSize } = useCardSize(numCardPairs)
+  // Use dynamic card sizing based on screen size and number of cards
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: 20, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
 
@@ -79,9 +104,10 @@ export default function MemoryGameChristmasPage() {
     setLockBoard(false)
     setHasGameEnded(false)
 
-    // Limitar ao máximo disponível
-    const maxPairs = Math.min(numCardPairs, Math.floor(christmasContents.length))
-    const selectedContents = shuffleArray([...christmasContents]).slice(0, maxPairs)
+  // Escolher imagens conforme o idioma
+  const contents = language === 'en' ? christmasContentsEN : christmasContentsPT;
+  const maxPairs = Math.min(numCardPairs, Math.floor(contents.length))
+  const selectedContents = shuffleArray([...contents]).slice(0, maxPairs)
     const doubled = selectedContents.flatMap((content) => [content, content])
     const withIds = shuffleArray(doubled).map((content, idx) => ({
       id: `${content}#${idx}`, // id determinístico (sem Math.random)
@@ -90,7 +116,7 @@ export default function MemoryGameChristmasPage() {
       isMatched: false,
     }))
     setCards(withIds)
-  }, [numCardPairs, playerNames])
+  }, [numCardPairs, playerNames, language])
 
   // Ajustar posição do placar após montar (opcional)
   useEffect(() => {
@@ -122,13 +148,24 @@ export default function MemoryGameChristmasPage() {
           const allMatchedNext = newCards.every((c) => c.isMatched)
           if (allMatchedNext && !hasGameEnded) {
             const maxScore = Math.max(...s)
-            const winnerIndex = s.indexOf(maxScore)
-            const winnerName = playerNames[winnerIndex]
-            setWinner(winnerName)
+            const winners = playerNames.filter((_, idx) => s[idx] === maxScore)
+            if (winners.length > 1) {
+              setIsDraw(true)
+              let winnerStr = ""
+              if (winners.length === 2) {
+                winnerStr = winners.join(" e ")
+              } else {
+                winnerStr = winners.slice(0, -1).join(", ") + " e " + winners[winners.length - 1]
+              }
+              setWinner(winnerStr)
+            } else {
+              setIsDraw(false)
+              setWinner(winners[0])
+            }
             setShowWinnerModal(true)
             setHasGameEnded(true)
           } else {
-            setToastMessage("🎉 CORRETO! 🎉")
+            setToastMessage(t('correct'))
             setShowToast(true)
             setTimeout(() => setShowToast(false), 1500)
           }
@@ -176,7 +213,7 @@ export default function MemoryGameChristmasPage() {
           <div className="h-10 w-full bg-red-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-red-700 shrink-0" />
-              <span className="text-base font-medium text-red-800 truncate">Placar</span>
+              <span className="text-base font-medium text-red-800 truncate">{t('scoreboard')}</span>
             </div>
             <button 
               className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-red-200/50 transition-colors shrink-0"
@@ -194,7 +231,7 @@ export default function MemoryGameChristmasPage() {
                 {playerNames.map((name, index) => (
                   <div key={index} className={`flex justify-between items-center p-2 rounded-2xl transition-colors ${index === currentPlayerIndex ? "bg-red-100 text-red-800 font-medium" : "text-brand-text-medium hover:bg-red-50"}`}>
                     <span className="font-medium truncate mr-2">{name}</span>
-                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? t('pair') : t('pairs')}</span>
                   </div>
                 ))}
               </div>
@@ -229,36 +266,164 @@ export default function MemoryGameChristmasPage() {
         <div className="w-24 h-24 mx-auto mb-4">
           <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
         </div>
-        <h2 className="text-3xl font-bold text-red-900 mb-4">Parabéns!</h2>
-        <p className="text-xl text-red-800 mb-6">O vencedor é <span className="font-bold text-red-700">{winner}</span>!</p>
+        <h2 className="text-3xl font-bold text-red-900 mb-4">{isDraw ? 'Empate!' : t('congratulations')}</h2>
+        {isDraw ? (
+          <>
+            <p className="text-xl text-red-800 mb-2">Houve um empate entre <span className="font-bold text-red-700">{winner}</span>!</p>
+            <p className="text-base text-red-700 mb-6 italic flex items-center justify-center gap-2">
+              Não acho que quem ganhar ou quem perder, nem quem ganhar nem perder, vai ganhar ou perder. Vai todo mundo perder. <span aria-label="riso" title="riso">😄</span>
+            </p>
+          </>
+        ) : (
+          <p className="text-xl text-red-800 mb-6">{t('winnerIs', { winner })}</p>
+        )}
         <div className="flex gap-4 justify-center">
-          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">Jogar Novamente</Button>
-          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">Menu Principal</Button>
+          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">{t('playAgain')}</Button>
+          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">{t('mainMenu')}</Button>
         </div>
       </motion.div>
     </div>
   )
 
+  const [showCardSizeHint, setShowCardSizeHint] = useState(false);
+  const [hintFading, setHintFading] = useState(false);
+
+  useEffect(() => {
+    const lastHint = localStorage.getItem("cardSizeHintLastShown")
+    const now = Date.now()
+    const threeDays = 1000 * 60 * 60 * 24 * 3
+    if (!lastHint || now - Number(lastHint) > threeDays) {
+      setShowCardSizeHint(true)
+      localStorage.setItem("cardSizeHintLastShown", now.toString())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showCardSizeHint) {
+      const timer = setTimeout(() => {
+        setHintFading(true);
+        setTimeout(() => setShowCardSizeHint(false), 400);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showCardSizeHint])
+
+  const dismissCardSizeHint = useCallback(() => {
+    setHintFading(true);
+    setTimeout(() => setShowCardSizeHint(false), 400);
+  }, [])
+
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
-      style={{ backgroundImage: "url(/images/Christmas/natal_bg.jpeg)" }}
+  style={{ backgroundImage: "url(/images/Christmas/natal_bg.webp)" }}
     >
       {showWinnerModal && <WinnerModal />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
-        <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória - Natal</h1>
+        <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')} - Natal</h1>
       </div>
 
       <DraggableScoreBoard />
 
-      <div className="flex-1 relative">
-        <div className="absolute inset-0 overflow-y-auto z-0">
-          <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-32">
-            <div className="fixed bottom-20 right-6 flex flex-col gap-2 z-20">
-              <Button onClick={() => setCardSize(prev => ({ min: Math.min(prev.min + 10, 300), max: Math.min(prev.max + 10, 320) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">+</Button>
-              <Button onClick={() => setCardSize(prev => ({ min: Math.max(prev.min - 10, 60), max: Math.max(prev.max - 10, 80) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">-</Button>
+      <div className="flex-1 relative flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center overflow-hidden">
+          <div className="w-full max-w-7xl mx-auto px-4">
+            {/* Zoom controls */}
+            <div className="bubble-wrap" style={{ position: 'fixed', right: 88, bottom: 96, zIndex: 40, pointerEvents: 'none' }}>
+              {showCardSizeHint && (
+                <div
+                  className={`speech-bubble${hintFading ? ' fade-out' : ''}`}
+                  style={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '12px 52px 12px 18px',
+                    maxWidth: 'min(90vw, 880px)',
+                    whiteSpace: 'nowrap',
+                    background: '#fff',
+                    color: '#6b2f00',
+                    borderRadius: 9999,
+                    boxShadow: '0 6px 20px rgba(0,0,0,.20)',
+                    pointerEvents: 'auto',
+                    zIndex: 30,
+                  }}
+                >
+                  <span className="bubble-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>Ajuste o tamanho dos cards por aqui!</span>
+                  <button
+                    onClick={dismissCardSizeHint}
+                    className="close"
+                    aria-label={t('close')}
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: 28,
+                      height: 28,
+                      border: 0,
+                      borderRadius: 9999,
+                      background: 'rgba(255,255,255,.95)',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.14)',
+                      display: 'grid',
+                      placeItems: 'center',
+                      cursor: 'pointer',
+                      zIndex: 2,
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 8.586l4.95-4.95a1 1 0 111.414 1.415L11.414 10l4.95 4.95a1 1 0 01-1.414 1.415L10 11.414l-4.95 4.95a1 1 0 01-1.415-1.415L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" clipRule="evenodd" /></svg>
+                  </button>
+                  <style>{`
+                    .speech-bubble.fade-out {
+                      opacity: 0;
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble {
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble::after,
+                    .speech-bubble::before {
+                      content: none !important;
+                      display: none !important;
+                    }
+                  `}</style>
+                </div>
+              )}
             </div>
-            <div className="grid gap-4 w-full auto-rows-fr" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${cardSize.min}px, ${cardSize.max}px))`, gridAutoRows: '1fr', justifyContent: 'center' }}>
+            <div className="zoom-buttons" style={{ position: 'fixed', right: 24, bottom: 80, zIndex: 10 }}>
+              <div className="flex flex-col gap-2">
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.min(prev.min + 10, 220), 
+                    max: Math.min(prev.max + 10, 240) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  +
+                </Button>
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.max(prev.min - 10, 80), 
+                    max: Math.max(prev.max - 10, 100) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  -
+                </Button>
+              </div>
+            </div>
+            <div className="grid gap-4 w-full place-content-center" style={{ 
+              gridTemplateColumns: `repeat(auto-fit, minmax(${cardSize.min}px, ${cardSize.max}px))`,
+              margin: '0 auto',
+              maxWidth: `calc(${cardSize.max}px * 6 + 16px * 5)`, // 6 columns max with gaps
+              gap: '16px',
+              justifyContent: 'center',
+              alignContent: 'center'
+            }}>
               {cards.map((card) => (
                 <MemoryCard
                   key={card.id}
@@ -285,15 +450,15 @@ export default function MemoryGameChristmasPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 items-center gap-4">
             <div className="flex items-center gap-3 justify-start">
-              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100/30 text-white hover:text-white hover:bg-red-50/30 bg-transparent rounded-full" size="sm">Voltar</Button>
+              <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100/30 text-white hover:text-white hover:bg-red-50/30 bg-transparent rounded-full" size="sm">{t('back')}</Button>
               <Button onClick={() => { setLockBoard(true); setTimeout(() => { resetGame() }, 300) }} className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-md rounded-full" size="sm">
-                <RotateCcw className="mr-2 h-4 w-4" /> Reiniciar
+                <RotateCcw className="mr-2 h-4 w-4" /> {t('restart')}
               </Button>
             </div>
             <div className="flex justify-center items-center">
               <div className="flex items-center gap-3 text-red-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-red-600" />
-                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                <span className="text-xl font-bold whitespace-nowrap">{t('turnOf', { player: playerNames[currentPlayerIndex] })}</span>
               </div>
             </div>
             <div></div>

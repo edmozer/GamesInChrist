@@ -1,16 +1,6 @@
+
 "use client"
-
-import { useState, useEffect, useCallback, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CustomToast } from "@/components/custom-toast"
-import { RotateCcw, Users, Trophy } from "lucide-react"
-import { MemoryCard } from "@/components/memory-card"
-import { motion } from "framer-motion"
-import { useRouter, useSearchParams } from "next/navigation"
-import Image from "next/image"
-
-// Types
+// --- Types and helpers from christmas/page.tsx ---
 interface GameCard {
   id: string;
   content: string;
@@ -18,7 +8,6 @@ interface GameCard {
   isMatched: boolean;
 }
 
-// Helper functions
 const shuffleArray = <T,>(array: T[]): T[] => {
   const newArray = [...array]
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -28,7 +17,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return newArray
 }
 
-// Card contents - moved outside component to prevent recreation
+// TODO: Replace with correct image set for this game mode if needed
 const cardContents = [
   "/images/img1-min.jpg",
   "/images/img2-min.jpg",
@@ -55,17 +44,31 @@ const cardContents = [
   "/images/img23-min.jpg",
   "/images/img24-min.jpg",
   "/images/img25-min.jpg",
-]
+];
 
-// This page intentionally uses only the Restoration image set.
+import { useState, useEffect, useCallback, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CustomToast } from "@/components/custom-toast"
+import { RotateCcw, Users, Trophy } from "lucide-react"
+import { MemoryCard } from "@/components/memory-card"
+import { motion } from "framer-motion"
+import { useRouter, useSearchParams } from "next/navigation"
+import Image from "next/image"
+import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { useCardSize } from "@/hooks/use-card-size"
+import { WinnerModal } from "@/components/winner-modal-new"
 
 export default function MemoryGamePage() {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   const router = useRouter()
   const searchParams = useSearchParams()
   
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
-  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
+  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 5
 
   // Game state
   const [playerNames] = useState<string[]>(initialPlayerNames)
@@ -82,9 +85,11 @@ export default function MemoryGamePage() {
   const [hasGameEnded, setHasGameEnded] = useState(false)
   
   // UI state
-  const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
+  const { cardSize, setCardSize } = useCardSize(numCardPairs)
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
+  const [showCardSizeHint, setShowCardSizeHint] = useState(false);
+  const [hintFading, setHintFading] = useState(false);
 
   // Game initialization
   const resetGame = useCallback(() => {
@@ -110,6 +115,31 @@ export default function MemoryGamePage() {
   useEffect(() => {
     resetGame()
   }, [resetGame])
+
+  useEffect(() => {
+    const lastHint = localStorage.getItem("cardSizeHintLastShown")
+    const now = Date.now()
+    const threeDays = 1000 * 60 * 60 * 24 * 3
+    if (!lastHint || now - Number(lastHint) > threeDays) {
+      setShowCardSizeHint(true)
+      localStorage.setItem("cardSizeHintLastShown", now.toString())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showCardSizeHint) {
+      const timer = setTimeout(() => {
+        setHintFading(true);
+        setTimeout(() => setShowCardSizeHint(false), 400);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showCardSizeHint]);
+
+  const dismissCardSizeHint = useCallback(() => {
+    setHintFading(true);
+    setTimeout(() => setShowCardSizeHint(false), 400);
+  }, []);
 
   const handleCardClick = (id: string) => {
     // Não permita cliques se o tabuleiro estiver bloqueado
@@ -154,7 +184,7 @@ export default function MemoryGamePage() {
             setShowWinnerModal(true)
             setHasGameEnded(true)
           } else {
-            setToastMessage("🎉 CORRETO! 🎉")
+            setToastMessage(t('correct'))
             setShowToast(true)
             setTimeout(() => setShowToast(false), 1500)
           }
@@ -203,70 +233,18 @@ export default function MemoryGamePage() {
     resetGame()
   }
 
-  // Componente do Modal de Vencedor
-  const WinnerModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.5, opacity: 0 }}
-        className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
-      >
-        {/* Confetti esquerdo */}
-        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
-          <Image
-            src="/images/confetti.png"
-            alt="Confetti left"
-            width={120}
-            height={120}
-            className="animate-float-left"
-          />
-        </div>
-
-        {/* Confetti direito */}
-        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
-          <Image
-            src="/images/confetti.png"
-            alt="Confetti right"
-            width={120}
-            height={120}
-            className="animate-float-right"
-          />
-        </div>
-
-        <div className="w-24 h-24 mx-auto mb-4">
-          <Image
-            src="/images/trophy.png"
-            alt="Troféu"
-            width={96}
-            height={96}
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <h2 className="text-3xl font-bold text-brand-primary-900 mb-4">
-          Parabéns!
-        </h2>
-        <p className="text-xl text-brand-text-medium mb-6">
-          O vencedor é <span className="font-bold text-brand-primary-700">{winner}</span>!
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Button
-            onClick={handleRestart}
-            className="bg-brand-primary-600 hover:bg-brand-primary-700 text-white"
-          >
-            Jogar Novamente
-          </Button>
-          <Button
-            onClick={() => router.push("/memory-game")}
-            variant="outline"
-            className="border-brand-primary-100 text-brand-primary-700"
-          >
-            Menu Principal
-          </Button>
-        </div>
-      </motion.div>
-    </div>
-  )
+  // Renderização do Modal de Vencedor
+  const renderWinnerModal = () => {
+    if (!showWinnerModal) return null;
+    return (
+      <WinnerModal
+        winner={winner}
+        score={scores[scores.indexOf(Math.max(...scores))]}
+        onPlayAgain={handleRestart}
+        onReturn={() => router.push("/memory-game")}
+      />
+    );
+  }
 
   // Componente do Placar Arrastável
   const DraggableScoreBoard = () => {
@@ -325,7 +303,7 @@ export default function MemoryGamePage() {
             <div className="flex items-center gap-1.5 overflow-hidden">
               <Users className="h-4 w-4 text-brand-primary-700 shrink-0" />
               <span className="text-base font-medium text-brand-primary-800 truncate">
-                Placar
+                {t('scoreboard')}
               </span>
             </div>
             <button 
@@ -365,7 +343,7 @@ export default function MemoryGamePage() {
                     }`}
                   >
                     <span className="font-medium truncate mr-2">{name}</span>
-                    <span className="font-bold whitespace-nowrap">{scores[index]} {scores[index] === 1 ? 'par' : 'pares'}</span>
+                    <span className="font-bold whitespace-nowrap">{scores[index]} {t(scores[index] === 1 ? 'pair' : 'pairs')}</span>
                   </div>
                 ))}
               </div>
@@ -376,19 +354,24 @@ export default function MemoryGamePage() {
     )
   }
 
-  // Removido: getPlayerPairs. Usamos `scores` por jogador.
-
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
       style={{ backgroundImage: "url(/images/nauvoo.jpeg)" }}
     >
       {/* Modal de Vencedor */}
-      {showWinnerModal && <WinnerModal />}
-      
+      {renderWinnerModal()}
+
+      {/* English language warning */}
+      {language === 'en' && (
+        <div className="bg-yellow-200 text-yellow-900 text-center py-3 px-4 font-semibold shadow-md">
+          Restoration game cards are not available in English yet.
+        </div>
+      )}
+
       {/* Título no topo */}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
-        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">Jogo da Memória</h1>
+        <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')}</h1>
       </div>
 
       {/* Placar Arrastável */}
@@ -399,29 +382,91 @@ export default function MemoryGamePage() {
         <div className="absolute inset-0 overflow-y-auto z-0">
           <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-32">
             {/* Zoom controls */}
-            <div className="fixed bottom-20 right-6 flex flex-col gap-2 z-20">
-              <Button
-                onClick={() => setCardSize(prev => ({
-                  min: Math.min(prev.min + 10, 300),
-                  max: Math.min(prev.max + 10, 320)
-                }))}
-                variant="outline"
-                size="sm"
-                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
-              >
-                +
-              </Button>
-              <Button
-                onClick={() => setCardSize(prev => ({
-                  min: Math.max(prev.min - 10, 60),
-                  max: Math.max(prev.max - 10, 80)
-                }))}
-                variant="outline"
-                size="sm"
-                className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-brand-primary-50"
-              >
-                -
-              </Button>
+            <div className="bubble-wrap" style={{ position: 'fixed', right: 88, bottom: 96, zIndex: 40, pointerEvents: 'none' }}>
+              {showCardSizeHint && (
+                <div
+                  className={`speech-bubble${hintFading ? ' fade-out' : ''}`}
+                  style={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '12px 52px 12px 18px',
+                    maxWidth: 'min(90vw, 880px)',
+                    background: '#fff',
+                    color: '#6b2f00',
+                    borderRadius: 9999,
+                    boxShadow: '0 6px 20px rgba(0,0,0,.20)',
+                    pointerEvents: 'auto',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span className="bubble-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('adjustCards')}</span>
+                  <button
+                    onClick={dismissCardSizeHint}
+                    className="close"
+                    aria-label="Fechar"
+                    style={{
+                      position: 'absolute',
+                      right: 14,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: 28,
+                      height: 28,
+                      borderRadius: 9999,
+                      background: 'rgba(255,255,255,.95)',
+                      boxShadow: '0 1px 3px rgba(0,0,0,.14)',
+                      display: 'grid',
+                      placeItems: 'center',
+                      border: 0,
+                      cursor: 'pointer',
+                      zIndex: 2,
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 8.586l4.95-4.95a1 1 0 111.414 1.415L11.414 10l4.95 4.95a1 1 0 01-1.414 1.415L10 11.414l-4.95 4.95a1 1 0 01-1.415-1.415L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" clipRule="evenodd" /></svg>
+                  </button>
+                  <style>{`
+                    .speech-bubble.fade-out {
+                      opacity: 0;
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble {
+                      transition: opacity 0.4s;
+                    }
+                    .speech-bubble::after,
+                    .speech-bubble::before {
+                      content: none !important;
+                      display: none !important;
+                    }
+                  `}</style>
+                </div>
+              )}
+            </div>
+            <div className="zoom-buttons" style={{ position: 'fixed', right: 24, bottom: 80, zIndex: 10 }}>
+              <div className="flex flex-col gap-2">
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.min(prev.min + 10, 220), 
+                    max: Math.min(prev.max + 10, 240) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  +
+                </Button>
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.max(prev.min - 10, 80), 
+                    max: Math.max(prev.max - 10, 100) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  -
+                </Button>
+              </div>
             </div>
             <div 
               className="grid gap-4 w-full auto-rows-fr"
@@ -458,7 +503,7 @@ export default function MemoryGamePage() {
                 className="border-brand-accent-100/30 text-white hover:text-white hover:bg-brand-accent-50/30 bg-transparent rounded-full"
                 size="sm"
               >
-                Voltar
+                {t('back')}
               </Button>
               <Button
                 onClick={() => {
@@ -471,7 +516,7 @@ export default function MemoryGamePage() {
                 size="sm"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reiniciar
+                {t('restart')}
               </Button>
             </div>
 
@@ -479,7 +524,7 @@ export default function MemoryGamePage() {
             <div className="flex justify-center items-center">
               <div className="flex items-center gap-3 text-brand-primary-800/90 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm">
                 <Users className="h-6 w-6 text-brand-primary-600" />
-                <span className="text-xl font-bold whitespace-nowrap">Vez de {playerNames[currentPlayerIndex]}</span>
+                <span className="text-xl font-bold whitespace-nowrap">{t('turnOf', { player: playerNames[currentPlayerIndex] })}</span>
               </div>
             </div>
 
@@ -494,7 +539,7 @@ export default function MemoryGamePage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 text-center text-lg font-semibold text-brand-primary-700"
             >
-              {playerNames[scores.indexOf(Math.max(...scores))]} venceu o jogo!
+              {t('winnerMessage', { player: playerNames[scores.indexOf(Math.max(...scores))] })}
             </motion.div>
           )}
         </div>

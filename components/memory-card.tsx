@@ -45,7 +45,7 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
       >
         {/* Verso da Carta (Imagem do verso - back-min.jpg) */}
         <div
-          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border-2 border-white/50"
+          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.18)] border-2 border-white/50"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -60,11 +60,13 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
+          {/* Dark overlay for better contrast, only if matched */}
+          {isMatched && <div className="absolute inset-0 bg-black/60" />}
         </div>
 
         {/* Frente da Carta (Imagem a ser revelada) */}
         <div
-          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border-2 border-white/50"
+          className="absolute w-full h-full rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.18)] border-2 border-white/50"
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
@@ -79,6 +81,9 @@ export function MemoryCard({ id, content, isFlipped, isMatched, onClick }: Memor
             sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
             className="transition-transform duration-200"
           />
+          {/* Dark overlay for better contrast, only if matched */}
+          {isMatched && <div className="absolute inset-0 bg-black/60" />}
+          {/* No text overlay for image cards */}
         </div>
       </motion.div>
     </motion.div>
