@@ -56,6 +56,7 @@ import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import { useCardSize } from "@/hooks/use-card-size"
 
 export default function MemoryGamePage() {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export default function MemoryGamePage() {
   
   // Configuration from URL parameters
   const initialPlayerNames = searchParams.get("players") ? JSON.parse(searchParams.get("players")!) : ["Jogador 1"]
-  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 8
+  const initialNumCardPairs = searchParams.get("pairs") ? Number.parseInt(searchParams.get("pairs")!) : 5
 
   // Game state
   const [playerNames] = useState<string[]>(initialPlayerNames)
@@ -81,7 +82,7 @@ export default function MemoryGamePage() {
   const [hasGameEnded, setHasGameEnded] = useState(false)
   
   // UI state
-  const [cardSize, setCardSize] = useState({ min: 140, max: 160 })
+  const { cardSize, setCardSize } = useCardSize(numCardPairs)
   const [scoreBoardPosition, setScoreBoardPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 240 : 1000, y: 20 })
   const [isScoreboardCollapsed, setIsScoreboardCollapsed] = useState(false)
   const [showCardSizeHint, setShowCardSizeHint] = useState(false);
@@ -485,8 +486,28 @@ export default function MemoryGamePage() {
             </div>
             <div className="zoom-buttons" style={{ position: 'fixed', right: 24, bottom: 80, zIndex: 10 }}>
               <div className="flex flex-col gap-2">
-                <Button onClick={() => setCardSize(prev => ({ min: Math.min(prev.min + 10, 300), max: Math.min(prev.max + 10, 320) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">+</Button>
-                <Button onClick={() => setCardSize(prev => ({ min: Math.max(prev.min - 10, 60), max: Math.max(prev.max - 10, 80) }))} variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50">-</Button>
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.min(prev.min + 10, 220), 
+                    max: Math.min(prev.max + 10, 240) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  +
+                </Button>
+                <Button 
+                  onClick={() => setCardSize(prev => ({ 
+                    min: Math.max(prev.min - 10, 80), 
+                    max: Math.max(prev.max - 10, 100) 
+                  }))} 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-8 h-8 p-0 bg-white/90 backdrop-blur-sm shadow-lg hover:bg-red-50"
+                >
+                  -
+                </Button>
               </div>
             </div>
             <div 

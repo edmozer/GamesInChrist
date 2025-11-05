@@ -17,8 +17,8 @@ export default function MemoryGameSetupPage() {
   const router = useRouter() // Inicializar useRouter
   const [numPlayers, setNumPlayers] = useState(1)
   const [playerNames, setPlayerNames] = useState<string[]>([`${t('player')} 1`])
-  const [numCardPairs, setNumCardPairs] = useState(14) // Valor numérico
-  const [numCardPairsInput, setNumCardPairsInput] = useState("14") // Valor do input como string
+  const [numCardPairs, setNumCardPairs] = useState(5) // Valor numérico
+  const [numCardPairsInput, setNumCardPairsInput] = useState("5") // Valor do input como string
   const [version, setVersion] = useState<'restauracao' | 'natal'>('natal')
 
   const handleNumPlayersChange = (value: number[]) => {
