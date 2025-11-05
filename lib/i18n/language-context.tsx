@@ -15,19 +15,37 @@ export function LanguageProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [language, setLanguage] = useState<Language>('pt');
+
+  // Start with undefined, set on client
+  const [language, setLanguage] = useState<Language | undefined>(undefined);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang) {
-      setLanguage(savedLang);
+    // Only run on client
+    let lang: Language = 'en';
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('language') as Language;
+      if (savedLang) {
+        lang = savedLang;
+      } else {
+        const navLang = navigator.language || navigator.languages?.[0] || '';
+        if (navLang.startsWith('pt-BR') || navLang.startsWith('pt-PT') || navLang.startsWith('pt')) {
+          lang = 'pt';
+        }
+        localStorage.setItem('language', lang);
+      }
     }
+    setLanguage(lang);
   }, []);
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem('language', lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
+    }
   };
+
+  // Don't render children until language is set (avoids hydration mismatch)
+  if (!language) return null;
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage }}>

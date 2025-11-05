@@ -56,10 +56,12 @@ import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
 import { useCardSize } from "@/hooks/use-card-size"
 
 export default function MemoryGamePage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -181,7 +183,7 @@ export default function MemoryGamePage() {
             setShowWinnerModal(true)
             setHasGameEnded(true)
           } else {
-            setToastMessage("🎉 CORRETO! 🎉")
+            setToastMessage(t('correct'))
             setShowToast(true)
             setTimeout(() => setShowToast(false), 1500)
           }
@@ -410,7 +412,14 @@ export default function MemoryGamePage() {
     >
       {/* Modal de Vencedor */}
       {showWinnerModal && <WinnerModal />}
-      
+
+      {/* English language warning */}
+      {language === 'en' && (
+        <div className="bg-yellow-200 text-yellow-900 text-center py-3 px-4 font-semibold shadow-md">
+          Restoration game cards are not available in English yet.
+        </div>
+      )}
+
       {/* Título no topo */}
       <div className="bg-white/30 backdrop-blur-sm border-b border-brand-primary-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-brand-primary-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')}</h1>

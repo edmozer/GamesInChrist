@@ -289,7 +289,9 @@ export default function LandingPage() {
                 </p>
                 <div className="flex items-center justify-center mt-8">
                   <a
-                    href="https://www.churchofjesuschrist.org/welcome/savior-jesus-christ?lang=por"
+                    href={language === 'en'
+                      ? 'https://www.churchofjesuschrist.org/welcome/savior-jesus-christ?lang=eng'
+                      : 'https://www.churchofjesuschrist.org/welcome/savior-jesus-christ?lang=por'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block px-8 py-3 rounded-md bg-white text-brand-primary-700 hover:bg-brand-primary-50 shadow-lg transform hover:scale-105 transition-all duration-200 font-semibold text-lg"
