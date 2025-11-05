@@ -10,10 +10,14 @@ export const metadata = {
   description: "Plataforma de jogos cristãos que combinam aprendizado bíblico com diversão.",
 }
 
+
 import { LanguageProvider } from "@/lib/i18n/language-context"
 import LanguageSelector from "@/components/language-selector"
+import { usePathname } from "next/navigation"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const hideLanguageSelector = pathname.startsWith('/memory-game/play');
   return (
     <html lang="pt-BR" className={`${manrope.variable} ${outfit.variable}`}>
       <head>
@@ -29,9 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LanguageProvider>
           <div className="relative">
             {children}
-            <div className="fixed top-4 right-4 z-50">
-              <LanguageSelector />
-            </div>
+            {!hideLanguageSelector && (
+              <div className="fixed top-4 right-4 z-50">
+                <LanguageSelector />
+              </div>
+            )}
           </div>
         </LanguageProvider>
         <Analytics />
