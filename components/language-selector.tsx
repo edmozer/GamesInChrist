@@ -44,6 +44,14 @@ export default function LanguageSelector() {
         >
           🇺🇸 English
         </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => {
+            setLanguage('es');
+            setIsOpen(false);
+          }}
+        >
+          🇲🇽 Español
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

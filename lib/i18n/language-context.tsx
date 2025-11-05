@@ -24,12 +24,16 @@ export function LanguageProvider({
     let lang: Language = 'en';
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('language') as Language;
-      if (savedLang) {
+      if (savedLang && (savedLang === 'pt' || savedLang === 'en' || savedLang === 'es')) {
         lang = savedLang;
       } else {
         const navLang = navigator.language || navigator.languages?.[0] || '';
         if (navLang.startsWith('pt-BR') || navLang.startsWith('pt-PT') || navLang.startsWith('pt')) {
           lang = 'pt';
+        } else if (navLang.startsWith('es')) {
+          lang = 'es';
+        } else {
+          lang = 'en';
         }
         localStorage.setItem('language', lang);
       }
