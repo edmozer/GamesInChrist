@@ -14,7 +14,7 @@ export default function Privacidade() {
         Um dos objetivos do site é mostrar como a inteligência artificial pode ser usada em prol do evangelho de Jesus Cristo.
       </p>
       <p className="mb-4 text-brand-text-medium font-sans">
-        Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto <b>Edmozer Cavalcante</b> no <a href="https://www.linkedin.com/in/edmozer-cavalcante/" target="_blank" rel="noopener noreferrer" className="underline text-brand-primary-700 hover:text-brand-primary-900">LinkedIn</a>.
+        Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto <a href="https://www.linkedin.com/in/edmozer-cavalcante/" target="_blank" rel="noopener noreferrer" className="underline text-brand-primary-700 hover:text-brand-primary-900">Edmozer Cavalcante</a> no LinkedIn.
       </p>
       <div className="mt-8">
         <Link href="/" className="text-brand-primary-700 underline hover:text-brand-primary-900">Voltar para a Home</Link>

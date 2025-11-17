@@ -79,7 +79,7 @@ export const translations = {
     aboutDevText1: 'Este site foi desenvolvido com Next.js (React), utilizando componentes reutilizáveis, estilização com Tailwind CSS e deploy moderno. O desenvolvimento contou com auxílio da IA Claude Sonnet para código e estrutura.',
     aboutDevText2: 'A maioria das imagens foi gerada/editada por IA utilizando o Google Gemini 2.5 Flash Image, conhecido popularmente como Nano Banana.',
     aboutDevText3: 'Um dos objetivos do site é mostrar como a inteligência artificial pode ser usada em prol do evangelho de Jesus Cristo.',
-    aboutDevText4: 'Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto Edmozer Cavalcante no LinkedIn.',
+    aboutDevText4: 'Ideas and feedback are very welcome! You can find the project creator Edmozer Cavalcante on LinkedIn.',
   },
   en: {
     // Share invitation

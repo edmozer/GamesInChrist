@@ -27,7 +27,7 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
       animate={{ opacity: 1 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
     >
-      <div className="relative bg-white rounded-lg p-6 max-w-sm w-full">
+      <div className="relative bg-white rounded-2xl p-6 max-w-sm w-full">
         {/* Confetti left */}
         <div className="absolute -left-24 top-1/2 -translate-y-1/2">
           <Image
