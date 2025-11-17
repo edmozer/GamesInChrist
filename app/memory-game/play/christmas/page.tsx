@@ -71,6 +71,22 @@ const christmasContentsEN = [
 ];
 
 export default function MemoryGameChristmasPage() {
+    // Detecta se está em mobile e orientação vertical
+    const [showRotateMsg, setShowRotateMsg] = useState(false);
+    useEffect(() => {
+      function checkOrientation() {
+        const isMobile = window.innerWidth < 768;
+        const isPortrait = window.innerHeight > window.innerWidth;
+        setShowRotateMsg(isMobile && isPortrait);
+      }
+      checkOrientation();
+      window.addEventListener('resize', checkOrientation);
+      window.addEventListener('orientationchange', checkOrientation);
+      return () => {
+        window.removeEventListener('resize', checkOrientation);
+        window.removeEventListener('orientationchange', checkOrientation);
+      };
+    }, []);
   const { t } = useTranslation();
   const { language } = useLanguage();
   const router = useRouter()
@@ -193,23 +209,26 @@ export default function MemoryGameChristmasPage() {
     const [cardWidth] = useState(200)
     const dragInfo = useRef({ mouseDown: false, startX: 0, startY: 0, moved: false })
 
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
     return (
       <motion.div
-        drag
+        drag={!isMobile}
         dragMomentum={false}
-        initial={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
-        animate={{ x: scoreBoardPosition.x, y: scoreBoardPosition.y }}
+        initial={{ x: isMobile ? 0 : scoreBoardPosition.x, y: isMobile ? 0 : scoreBoardPosition.y }}
+        animate={{ x: isMobile ? 0 : scoreBoardPosition.x, y: isMobile ? 0 : scoreBoardPosition.y }}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={(event, info) => {
           setIsDragging(false)
-          setScoreBoardPosition({ x: scoreBoardPosition.x + info.offset.x, y: scoreBoardPosition.y + info.offset.y })
+          if (!isMobile) {
+            setScoreBoardPosition({ x: scoreBoardPosition.x + info.offset.x, y: scoreBoardPosition.y + info.offset.y })
+          }
         }}
-        className="fixed z-50 touch-none select-none"
-        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        className={isMobile ? "fixed bottom-0 left-0 w-full z-40" : "fixed z-50 touch-none select-none"}
+        style={isMobile ? { cursor: 'default', width: '100%', borderRadius: 0 } : { cursor: isDragging ? 'grabbing' : 'grab' }}
       >
         <Card 
-          className="bg-white/90 backdrop-blur-sm shadow-lg border-brand-primary-100 rounded-2xl overflow-hidden"
-          style={{ width: `${cardWidth}px`, height: isScoreboardCollapsed ? '40px' : 'auto', transition: 'height 0.3s ease' }}
+          className={isMobile ? "bg-white/90 backdrop-blur-sm shadow-lg border-red-100 rounded-none overflow-hidden w-full" : "bg-white/90 backdrop-blur-sm shadow-lg border-brand-primary-100 rounded-2xl overflow-hidden"}
+          style={isMobile ? { width: '100%', borderRadius: 0, height: isScoreboardCollapsed ? '40px' : 'auto', transition: 'height 0.3s ease' } : { width: `${cardWidth}px`, height: isScoreboardCollapsed ? '40px' : 'auto', transition: 'height 0.3s ease' }}
         >
           <div className="h-10 w-full bg-red-100 cursor-grab active:cursor-grabbing flex justify-between items-center px-4">
             <div className="flex items-center gap-1.5 overflow-hidden">
@@ -293,6 +312,11 @@ export default function MemoryGameChristmasPage() {
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
       style={{ backgroundImage: "url(/images/Christmas/natal_bg.webp)" }}
     >
+      {showRotateMsg && (
+        <div className="fixed top-0 left-0 w-full z-50 bg-yellow-100 text-yellow-900 text-center py-3 px-4 font-semibold shadow-md">
+          Para melhor experiência, coloque o jogo na horizontal (gire seu dispositivo).
+        </div>
+      )}
       {showWinnerModal && <WinnerModalWrapper />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')} - Natal</h1>
