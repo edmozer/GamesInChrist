@@ -13,6 +13,22 @@ import { useRouter } from "next/navigation" // Importar useRouter
 import { useTranslation } from "@/lib/i18n/use-translation"
 
 export default function MemoryGameSetupPage() {
+    // Detecta se está em mobile e orientação vertical
+    const [showRotateMsg, setShowRotateMsg] = useState(false);
+    useEffect(() => {
+      function checkOrientation() {
+        const isMobile = window.innerWidth < 768;
+        const isPortrait = window.innerHeight > window.innerWidth;
+        setShowRotateMsg(isMobile && isPortrait);
+      }
+      checkOrientation();
+      window.addEventListener('resize', checkOrientation);
+      window.addEventListener('orientationchange', checkOrientation);
+      return () => {
+        window.removeEventListener('resize', checkOrientation);
+        window.removeEventListener('orientationchange', checkOrientation);
+      };
+    }, []);
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [numCardPairsError, setNumCardPairsError] = useState("");
@@ -92,6 +108,11 @@ export default function MemoryGameSetupPage() {
       className="flex flex-col min-h-screen items-center justify-center bg-cover bg-center bg-fixed p-4 transition-[background-image] duration-300 ease-in-out"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
+      {showRotateMsg && (
+        <div className="fixed top-0 left-0 w-full z-50 bg-yellow-100 text-yellow-900 text-center py-3 px-4 font-semibold shadow-md">
+          Para melhor experiência, coloque o jogo na horizontal (gire seu dispositivo).
+        </div>
+      )}
       {/* Main Card */}
   <Card className={`w-full max-w-2xl border ${isChristmas ? 'border-red-100/30' : 'border-brand-primary-100/30'} bg-white/20 backdrop-blur-lg shadow-lg mb-4 rounded-3xl`}>
         <CardHeader className="text-center pb-6">

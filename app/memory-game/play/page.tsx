@@ -1,5 +1,20 @@
-
 "use client"
+  // Detecta se está em mobile e orientação vertical
+  const [showRotateMsg, setShowRotateMsg] = useState(false);
+  useEffect(() => {
+    function checkOrientation() {
+      const isMobile = window.innerWidth < 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      setShowRotateMsg(isMobile && isPortrait);
+    }
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 // --- Types and helpers from christmas/page.tsx ---
 interface GameCard {
   id: string;
@@ -359,6 +374,11 @@ export default function MemoryGamePage() {
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
       style={{ backgroundImage: "url(/images/nauvoo.jpeg)" }}
     >
+      {showRotateMsg && (
+        <div className="fixed top-0 left-0 w-full z-50 bg-yellow-100 text-yellow-900 text-center py-3 px-4 font-semibold shadow-md">
+          Para melhor experiência, coloque o jogo na horizontal (gire seu dispositivo).
+        </div>
+      )}
       {/* Modal de Vencedor */}
       {renderWinnerModal()}
 
