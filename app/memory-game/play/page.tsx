@@ -1,3 +1,4 @@
+"use client"
   // Detecta se está em mobile e orientação vertical
   const [showRotateMsg, setShowRotateMsg] = useState(false);
   useEffect(() => {
@@ -14,8 +15,6 @@
       window.removeEventListener('orientationchange', checkOrientation);
     };
   }, []);
-
-"use client"
 // --- Types and helpers from christmas/page.tsx ---
 interface GameCard {
   id: string;
