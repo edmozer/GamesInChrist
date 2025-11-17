@@ -12,6 +12,7 @@ import Image from "next/image"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { useCardSize } from "@/hooks/use-card-size"
+import { WinnerModal } from "@/components/winner-modal-new"
 
 interface GameCard {
   id: string;
@@ -43,7 +44,7 @@ const christmasContentsPT = [
   "/images/Christmas/jose.webp",
   "/images/Christmas/manjedoura.webp",
   "/images/Christmas/maria.webp",
-  "/images/Christmas/mirra.jpg",
+  "/images/Christmas/mirra1.jpg",
   "/images/Christmas/nazare.webp",
   "/images/Christmas/ouro.webp",
   "/images/Christmas/ovelhas.webp",
@@ -249,40 +250,14 @@ export default function MemoryGameChristmasPage() {
     resetGame()
   }
 
-  const WinnerModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.5, opacity: 0 }}
-        className="relative bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full m-4 text-center"
-      >
-        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
-          <Image src="/images/confetti.png" alt="Confetti left" width={120} height={120} className="animate-float-left" />
-        </div>
-        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
-          <Image src="/images/confetti.png" alt="Confetti right" width={120} height={120} className="animate-float-right" />
-        </div>
-        <div className="w-24 h-24 mx-auto mb-4">
-          <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
-        </div>
-        <h2 className="text-3xl font-bold text-red-900 mb-4">{isDraw ? 'Empate!' : t('congratulations')}</h2>
-        {isDraw ? (
-          <>
-            <p className="text-xl text-red-800 mb-2">Houve um empate entre <span className="font-bold text-red-700">{winner}</span>!</p>
-            <p className="text-base text-red-700 mb-6 italic flex items-center justify-center gap-2">
-              Não acho que quem ganhar ou quem perder, nem quem ganhar nem perder, vai ganhar ou perder. Vai todo mundo perder. <span aria-label="riso" title="riso">😄</span>
-            </p>
-          </>
-        ) : (
-          <p className="text-xl text-red-800 mb-6">{t('winnerIs', { winner })}</p>
-        )}
-        <div className="flex gap-4 justify-center">
-          <Button onClick={handleRestart} className="bg-red-600 hover:bg-red-700 text-white">{t('playAgain')}</Button>
-          <Button onClick={() => router.push("/memory-game")} variant="outline" className="border-red-100 text-red-700">{t('mainMenu')}</Button>
-        </div>
-      </motion.div>
-    </div>
+  // Modal de vencedor unificado
+  const WinnerModalWrapper = () => (
+    <WinnerModal
+      winner={winner}
+      score={scores[playerNames.indexOf(winner)]}
+      onPlayAgain={handleRestart}
+      onReturn={() => router.push("/memory-game")}
+    />
   )
 
   const [showCardSizeHint, setShowCardSizeHint] = useState(false);
@@ -316,9 +291,9 @@ export default function MemoryGameChristmasPage() {
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-cover bg-center bg-fixed transition-[background-image] duration-300 ease-in-out"
-  style={{ backgroundImage: "url(/images/Christmas/natal_bg.webp)" }}
+      style={{ backgroundImage: "url(/images/Christmas/natal_bg.webp)" }}
     >
-      {showWinnerModal && <WinnerModal />}
+      {showWinnerModal && <WinnerModalWrapper />}
       <div className="bg-white/30 backdrop-blur-sm border-b border-red-100/30 py-4 shadow-md flex justify-center">
         <h1 className="text-3xl font-semibold text-red-900/90 bg-white/20 px-4 py-2 rounded-2xl backdrop-blur-sm inline-block tracking-tight">{t('memoryGame')} - Natal</h1>
       </div>

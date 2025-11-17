@@ -106,7 +106,7 @@ export default function LandingPage() {
                     )}
                     {language === 'es' && (
                       <>
-                        Juegos que <span className="text-brand-primary-600">edifican</span> y <span className="text-brand-secondary-700">divierten</span>
+                        Juegos que <span className="text-brand-primary-600">edifican</span> y <span className="text-brand-secondary-700">diverten</span>
                       </>
                     )}
                   </h1>
@@ -486,7 +486,15 @@ export default function LandingPage() {
               {t('aboutDevText3')}
             </p>
             <p className="mb-4 text-brand-text-medium font-sans">
-              {t('aboutDevText4')}
+              Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto{' '}
+              <a
+                href="https://www.linkedin.com/in/edmozer-cavalcante/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-brand-primary-700 hover:text-brand-primary-900"
+              >
+                Edmozer Cavalcante
+              </a>{' '}no LinkedIn.
             </p>
           </div>
         </div>

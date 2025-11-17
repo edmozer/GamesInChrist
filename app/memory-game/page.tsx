@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useLanguage } from "@/lib/i18n/language-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,10 +14,20 @@ import { useTranslation } from "@/lib/i18n/use-translation"
 
 export default function MemoryGameSetupPage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const [numCardPairsError, setNumCardPairsError] = useState("");
   const router = useRouter() // Inicializar useRouter
   const [numPlayers, setNumPlayers] = useState(1)
   const [playerNames, setPlayerNames] = useState<string[]>([`${t('player')} 1`])
+  useEffect(() => {
+    setPlayerNames((prevNames) =>
+      prevNames.map((name, idx) =>
+        name.trim() === "" || /^Player|Jogador|Jugador/.test(name)
+          ? `${t('player')} ${idx + 1}`
+          : name
+      )
+    );
+  }, [language]);
   const [numCardPairs, setNumCardPairs] = useState(5) // Valor numérico
   const [numCardPairsInput, setNumCardPairsInput] = useState("5") // Valor do input como string
   const [version, setVersion] = useState<'restauracao' | 'natal'>('natal')

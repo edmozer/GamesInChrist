@@ -1,4 +1,3 @@
-
 export type Language = 'pt' | 'en' | 'es';
 
 export const translations = {
@@ -80,7 +79,7 @@ export const translations = {
     aboutDevText1: 'Este site foi desenvolvido com Next.js (React), utilizando componentes reutilizáveis, estilização com Tailwind CSS e deploy moderno. O desenvolvimento contou com auxílio da IA Claude Sonnet para código e estrutura.',
     aboutDevText2: 'A maioria das imagens foi gerada/editada por IA utilizando o Google Gemini 2.5 Flash Image, conhecido popularmente como Nano Banana.',
     aboutDevText3: 'Um dos objetivos do site é mostrar como a inteligência artificial pode ser usada em prol do evangelho de Jesus Cristo.',
-    aboutDevText4: 'Ideias e feedbacks são muito bem-vindos! Você pode encontrar o criador do projeto Edmozer Cavalcante no LinkedIn.',
+    aboutDevText4: 'Ideas and feedback are very welcome! You can find the project creator Edmozer Cavalcante on LinkedIn.',
   },
   en: {
     // Share invitation
@@ -102,6 +101,7 @@ export const translations = {
     // Memory Game
     memoryGame: 'Memory Game',
     memoryGameDescription: 'Game with Bible verses and characters',
+    memoryGameChristmas: 'Memory Game - Christmas',
     playNow: 'Play Now',
     comingSoon: 'Coming Soon',
     bibleQuiz: 'Bible Quiz',
@@ -173,13 +173,14 @@ export const translations = {
     eachGameDescription: 'Cada juego está cuidadosamente diseñado para brindar alegría mientras fortalece el conocimiento de las escrituras y los valores cristianos.',
     aboutSite: 'Sobre el sitio',
     termsOfUse: 'Términos de uso',
-    siteAboutText: 'Este sitio ofrece juegos cristianos gratuitos, comenzando con un juego de memoria con hermosas ilustraciones de temas bíblicos. Es un proyecto personal construido con amor y dedicación.',
+    siteAboutText: 'Este sitio ofrece juegos cristianos gratuitos, comenzando com um jogo de memória com hermosas ilustraciones de temas bíblicos. É um projeto pessoal construído com amor e dedicação.',
     siteContentFree: 'Todo el contenido es gratuito y puede usarse para fines personales, familiares y educativos, siempre que no sea para uso comercial.',
     contact: 'Contacto',
     contactLinkedinText: 'Para preguntas, sugerencias o solicitudes, contacta al desarrollador en LinkedIn:',
     contactCta: 'Contacta a Edmozer Cavalcante',
     memoryGame: 'Juego de Memoria',
     memoryGameDescription: 'Juego con versículos y personajes bíblicos',
+    memoryGameChristmas: 'Juego de Memoria - Navidad',
     playNow: 'Jugar ahora',
     comingSoon: 'Próximamente',
     bibleQuiz: 'Quiz Bíblico',

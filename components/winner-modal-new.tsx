@@ -27,7 +27,33 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
       animate={{ opacity: 1 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
     >
-      <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+      <div className="relative bg-white rounded-2xl p-6 max-w-sm w-full">
+        {/* Confetti left */}
+        <div className="absolute -left-24 top-1/2 -translate-y-1/2">
+          <Image
+            src="/images/confetti.png"
+            alt="Confetti left"
+            width={120}
+            height={120}
+            className="object-contain animate-float-left"
+            priority
+          />
+        </div>
+        {/* Confetti right */}
+        <div className="absolute -right-24 top-1/2 -translate-y-1/2">
+          <Image
+            src="/images/confetti.png"
+            alt="Confetti right"
+            width={120}
+            height={120}
+            className="object-contain animate-float-right"
+            priority
+          />
+        </div>
+        {/* Trophy */}
+        <div className="w-24 h-24 mx-auto mb-4">
+          <Image src="/images/trophy.png" alt="Troféu" width={96} height={96} className="w-full h-full object-contain" />
+        </div>
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('congratulations')}</h2>
           <p className="text-gray-600">{winnerMsg}</p>
@@ -46,7 +72,6 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
           >
             {t('mainMenu')}
           </Button>
-          
           {/* Social Share Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mt-6">
             {/* WhatsApp */}
@@ -67,7 +92,6 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
               </span>
               <span className="text-xs mt-1 text-green-700 font-medium">WhatsApp</span>
             </a>
-
             {/* Instagram */}
             <a
               href="https://www.instagram.com/"
@@ -86,7 +110,6 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
               </span>
               <span className="text-xs mt-1 text-pink-700 font-medium">Instagram</span>
             </a>
-
             {/* Facebook */}
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrlEncoded}&quote=${shareMsgEncoded}`}
@@ -105,7 +128,6 @@ export function WinnerModal({ winner, score, onPlayAgain, onReturn }: WinnerModa
               </span>
               <span className="text-xs mt-1 text-blue-700 font-medium">Facebook</span>
             </a>
-
             {/* X */}
             <a
               href={`https://twitter.com/intent/tweet?url=${shareUrlEncoded}&text=${shareMsgEncoded}`}
